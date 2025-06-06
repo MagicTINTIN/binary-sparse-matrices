@@ -5,11 +5,20 @@
 #include <iostream>
 #include <string>
 
-void operator<<(
+std::ostream &operator<<(
     std::ostream &stream,
     const BCSR &matrix)
 {
-    stream << matrix.toString();
+    // stream << matrix.toString();
+    return std::operator<<(stream, matrix.toString());
+}
+
+std::ostream &operator<<(
+    std::ostream &stream,
+    BCSR &matrix)
+{
+    // stream << matrix.toString();
+    return std::operator<<(stream, matrix.toString());
 }
 
 /**
@@ -93,33 +102,36 @@ std::string BCSR::toDnString() const
     return ret;
 }
 
-void insertDn2BCSR(std::vector<u_int32_t> &i_ptr, std::vector<u_int32_t> &indces, u_int32_t width, u_int32_t height, u_int8_t **values)
+void BCSR::insertDn2BCSR(u_int8_t values[])
 {
-    i_ptr[0] = 0;
+    _index_pointers[0] = 0;
 
-    for (u_int32_t row = 0; row < height; ++row)
+    for (u_int32_t row = 0; row < _height; ++row)
     {
-        for (u_int32_t col = 0; col < width; ++col)
+        for (u_int32_t col = 0; col < _width; ++col)
         {
-            if (values[row][col])
+            if (values[row * _width + col])
             {
-                indces.push_back(col);
+                _indices.push_back(col);
+                printf("adding {%d;%d}\n", row, col);
             }
         }
-        i_ptr[row + 1] = indces.size();
+        printf("row{%d}=%d\n", row + 1, _indices.size());
+        _index_pointers[row + 1] = _indices.size();
     }
 }
 
-BCSR::BCSR(u_int32_t height, u_int32_t width) : _width(width), _height(height)
+BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
 }
 
-BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t **values) : _width(width), _height(height)
+BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
+    insertDn2BCSR(values);
 }
 // CSR::~CSR()
 // {
