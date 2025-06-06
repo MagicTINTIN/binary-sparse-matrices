@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <iostream>
-#include "csr/csr.hh"
+#include "csr/bcsr.hh"
 
 int main(int argc, char const *argv[])
 {

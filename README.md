@@ -1,3 +1,3 @@
 # CPP
 
-BCSR class implementation
+BCSR (binary compressed sparse row) class implementation

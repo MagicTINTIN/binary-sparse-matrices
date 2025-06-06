@@ -1,3 +1,7 @@
+#pragma once
+#ifndef BCSR_HH
+#define BCSR_HH
+
 class CSR
 {
 private:
@@ -7,10 +11,4 @@ public:
     ~CSR();
 };
 
-CSR::CSR(/* args */)
-{
-}
-
-CSR::~CSR()
-{
-}
+#endif // BCSR_HH
