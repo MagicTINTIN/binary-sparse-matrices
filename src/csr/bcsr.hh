@@ -4,6 +4,7 @@
 
 #include <sys/types.h>
 #include <vector>
+#include <string>
 
 class BCSR
 {
@@ -13,9 +14,11 @@ private:
     std::vector<u_int32_t> _indices;
 
 public:
-    BCSR(u_int32_t width, u_int32_t height);
-    BCSR(u_int32_t width, u_int32_t height, u_int8_t **values);
-    u_int8_t toDense();
+    BCSR(u_int32_t height, u_int32_t width);
+    BCSR(u_int32_t height, u_int32_t width, u_int8_t **values);
+    std::vector<std::vector<u_int8_t>> toDenseVector() const;
+    std::string toString() const;
+    std::string toDnString() const;
     // ~BCSR();
 };
 
