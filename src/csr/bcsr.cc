@@ -20,39 +20,38 @@ std::ostream &operator<<(
 }
 
 
-/**
- * @note equivalent to operationOr method and operation+=
- */
 BCSR & BCSR::operator|=(const BCSR &b)
 {
     operationOr(b);
     return *this;
 }
 
-/**
- * @note equivalent to operationOr method and operation|=
- */
 BCSR & BCSR::operator+=(const BCSR &b)
 {
     operationOr(b);
     return *this;
 }
 
-
-/**
- * @note equivalent to operation+= and operation|=
- */
 void BCSR::operationOr(const BCSR &b) {
+    *this = *this | b;
+}
+
+BCSR BCSR::operator|(const BCSR &b) const
+{
     if (b._width != _width || b._height != _height) {
         fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
         exit(EXIT_FAILURE);
     }
     
+    // FIXME: (opti?) _index_pointers.size()  -> _height + 1
+    for (size_t r = 1; r < _index_pointers.size(); r)
+    {
+        if (b._index_pointers[r] - b._index_pointers[r - 1] > 0) {
+            // for (u_int8_t )
+        }
+    }
 }
 
-/**
- * @returns a dense matrix
- */
 std::vector<u_int8_t> BCSR::toDenseVector() const
 {
     std::vector<u_int8_t> mat(_width * _height);
@@ -68,9 +67,6 @@ std::vector<u_int8_t> BCSR::toDenseVector() const
     return mat;
 }
 
-/**
- * Prints the BCSR matrix
- */
 std::string BCSR::toString() const
 {
     if (_width == 0 || _height == 0)
@@ -89,9 +85,6 @@ std::string BCSR::toString() const
     return ret;
 }
 
-/**
- * Prints the BCSR matrix in dense form
- */
 std::string BCSR::toDnString() const
 {
     if (_height == 0)
@@ -133,10 +126,6 @@ std::string BCSR::toDnString() const
     return ret;
 }
 
-/**
- * Insert a dense matrix in the current BCSR matrix
- * @param values[] a array-like dense matrix
- */
 void BCSR::insertDn2BCSR(u_int8_t values[])
 {
     _index_pointers[0] = 0;
@@ -148,31 +137,20 @@ void BCSR::insertDn2BCSR(u_int8_t values[])
             if (values[row * _width + col])
             {
                 _indices.push_back(col);
-                printf("adding {%d;%d}\n", row, col);
+                // printf("adding {%d;%d}\n", row, col);
             }
         }
-        printf("row{%d}=%d\n", row + 1, _indices.size());
+        // printf("row{%d}=%d\n", row + 1, _indices.size());
         _index_pointers[row + 1] = _indices.size();
     }
 }
 
-/**
- * Initialise a 0-filled BCSR matrix
- * @param height the matrix height/rows
- * @param width the matrix width/columns
- */
 BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
 }
 
-/**
- * Initialise a BCSR matrix using a dense matrix
- * @param height the matrix height/rows
- * @param width the matrix width/columns
- * @param values the dense array-like matrix values
- */
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);
