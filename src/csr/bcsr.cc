@@ -24,15 +24,15 @@ std::ostream &operator<<(
 /**
  * @returns a dense matrix
  */
-std::vector<std::vector<u_int8_t>> BCSR::toDenseVector() const
+std::vector<u_int8_t> BCSR::toDenseVector() const
 {
-    std::vector<std::vector<u_int8_t>> mat;
+    std::vector<u_int8_t> mat(_width * _height);
 
     for (int i = 0; i < _height; ++i)
     {
         for (int idx = _index_pointers[i]; idx < _index_pointers[i + 1]; ++idx)
         {
-            mat[i][_indices[idx]] = 1;
+            mat[i * _width + _indices[idx]] = 1;
         }
     }
 
@@ -72,28 +72,24 @@ std::string BCSR::toDnString() const
     }
 
     std::string ret("[");
-    std::vector<std::vector<u_int8_t>> m = toDenseVector();
-    bool firstLine = true;
-    for (std::vector<u_int8_t> r : m)
+    std::vector<u_int8_t> m = toDenseVector();
+    for (size_t line = 0; line < _height; line++)
     {
-        if (firstLine)
+        if (line == 0)
         {
             ret += "[";
-            firstLine = false;
         }
         else
             ret += ",\n [";
-        bool firstColumn = true;
-        for (u_int8_t c : r)
+        for (size_t col = 0; col < _width; col++)
         {
-            if (firstColumn)
+            if (col == 0)
             {
-                ret += std::to_string(c);
-                firstColumn = false;
+                ret += std::to_string(m[line * _width + col]);
             }
             else
             {
-                ret += "," + std::to_string(c);
+                ret += "," + std::to_string(m[line * _width + col]);
             }
         }
         ret += "]";

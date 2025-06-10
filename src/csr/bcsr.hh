@@ -17,7 +17,7 @@ private:
 public:
     BCSR(u_int32_t height, u_int32_t width);
     BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]);
-    std::vector<std::vector<u_int8_t>> toDenseVector() const;
+    std::vector<u_int8_t> toDenseVector() const;
     std::string toString() const;
     std::string toDnString() const;
     // ~BCSR();
