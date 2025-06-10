@@ -47,13 +47,13 @@ void BCSR::operationOr(const BCSR &b)
         {
             set(r - 1, b._indices[c]);
         }
-        
+
     }
 }
 
 BCSR BCSR::operator|(const BCSR &b) const
 {
-    
+
     if (b._width != _width || b._height != _height)
     {
         fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
@@ -114,6 +114,38 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
             }
         }
         _index_pointers[r] += 1;
+    }
+}
+
+void BCSR::reset(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+
+    bool removed = false;
+    // for each row after the removal, propagate the information
+    for (size_t r = row + 1; r < _index_pointers.size(); r++)
+    {
+        if (!removed)
+        {
+            for (u_int32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
+            {
+                if (col == _indices[i])
+                {
+                    _indices.erase(_indices.begin() + i);
+                    removed = true;
+                }
+            }
+            if (!removed)
+            {
+                // if nothing has been removed on the affected row, then there is nothing to update
+                return;
+            }
+        }
+        _index_pointers[r] -= 1;
     }
 }
 

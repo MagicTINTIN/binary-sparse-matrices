@@ -33,6 +33,8 @@ int main(int argc, char const *argv[])
     bcsr_mat.set(2, 3);
     // std::cout << bcsr_mat.toDnString() << std::endl;
     bcsr_mat.set(6, 0);
+    bcsr_mat.reset(0, 2);
+    bcsr_mat.reset(0, 1);
 
     std::cout << bcsr_mat.toDnString() << std::endl;
     return 0;
