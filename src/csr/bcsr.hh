@@ -20,6 +20,11 @@ public:
     std::vector<u_int8_t> toDenseVector() const;
     std::string toString() const;
     std::string toDnString() const;
+
+    // or operation with matrices
+    void operationOr(const BCSR &b);
+    BCSR &BCSR::operator|=(const BCSR &b);
+    BCSR &BCSR::operator+=(const BCSR &b);
     // ~BCSR();
 };
 
