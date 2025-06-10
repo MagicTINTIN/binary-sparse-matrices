@@ -19,36 +19,101 @@ std::ostream &operator<<(
     return std::operator<<(stream, matrix.toString());
 }
 
-
-BCSR & BCSR::operator|=(const BCSR &b)
+BCSR &BCSR::operator|=(const BCSR &b)
 {
     operationOr(b);
     return *this;
 }
 
-BCSR & BCSR::operator+=(const BCSR &b)
+BCSR &BCSR::operator+=(const BCSR &b)
 {
     operationOr(b);
     return *this;
 }
 
-void BCSR::operationOr(const BCSR &b) {
-    *this = *this | b;
+void BCSR::operationOr(const BCSR &b)
+{
+    // *this = *this | b;
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
+
+    // FIXME: (opti?) _index_pointers.size()  -> _height + 1
+    for (size_t r = 1; r < _index_pointers.size(); r)
+    {
+        for (size_t c = b._index_pointers[r - 1]; c < b._index_pointers[r]; c++)
+        {
+            set(r - 1, b._indices[c]);
+        }
+        
+    }
 }
 
 BCSR BCSR::operator|(const BCSR &b) const
 {
-    if (b._width != _width || b._height != _height) {
+    
+    if (b._width != _width || b._height != _height)
+    {
         fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
         exit(EXIT_FAILURE);
     }
-    
+
+    BCSR result(*this);
+
     // FIXME: (opti?) _index_pointers.size()  -> _height + 1
     for (size_t r = 1; r < _index_pointers.size(); r)
     {
-        if (b._index_pointers[r] - b._index_pointers[r - 1] > 0) {
-            // for (u_int8_t )
+        for (size_t c = b._index_pointers[r - 1]; c < b._index_pointers[r]; c++)
+        {
+            result.set(r - 1, b._indices[c]);
         }
+    }
+
+    return result;
+}
+
+
+void BCSR::set(const u_int32_t row, const u_int32_t col, const u_int8_t value) {
+    if (value)
+        set(row,col);
+    else
+        reset(row, col);
+}
+
+void BCSR::set(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+
+    bool inserted = false;
+    // for each row after the insertion, propagate the information
+    for (size_t r = row + 1; r < _index_pointers.size(); r++)
+    {
+        if (!inserted)
+        {
+            for (u_int32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
+            {
+                if (col < _indices[i])
+                {
+                    _indices.insert(_indices.begin() + i, col);
+                    inserted = true;
+                }
+                // if the value was already 1, then there is no change
+                else if (col == _indices[i])
+                    return;
+            }
+            if (!inserted)
+            {
+                _indices.insert(_indices.begin() + _index_pointers[r], col);
+                inserted = true;
+            }
+        }
+        _index_pointers[r] += 1;
     }
 }
 

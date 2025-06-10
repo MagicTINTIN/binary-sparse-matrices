@@ -21,11 +21,19 @@ int main(int argc, char const *argv[])
         0, 0, 0, 0, 0,
         0, 0, 0, 1, 0};
 
-
     BCSR bcsr_mat(7, 5, bmat);
 
     std::cout << bcsr_mat << "\n"
               << bcsr_mat.toDnString() << std::endl;
 
+    bcsr_mat.set(0, 0);
+    // std::cout << /*bcsr_mat << "\n" <<*/ bcsr_mat.toDnString() << std::endl;
+    bcsr_mat.set(0, 4);
+    // std::cout << bcsr_mat.toDnString() << std::endl;
+    bcsr_mat.set(2, 3);
+    // std::cout << bcsr_mat.toDnString() << std::endl;
+    bcsr_mat.set(6, 0);
+
+    std::cout << bcsr_mat.toDnString() << std::endl;
     return 0;
 }

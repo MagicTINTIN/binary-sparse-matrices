@@ -59,13 +59,38 @@ public:
     /**
      * @note equivalent to operationOr method and operation+=
      */
-    BCSR &BCSR::operator|=(const BCSR &b);
+    BCSR &operator|=(const BCSR &b);
 
     /**
      * @note equivalent to operationOr method and operation|=
      */
-    BCSR &BCSR::operator+=(const BCSR &b);
-    BCSR BCSR::operator|(const BCSR &b) const;
+    BCSR &operator+=(const BCSR &b);
+    BCSR operator|(const BCSR &b) const;
+
+    /**
+     * Set a value in the matrix
+     * @param row of the value
+     * @param col of the value
+     * @param value (0 or 1) (different from 0)
+     * @warning this can be a costly operation
+     */
+    void set(const u_int32_t row, const u_int32_t col, const u_int8_t value);
+
+    /**
+     * Set the value at (row,col) to 1 in the matrix
+     * @param row of the value
+     * @param col of the value
+     * @warning this can be a costly operation
+     */
+    void set(const u_int32_t row, const u_int32_t col);
+
+    /**
+     * Set the value at (row,col) to 0 in the matrix
+     * @param row of the value
+     * @param col of the value
+     * @warning this can be a costly operation
+     */
+    void reset(const u_int32_t row, const u_int32_t col);
     // ~BCSR();
 };
 
