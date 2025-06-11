@@ -5,18 +5,23 @@
 #include <iostream>
 #include <string>
 
-std::ostream &operator<<(
-    std::ostream &stream,
-    const BCSR &matrix)
+bool BCSR::checkOrder() const
 {
-    return std::operator<<(stream, matrix.toString());
-}
+    if (_indices.size() != _index_pointers[_index_pointers.size() - 1])
+        return false;
 
-std::ostream &operator<<(
-    std::ostream &stream,
-    BCSR &matrix)
-{
-    return std::operator<<(stream, matrix.toString());
+    for (int i = 0; i < _height; ++i)
+    {
+        signed int row_min_col = -1;
+        for (int idx = _index_pointers[i]; idx < _index_pointers[i + 1]; ++idx)
+        {
+            if (row_min_col >= _indices[idx])
+                return false;
+            row_min_col = _indices[idx];
+        }
+    }
+
+    return true;
 }
 
 BCSR &BCSR::operator|=(const BCSR &b)
@@ -65,7 +70,8 @@ void BCSR::operationOr(const BCSR &b)
                 for (; b._indices[b_index_pointer] <= _indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
                 {
                     // if the value was already 1, then there is no change for this column
-                    if (b._indices[b_index_pointer] < _indices[col_index]) {
+                    if (b._indices[b_index_pointer] < _indices[col_index])
+                    {
                         _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
                         addedInRow++;
                         carry++;

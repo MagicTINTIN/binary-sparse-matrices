@@ -50,6 +50,13 @@ public:
      */
     std::string toDnString() const;
 
+    /**
+     * check ordering of the indices
+     * TODO: remove ?
+     * @note useless in prod
+     */
+    bool checkOrder() const;
+
     // or operation with matrices
     /**
      * @note equivalent to operation+= and operation|=

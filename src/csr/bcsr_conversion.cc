@@ -5,6 +5,21 @@
 #include <iostream>
 #include <string>
 
+
+std::ostream &operator<<(
+    std::ostream &stream,
+    const BCSR &matrix)
+{
+    return std::operator<<(stream, matrix.toString());
+}
+
+std::ostream &operator<<(
+    std::ostream &stream,
+    BCSR &matrix)
+{
+    return std::operator<<(stream, matrix.toString());
+}
+
 std::vector<u_int8_t> BCSR::toDenseVector() const
 {
     std::vector<u_int8_t> mat(_width * _height);
