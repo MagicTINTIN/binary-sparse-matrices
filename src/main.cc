@@ -53,5 +53,8 @@ int main(int argc, char const *argv[])
     bcsr_mat |= bcsr_mat2;
     std::cout << bcsr_mat << "\n";
     std::cout << bcsr_mat.toDnString() << std::endl;
+
+    if (!bcsr_mat.checkOrder())
+        printf("ERROR in ordering!\n");
     return 0;
 }

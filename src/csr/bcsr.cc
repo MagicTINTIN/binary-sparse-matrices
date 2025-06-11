@@ -12,12 +12,14 @@ bool BCSR::checkOrder() const
 
     for (int i = 0; i < _height; ++i)
     {
-        signed int row_min_col = -1;
+        u_int8_t row_min_col = 0;
+        bool first = true;
         for (int idx = _index_pointers[i]; idx < _index_pointers[i + 1]; ++idx)
         {
-            if (row_min_col >= _indices[idx])
+            if (row_min_col >= _indices[idx] && !first)
                 return false;
             row_min_col = _indices[idx];
+            first = false;
         }
     }
 
