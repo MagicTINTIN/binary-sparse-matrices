@@ -56,6 +56,13 @@ public:
      * @note useless in prod
      */
     bool checkOrder() const;
+    /**
+     * check ordering of the indices
+     * @param verbose to print what are the representation issues
+     * TODO: remove ?
+     * @note useless in prod
+     */
+    bool checkOrder(bool verbose) const;
 
     // or operation with matrices
     /**

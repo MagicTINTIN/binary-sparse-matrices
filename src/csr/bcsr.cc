@@ -5,10 +5,14 @@
 #include <iostream>
 #include <string>
 
-bool BCSR::checkOrder() const
+bool BCSR::checkOrder(bool verbose) const
 {
     if (_indices.size() != _index_pointers[_index_pointers.size() - 1])
+    {
+        if (verbose)
+            fprintf(stderr, "Size of indices (=%ld) not equal to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
         return false;
+    }
 
     for (int i = 0; i < _height; ++i)
     {
@@ -17,13 +21,22 @@ bool BCSR::checkOrder() const
         for (int idx = _index_pointers[i]; idx < _index_pointers[i + 1]; ++idx)
         {
             if (row_min_col >= _indices[idx] && !first)
+            {
+                if (verbose)
+                    fprintf(stderr, "Line %d (diff %d-%d) columns number are not strictly ordered: %d >= %d!\n", i, i+1, i, row_min_col, _indices[idx]);
                 return false;
+            }
             row_min_col = _indices[idx];
             first = false;
         }
     }
 
     return true;
+}
+
+bool BCSR::checkOrder() const
+{
+    return checkOrder(false);
 }
 
 BCSR &BCSR::operator|=(const BCSR &b)
