@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCES
     src/main.cc
     src/csr/bcsr.cc
+    src/csr/bcsr_conversion.cc
 )
 
 # Binary
