@@ -177,6 +177,8 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
                 {
                     _indices.erase(_indices.begin() + i);
                     removed = true;
+                    // the column has been deleted, there is nothing more to check, if we wanted to, think to add i--;
+                    break;
                 }
             }
             if (!removed)
