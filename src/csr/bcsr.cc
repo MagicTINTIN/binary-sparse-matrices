@@ -76,7 +76,6 @@ void BCSR::operationOr(const BCSR &b)
         // if the line contains a non zero value.
         if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
         {
-            // u_int8_t lineCarry = 0;
             u_int32_t col_index = _index_pointers[r - 1];
             u_int32_t b_index_pointer = b._index_pointers[r - 1];
             // for each column check if there is an insertion to do before it
@@ -89,7 +88,6 @@ void BCSR::operationOr(const BCSR &b)
                     if (b._indices[b_index_pointer] < _indices[col_index])
                     {
                         _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                        // lineCarry++;
                         carry++;
                         col_index++;
                     }
@@ -98,9 +96,8 @@ void BCSR::operationOr(const BCSR &b)
             // for every other non-zero in the line that has not been added
             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
             {
-                _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]); //+ lineCarry
+                _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
                 carry++;
-                // lineCarry++;
             }
         }
         _index_pointers[r] += carry;
@@ -126,6 +123,39 @@ BCSR BCSR::operator|(const BCSR &b) const
     //         result.set(r - 1, b._indices[c]);
     //     }
     // }
+
+    u_int32_t carry = 0;
+    for (size_t r = 1; r < result._index_pointers.size(); r++)
+    {
+        // if the line contains a non zero value.
+        if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
+        {
+            u_int32_t col_index = result._index_pointers[r - 1];
+            u_int32_t b_index_pointer = b._index_pointers[r - 1];
+            // for each column check if there is an insertion to do before it
+            for (;col_index < _index_pointers[r] + carry; col_index++)
+            {
+                // add every non zero indice (column) before this column
+                for (; b._indices[b_index_pointer] <= result._indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
+                {
+                    // if the value was already 1, then there is no change for this column
+                    if (b._indices[b_index_pointer] < result._indices[col_index])
+                    {
+                        result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
+                        carry++;
+                        col_index++;
+                    }
+                }
+            }
+            // for every other non-zero in the line that has not been added
+            for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
+            {
+                result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
+                carry++;
+            }
+        }
+        result._index_pointers[r] += carry;
+    }
 
     return result;
 }

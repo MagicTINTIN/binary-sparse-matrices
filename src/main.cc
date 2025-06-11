@@ -49,6 +49,9 @@ int main(int argc, char const *argv[])
 
     if (!bcsr_mat.checkOrder())
         printf("ERROR in ordering!\n");
+    
+    BCSR res = bcsr_mat | bcsr_mat2;
+    std::cout << res << "\n";
 
     bcsr_mat |= bcsr_mat2;
     std::cout << bcsr_mat << "\n";
