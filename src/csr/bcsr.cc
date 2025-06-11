@@ -76,10 +76,11 @@ void BCSR::operationOr(const BCSR &b)
         // if the line contains a non zero value.
         if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
         {
-            u_int8_t addedInRow = 0;
+            // u_int8_t lineCarry = 0;
+            u_int32_t col_index = _index_pointers[r - 1];
             u_int32_t b_index_pointer = b._index_pointers[r - 1];
             // for each column check if there is an insertion to do before it
-            for (u_int32_t col_index = _index_pointers[r - 1]; col_index < _index_pointers[r] + carry; col_index++)
+            for (;col_index < _index_pointers[r] + carry; col_index++)
             {
                 // add every non zero indice (column) before this column
                 for (; b._indices[b_index_pointer] <= _indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
@@ -88,7 +89,7 @@ void BCSR::operationOr(const BCSR &b)
                     if (b._indices[b_index_pointer] < _indices[col_index])
                     {
                         _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                        addedInRow++;
+                        // lineCarry++;
                         carry++;
                         col_index++;
                     }
@@ -97,9 +98,9 @@ void BCSR::operationOr(const BCSR &b)
             // for every other non-zero in the line that has not been added
             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
             {
-                _indices.insert(_indices.begin() + _index_pointers[r] + addedInRow, b._indices[b_index_pointer]);
+                _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]); //+ lineCarry
                 carry++;
-                addedInRow++;
+                // lineCarry++;
             }
         }
         _index_pointers[r] += carry;
