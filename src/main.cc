@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
 
     if (!bcsr_mat.checkOrder())
         printf("ERROR in ordering!\n");
-    
+
     BCSR res = bcsr_mat | bcsr_mat2;
     std::cout << res << "\n";
 
@@ -59,5 +59,43 @@ int main(int argc, char const *argv[])
 
     if (!bcsr_mat.checkOrder(true))
         printf("ERROR in ordering!\n");
+
+    printf("###################################################\n");
+
+    u_int8_t bmat3[4 * 3] = {
+        1, 0, 1,
+        0, 0, 0,
+        0, 1, 0,
+        0, 0, 1};
+
+    BCSR bcsr3(4, 3, bmat3);
+    BCSR bcsr3_0(4,3);
+    BCSR bcsr3t =  bcsr3.transpose();
+    std::cout << bcsr3 << "\n" ;
+    std::cout << bcsr3.toDnString() << "\n\n";
+    std::cout << bcsr3t << "\n";
+    std::cout << bcsr3.transpose().toDnString() << std::endl;
+
+
+    printf("###################################################\n");
+
+    u_int8_t bmat4[5 * 8] = {
+        0, 0, 1, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 1,
+        0, 0, 1, 0, 0, 1, 1, 0,
+        0, 1, 0, 1, 0, 1, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0};
+
+    BCSR bcsr4(5, 8, bmat4);
+    BCSR bcsr4t(bcsr4.transpose());
+    BCSR bcsr4tt(bcsr4t.transpose());
+    std::cout << bcsr4 << "\n";
+    std::cout << bcsr4tt << "\n";
+    std::cout << bcsr4.toDnString() << "\n\n";
+    std::cout << bcsr4t.toDnString() << std::endl;
+    // std::cout << bcsr4.toDnString() << "\n\n";
+    // std::cout << bcsr4.transpose().transpose() << "\n";
+    // std::cout << bcsr4.transpose().toDnString() << std::endl;
+
     return 0;
 }

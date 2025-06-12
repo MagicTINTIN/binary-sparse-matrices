@@ -166,12 +166,43 @@ BCSR BCSR::operator|(const BCSR &b) const
 
 BCSR &BCSR::selfTranspose()
 {
-    *this = this->transpose();
+    return *this = this->transpose();
 }
 
 BCSR BCSR::transpose() const
 {
     BCSR result(_width, _height, _index_pointers[_height]);
+
+    // count number of values in each column
+    // std::vector<u_int32_t> col_count(_width + 1, 0); //TODO: remove
+    for (u_int8_t col : _indices)
+    {
+        // col_count[col+1]++;//TODO: remove
+        result._index_pointers[col+1]++;
+    }
+    
+    // calculate cumulative sums
+    for (u_int8_t c = 1; c <= result._height; c++)
+        result._index_pointers[c] += result._index_pointers[c-1];
+
+    for (u_int32_t row = 0; row < _height; row++)
+    {
+        for (u_int32_t col_index = _index_pointers[row]; col_index < _index_pointers[row+1]; col_index++)
+        {
+            //TODO: simplify
+            u_int8_t col = _indices[col_index];
+            u_int8_t dest = result._index_pointers[col];
+            result._indices[dest] = row;
+            result._index_pointers[col]++;
+        }
+    }
+    for (u_int32_t col_idx = result._height; col_idx > 0; col_idx--)
+    {
+        result._index_pointers[col_idx] = result._index_pointers[col_idx-1];
+    }
+    result._index_pointers[0] = 0;
+
+    return result;
 }
 
 void BCSR::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
@@ -256,7 +287,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
 
 BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) //, _nz_number(0)
 {
-    _index_pointers = std::vector<u_int32_t>(height + 1);
+    _index_pointers = std::vector<u_int32_t>(height + 1,0);
     _indices = std::vector<u_int32_t>();
 }
 
@@ -270,8 +301,8 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(heigh
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width)//, _nz_number(nz_number)
 {
-    _index_pointers = std::vector<u_int32_t>(height + 1);
-    _indices = std::vector<u_int32_t>(nz_number);
+    _index_pointers = std::vector<u_int32_t>(height + 1,0);
+    _indices = std::vector<u_int32_t>(nz_number,0);
 }
 // CSR::~CSR()
 // {

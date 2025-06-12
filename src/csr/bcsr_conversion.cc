@@ -40,7 +40,12 @@ std::string BCSR::toString() const
         return std::string("<0;0>");
 
     std::string ret("<");
-    ret += std::to_string(_height) + ";" + std::to_string(_width) + "> (" + std::to_string(_index_pointers[_height]) + " ones / " + std::to_string(_width*_height) + ", sparsity: " + std::to_string((float)100*(_width*_height-_index_pointers[_height])/(_width*_height));
+    ret += std::to_string(_height) + ";" + std::to_string(_width);
+    ret += "> (" + std::to_string(_index_pointers[_height]);
+    ret += " ones / ";
+    ret += std::to_string(_width*_height);
+    ret += ", sparsity: ";
+    ret += std::to_string((float)100*(_width*_height-_index_pointers[_height])/(_width*_height));
 
     ret += "%)\nIndex Pointers (Rows): [" + std::to_string(_index_pointers[0]);
     for (u_int32_t i = 1; i < _height + 1; i++)
