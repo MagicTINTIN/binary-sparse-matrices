@@ -78,17 +78,31 @@ public:
      * @note equivalent to operation+= and operation|=
      */
     void operationOr(const BCSR &b);
-
     /**
      * @note equivalent to operationOr method and operation+=
      */
     BCSR &operator|=(const BCSR &b);
-
     /**
      * @note equivalent to operationOr method and operation|=
      */
     BCSR &operator+=(const BCSR &b);
     BCSR operator|(const BCSR &b) const;
+    BCSR operator+(const BCSR &b) const;
+
+
+    // and operation with matrices
+    /**
+     * @note equivalent to hadamard multiplication
+     */
+    void operationAnd(const BCSR &b);
+    /**
+     * @note equivalent to hadamard multiplication
+     */
+    BCSR operator&(const BCSR &b) const;
+    /**
+     * @note equivalent to hadamard multiplication
+     */
+    BCSR &operator&=(const BCSR &b);
 
 
     /**
@@ -97,7 +111,6 @@ public:
      * @note equivalent to transform it as a CSC
      */
     BCSR &selfTranspose();
-
     /**
      * @note equivalent to transform it as a CSC
      * @returns the transposed matrix

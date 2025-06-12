@@ -164,6 +164,27 @@ BCSR BCSR::operator|(const BCSR &b) const
     return result;
 }
 
+BCSR BCSR::operator+(const BCSR &b) const
+{
+    return operator|(b);
+}
+
+void BCSR::operationAnd(const BCSR &b)
+{
+}
+
+BCSR BCSR::operator&(const BCSR &b) const
+{
+    BCSR result(*this);
+    return result;
+}
+
+BCSR &BCSR::operator&=(const BCSR &b)
+{
+    operationAnd(b);
+    return *this;
+}
+
 BCSR &BCSR::selfTranspose()
 {
     return *this = this->transpose();
