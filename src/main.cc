@@ -97,5 +97,26 @@ int main(int argc, char const *argv[])
     // std::cout << bcsr4.transpose().transpose() << "\n";
     // std::cout << bcsr4.transpose().toDnString() << std::endl;
 
+
+    printf("###################################################\n");
+
+    u_int8_t bmat5[4 * 3] = {
+        1, 0, 1,
+        0, 0, 0,
+        0, 1, 0,
+        0, 0, 1};
+
+    u_int8_t bmat5diff[4 * 3] = {
+        1, 0, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 0, 1};
+
+    BCSR bcsr5(4, 3, bmat3);
+    BCSR bcsr5diff(4,3,bmat5diff);
+    // BCSR bcsr5res = bcsr5 & bcsr5diff;
+    // std::cout << bcsr5res << "\n" ;
+    // std::cout << bcsr5res.toDnString() << "\n\n";
+
     return 0;
 }
