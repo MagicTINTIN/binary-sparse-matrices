@@ -40,7 +40,7 @@ std::string BCSR::toString() const
         return std::string("<0;0>");
 
     std::string ret("<");
-    ret += std::to_string(_height) + ";" + std::to_string(_width) + "> (" + std::to_string(_nz_number) + " ones / " + std::to_string(_width*_height) + ", sparsity: " + std::to_string((float)100*(_width*_height-_nz_number)/(_width*_height));
+    ret += std::to_string(_height) + ";" + std::to_string(_width) + "> (" + std::to_string(_index_pointers[_height]) + " ones / " + std::to_string(_width*_height) + ", sparsity: " + std::to_string((float)100*(_width*_height-_index_pointers[_height])/(_width*_height));
 
     ret += "%)\nIndex Pointers (Rows): [" + std::to_string(_index_pointers[0]);
     for (u_int32_t i = 1; i < _height + 1; i++)
@@ -106,7 +106,7 @@ void BCSR::insertDn2BCSR(u_int8_t values[])
             if (values[row * _width + col])
             {
                 _indices.push_back(col);
-                _nz_number++;
+                // _nz_number++;
                 // printf("adding {%d;%d}\n", row, col);
             }
         }

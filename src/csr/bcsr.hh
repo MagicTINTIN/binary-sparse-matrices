@@ -10,7 +10,7 @@ class BCSR
 {
 private:
     u_int32_t _width, _height;
-    u_int32_t _nz_number;
+    // u_int32_t _nz_number; // equal last value of _index_pointers
     std::vector<u_int32_t> _index_pointers;
     std::vector<u_int32_t> _indices;
 
