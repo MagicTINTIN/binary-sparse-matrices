@@ -71,7 +71,7 @@ void BCSR::operationOr(const BCSR &b)
 
     // for each row after an insertion, propagate the information with the carry
     u_int32_t carry = 0;
-    for (size_t r = 1; r < _index_pointers.size(); r++)
+    for (size_t r = 1; r <= _height; r++)//< _index_pointers.size()
     {
         // if the line contains a non zero value.
         if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
@@ -126,6 +126,7 @@ BCSR BCSR::operator|(const BCSR &b) const
     //     }
     // }
 
+    /*
     u_int32_t carry = 0;
     for (size_t r = 1; r < result._index_pointers.size(); r++)
     {
@@ -160,7 +161,8 @@ BCSR BCSR::operator|(const BCSR &b) const
         }
         result._index_pointers[r] += carry;
     }
-
+    */
+    result.operationOr(b);
     return result;
 }
 
@@ -171,11 +173,17 @@ BCSR BCSR::operator+(const BCSR &b) const
 
 void BCSR::operationAnd(const BCSR &b)
 {
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
 }
 
 BCSR BCSR::operator&(const BCSR &b) const
 {
     BCSR result(*this);
+    result.operationAnd(b);
     return result;
 }
 
@@ -244,7 +252,7 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
 
     bool inserted = false;
     // for each row after the insertion, propagate the information
-    for (size_t r = row + 1; r < _index_pointers.size(); r++)
+    for (size_t r = row + 1; r <= _height; r++) // < _index_pointers.size()
     {
         if (!inserted)
         {
@@ -281,7 +289,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
 
     bool removed = false;
     // for each row after the removal, propagate the information
-    for (size_t r = row + 1; r < _index_pointers.size(); r++)
+    for (size_t r = row + 1; r <= _height; r++) //< _index_pointers.size()
     {
         if (!removed)
         {
