@@ -10,6 +10,7 @@ class BCSR
 {
 private:
     u_int32_t _width, _height;
+    u_int32_t _nz_number;
     std::vector<u_int32_t> _index_pointers;
     std::vector<u_int32_t> _indices;
 
@@ -34,6 +35,14 @@ public:
      * @param values the dense array-like matrix values
      */
     BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]);
+
+    /**
+     * Initialise a BCSR matrix using a dense matrix
+     * @param height the matrix height/rows
+     * @param width the matrix width/columns
+     * @param nz_number number of non zero values (optimisation to prevent too many resizes)
+     */
+    BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number);
 
     /**
      * @returns a dense matrix
@@ -80,6 +89,20 @@ public:
      */
     BCSR &operator+=(const BCSR &b);
     BCSR operator|(const BCSR &b) const;
+
+
+    /**
+     * Will transpose the matrix
+     * @warning it modifies the current matrix!
+     * @note equivalent to transform it as a CSC
+     */
+    BCSR &selfTranspose();
+
+    /**
+     * @note equivalent to transform it as a CSC
+     * @returns the transposed matrix
+     */
+    BCSR transpose() const;
 
     /**
      * Set a value in the matrix

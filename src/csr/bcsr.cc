@@ -23,7 +23,7 @@ bool BCSR::checkOrder(bool verbose) const
             if (row_min_col >= _indices[idx] && !first)
             {
                 if (verbose)
-                    fprintf(stderr, "Line %d (diff %d-%d) columns number are not strictly ordered: %d >= %d!\n", i, i+1, i, row_min_col, _indices[idx]);
+                    fprintf(stderr, "Line %d (diff %d-%d) columns number are not strictly ordered: %d >= %d!\n", i, i + 1, i, row_min_col, _indices[idx]);
                 return false;
             }
             row_min_col = _indices[idx];
@@ -79,7 +79,7 @@ void BCSR::operationOr(const BCSR &b)
             u_int32_t col_index = _index_pointers[r - 1];
             u_int32_t b_index_pointer = b._index_pointers[r - 1];
             // for each column check if there is an insertion to do before it
-            for (;col_index < _index_pointers[r] + carry; col_index++)
+            for (; col_index < _index_pointers[r] + carry; col_index++)
             {
                 // add every non zero indice (column) before this column
                 for (; b._indices[b_index_pointer] <= _indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
@@ -88,6 +88,7 @@ void BCSR::operationOr(const BCSR &b)
                     if (b._indices[b_index_pointer] < _indices[col_index])
                     {
                         _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
+                        _nz_number++;
                         carry++;
                         col_index++;
                     }
@@ -97,6 +98,7 @@ void BCSR::operationOr(const BCSR &b)
             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
             {
                 _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
+                _nz_number++;
                 carry++;
             }
         }
@@ -133,7 +135,7 @@ BCSR BCSR::operator|(const BCSR &b) const
             u_int32_t col_index = result._index_pointers[r - 1];
             u_int32_t b_index_pointer = b._index_pointers[r - 1];
             // for each column check if there is an insertion to do before it
-            for (;col_index < _index_pointers[r] + carry; col_index++)
+            for (; col_index < _index_pointers[r] + carry; col_index++)
             {
                 // add every non zero indice (column) before this column
                 for (; b._indices[b_index_pointer] <= result._indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
@@ -142,6 +144,7 @@ BCSR BCSR::operator|(const BCSR &b) const
                     if (b._indices[b_index_pointer] < result._indices[col_index])
                     {
                         result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
+                        result._nz_number++;
                         carry++;
                         col_index++;
                     }
@@ -151,6 +154,7 @@ BCSR BCSR::operator|(const BCSR &b) const
             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
             {
                 result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
+                result._nz_number++;
                 carry++;
             }
         }
@@ -158,6 +162,16 @@ BCSR BCSR::operator|(const BCSR &b) const
     }
 
     return result;
+}
+
+BCSR &BCSR::selfTranspose()
+{
+    *this = this->transpose();
+}
+
+BCSR BCSR::transpose() const
+{
+    BCSR result(_width, _height, _nz_number);
 }
 
 void BCSR::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
@@ -187,6 +201,7 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
                 if (col < _indices[i])
                 {
                     _indices.insert(_indices.begin() + i, col);
+                    _nz_number++;
                     inserted = true;
                 }
                 // if the value was already 1, then there is no change
@@ -196,6 +211,7 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
             if (!inserted)
             {
                 _indices.insert(_indices.begin() + _index_pointers[r], col);
+                _nz_number++;
                 inserted = true;
             }
         }
@@ -222,6 +238,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
                 if (col == _indices[i])
                 {
                     _indices.erase(_indices.begin() + i);
+                    _nz_number--;
                     removed = true;
                     // the column has been deleted, there is nothing more to check, if we wanted to, think to add i--;
                     break;
@@ -237,7 +254,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
-BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
+BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width), _nz_number(0)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
@@ -245,9 +262,16 @@ BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
+    _nz_number = 0;
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
     insertDn2BCSR(values);
+}
+
+BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width), _nz_number(nz_number)
+{
+    _index_pointers = std::vector<u_int32_t>(height + 1);
+    _indices = std::vector<u_int32_t>(nz_number);
 }
 // CSR::~CSR()
 // {
