@@ -105,8 +105,8 @@ public:
     /**
      * @note not fully implemented, only for square matrices
      */
-    void operationTimesMatrix(const BCSR &b);
-    void operationTimesSquareMatrix(const BCSR &b);
+    BCSR operationTimesMatrix(const BCSR &b) const;
+    // BCSR operationTimesSquareMatrix(const BCSR &b) const;
     /**
      * @note not fully implemented, only for square matrices
      */

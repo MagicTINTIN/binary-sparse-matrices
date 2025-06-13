@@ -184,7 +184,8 @@ void BCSR::operationAnd(const BCSR &b)
     for (size_t r = 1; r <= _height; r++)
     {
         if (_index_pointers[r] - _index_pointers[r - 1] == 0)
-        {}
+        {
+        }
         // if the line pf b contains a non zero value.
         else if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
         {
@@ -214,7 +215,7 @@ void BCSR::operationAnd(const BCSR &b)
             }
         }
         // if we still have non-zeros left on this line, then remove all of them
-        else// if (_index_pointers[r] - _index_pointers[r - 1] > 0) non necessary now
+        else // if (_index_pointers[r] - _index_pointers[r - 1] > 0) non necessary now
         {
             for (size_t idx_ptr = _index_pointers[r - 1]; idx_ptr < _index_pointers[r] - carry; idx_ptr++)
             {
@@ -240,7 +241,7 @@ BCSR &BCSR::operator&=(const BCSR &b)
     return *this;
 }
 
-void BCSR::operationTimesMatrix(const BCSR &b)
+BCSR BCSR::operationTimesMatrix(const BCSR &b) const
 {
     if (b._height != _width)
     {
@@ -249,49 +250,70 @@ void BCSR::operationTimesMatrix(const BCSR &b)
     }
 
     // if square matrices
-    if (b._width == _width && b._height != _height)
+    // if (b._width == _width && b._height != _height)
+    // {
+    //     operationTimesMatrix(b);
+    // }
+
+    // TODO:
+    // fprintf(stderr, "Times operation with not square matrix is not implemented yet!\n");
+    BCSR result(_height, b._width), bT(b.transpose());
+    u_int32_t non_zero_count = 0;
+    for (size_t rowA = 1; rowA <= _height; rowA++)
     {
-        operationTimesMatrix(b);
+        // if a line only contains zeros, then the output line will only contains 0 too (skip n useless check loops)
+        if (_index_pointers[rowA] - _index_pointers[rowA - 1] > 0)
+        {
+            for (size_t rowB = 1; rowB <= bT._height; rowB++)
+            {
+                // will skip the row if B current row is empty
+                u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB - 1]);
+                // for (; colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB];)
+                // {
+                // }
+                while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB])
+                {
+                    if (_indices[colA_ptr] < bT._indices[colB_ptr])
+                        colA_ptr++;
+                    else if (_indices[colA_ptr] > bT._indices[colB_ptr])
+                        colB_ptr++;
+                    else {
+                        result._indices.push_back(rowB - 1);
+                        non_zero_count++;
+                        break; // if we have a 1 then we know it will be there
+                    }
+                }
+            }
+        }
+        result._index_pointers[rowA] = non_zero_count;
     }
 
-    // TODO: 
-    fprintf(stderr, "Times operation with not square matrix is not implemented yet!\n");
+    return result;
 }
 
-void BCSR::operationTimesSquareMatrix(const BCSR &b)
-{
-    if (!(_width == b._height && b._width == _width && b._height != _height))
-    {
-        fprintf(stderr, "Error: dimensions does not match in operationSquareTimesMatrix, all dimensions should be equal in a<%d;%d> and b<%d;%d>\n", _height, _width, b._height, b._width);
-        exit(EXIT_FAILURE);
-    }
-}
+// BCSR BCSR::operationTimesSquareMatrix(const BCSR &b) const
+// {
+//     if (!(_width == b._height && b._width == _width && b._height != _height))
+//     {
+//         fprintf(stderr, "Error: dimensions does not match in operationSquareTimesMatrix, all dimensions should be equal in a<%d;%d> and b<%d;%d>\n", _height, _width, b._height, b._width);
+//         exit(EXIT_FAILURE);
+//     }
+// }
 
 BCSR BCSR::operator*(const BCSR &b) const
 {
-    // FIXME:
-    BCSR result(*this);
-    result.operationTimesSquareMatrix(b);
-    return result;
+    return operationTimesMatrix(b);
 }
 
 BCSR &BCSR::operator*=(const BCSR &b)
 {
-    // TODO: insert return statement here
-    operationTimesMatrix(b);
+    *this = operationTimesMatrix(b);
     return *this;
-}
-
-BCSR BCSR::operator&(const BCSR &b) const
-{
-    BCSR result(*this);
-    result.operationTimesMatrix(b);
-    return result;
 }
 
 BCSR &BCSR::selfTranspose()
 {
-    return *this = this->transpose();
+    return *this = transpose();
 }
 
 BCSR BCSR::transpose() const
