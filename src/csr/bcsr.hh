@@ -54,6 +54,14 @@ public:
      */
     std::string toString() const;
     /**
+     * Convert the BCSR matrix to a printable condensed string
+     */
+    std::string toCondensedString() const;
+    /**
+     * Convert the BCSR matrix to a printable condensed string
+     */
+    std::string toCondensedString(char const separator) const;
+    /**
      * Convert the BCSR matrix in dense form to a printable string
      */
     std::string toDnString() const;
@@ -106,7 +114,6 @@ public:
      * @note not fully implemented, only for square matrices
      */
     BCSR operationTimesMatrix(const BCSR &b) const;
-    // BCSR operationTimesSquareMatrix(const BCSR &b) const;
     /**
      * @note not fully implemented, only for square matrices
      */
@@ -191,5 +198,16 @@ void scipy_tocsc(const int n_row,
                  int Bi[] //,
                           //  char Bx[]
 );
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const int Mp[],
+                        const int Mj[]);
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const int Mp[],
+                        const int Mj[],
+                        const char separator);
 
 #endif // BCSR_HH

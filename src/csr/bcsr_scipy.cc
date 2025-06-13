@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <sstream>
+
 void scipy_tocsc(const int n_row,
                  const int n_col,
                  const int Ap[],
@@ -12,7 +14,7 @@ void scipy_tocsc(const int n_row,
                  //    const char Ax[],
                  int Bp[],
                  int Bi[] //,
-                 //  char Bx[]
+                          //  char Bx[]
 )
 {
     const int nnz = Ap[n_row];
@@ -189,4 +191,43 @@ void scipy_csr_matmat_binary(const int n_row,
 
         Cp[i + 1] = nnz;
     }
+}
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const int Mp[],
+                        const int Mj[],
+                        const char separator)
+{
+    if (n_row == 0)
+        return "[0]\n[]";
+
+    std::ostringstream oss;
+    oss << "[";
+
+    for (size_t i = 0; i <= n_row; ++i)
+    {
+        if (i)
+            oss << "|";
+        oss << Mp[i];
+    }
+
+    oss << "]\n[";
+    for (size_t i = 0; i < n_nz; ++i)
+    {
+        if (i)
+            oss << "|";
+        oss << Mj[i];
+    }
+    oss << "]";
+
+    return oss.str();
+}
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const int Mp[],
+                        const int Mj[])
+{
+    return scipy_tostr(n_row, n_nz, Mp, Mj, '|');
 }

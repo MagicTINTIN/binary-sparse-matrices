@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 std::ostream &operator<<(
     std::ostream &stream,
@@ -36,27 +37,59 @@ std::vector<u_int8_t> BCSR::toDenseMatrix() const
 
 std::string BCSR::toString() const
 {
-    if (_width == 0 || _height == 0)
-        return std::string("<0;0>");
+    if (_width == 0 || _height == 0) 
+        return "<0;0>";
 
-    std::string ret("<");
-    ret += std::to_string(_height) + ";" + std::to_string(_width);
-    ret += "> (" + std::to_string(_index_pointers[_height]);
-    ret += " ones / ";
-    ret += std::to_string(_width*_height);
-    ret += ", sparsity: ";
-    ret += std::to_string((float)100*(_width*_height-_index_pointers[_height])/(_width*_height));
+    std::ostringstream oss;
+    oss << "<" << _height << ";" << _width << "> ("
+        << _index_pointers[_height] << " ones / "
+        << (_width * _height)
+        << ", sparsity: "
+        << float(100.0 * (_width*_height - _index_pointers[_height]) 
+                 / (_width*_height))
+        << "%)\nIndex Pointers (Rows): [";
 
-    ret += "%)\nIndex Pointers (Rows): [" + std::to_string(_index_pointers[0]);
-    for (u_int32_t i = 1; i < _height + 1; i++)
-        ret += "|" + std::to_string(_index_pointers[i]);
-    ret += "]\nIndices (Columns): [";
-    if (_indices.size() > 0)
-        ret += std::to_string(_indices[0]);
-    for (u_int32_t i = 1; i < _indices.size(); i++)
-        ret += "|" + std::to_string(_indices[i]);
-    ret += "]";
-    return ret;
+    for (size_t i = 0; i <= _height; ++i) {
+        if (i) oss << "|";
+        oss << _index_pointers[i];
+    }
+
+    oss << "]\nIndices (Columns): [";
+    for (size_t i = 0; i < _indices.size(); ++i) {
+        if (i) oss << "|";
+        oss << _indices[i];
+    }
+    oss << "]";
+
+    return oss.str();
+}
+
+std::string BCSR::toCondensedString() const
+{
+    return toCondensedString('|');
+}
+
+std::string BCSR::toCondensedString(char const separator) const
+{
+    if (_width == 0 || _height == 0) 
+        return "[0]\n[0]";
+
+    std::ostringstream oss;
+    oss << "[";
+
+    for (size_t i = 0; i <= _height; ++i) {
+        if (i) oss << separator;
+        oss << _index_pointers[i];
+    }
+
+    oss << "]\n[";
+    for (size_t i = 0; i < _indices.size(); ++i) {
+        if (i) oss << separator;
+        oss << _indices[i];
+    }
+    oss << "]";
+
+    return oss.str();
 }
 
 std::string BCSR::toDnString() const

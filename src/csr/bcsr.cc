@@ -249,14 +249,6 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
         exit(EXIT_FAILURE);
     }
 
-    // if square matrices
-    // if (b._width == _width && b._height != _height)
-    // {
-    //     operationTimesMatrix(b);
-    // }
-
-    // TODO:
-    // fprintf(stderr, "Times operation with not square matrix is not implemented yet!\n");
     BCSR result(_height, b._width), bT(b.transpose());
     u_int32_t non_zero_count = 0;
     for (size_t rowA = 1; rowA <= _height; rowA++)
@@ -268,9 +260,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
             {
                 // will skip the row if B current row is empty
                 u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB - 1]);
-                // for (; colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB];)
-                // {
-                // }
+                
                 while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB])
                 {
                     if (_indices[colA_ptr] < bT._indices[colB_ptr])
@@ -291,15 +281,6 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
     return result;
 }
 
-// BCSR BCSR::operationTimesSquareMatrix(const BCSR &b) const
-// {
-//     if (!(_width == b._height && b._width == _width && b._height != _height))
-//     {
-//         fprintf(stderr, "Error: dimensions does not match in operationSquareTimesMatrix, all dimensions should be equal in a<%d;%d> and b<%d;%d>\n", _height, _width, b._height, b._width);
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
 BCSR BCSR::operator*(const BCSR &b) const
 {
     return operationTimesMatrix(b);
@@ -311,6 +292,9 @@ BCSR &BCSR::operator*=(const BCSR &b)
     return *this;
 }
 
+
+
+
 BCSR &BCSR::selfTranspose()
 {
     return *this = transpose();
@@ -321,10 +305,8 @@ BCSR BCSR::transpose() const
     BCSR result(_width, _height, _index_pointers[_height]);
 
     // count number of values in each column
-    // std::vector<u_int32_t> col_count(_width + 1, 0); //TODO: remove
     for (u_int8_t col : _indices)
     {
-        // col_count[col+1]++;//TODO: remove
         result._index_pointers[col + 1]++;
     }
 
@@ -351,6 +333,9 @@ BCSR BCSR::transpose() const
 
     return result;
 }
+
+
+
 
 void BCSR::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
 {

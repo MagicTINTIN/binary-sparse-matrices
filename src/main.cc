@@ -76,7 +76,7 @@ int main(int argc, char const *argv[])
     std::cout << bcsr3t << "\n";
     std::cout << bcsr3.transpose().toDnString() << std::endl;
 
-    printf("###################################################\n");
+    printf("###################################################\n- 4 -\n");
 
     u_int8_t bmat4[5 * 8] = {
         0, 0, 1, 0, 0, 0, 0, 1,
@@ -89,12 +89,22 @@ int main(int argc, char const *argv[])
     BCSR bcsr4t(bcsr4.transpose());
     BCSR bcsr4tt(bcsr4t.transpose());
     std::cout << bcsr4 << "\n";
-    std::cout << bcsr4tt << "\n";
+    std::cout << bcsr4t.toCondensedString(',') << "\n";
+    std::cout << bcsr4tt.toCondensedString('|') << "\n";
     std::cout << bcsr4.toDnString() << "\n\n";
     std::cout << bcsr4t.toDnString() << std::endl;
     // std::cout << bcsr4.toDnString() << "\n\n";
     // std::cout << bcsr4.transpose().transpose() << "\n";
     // std::cout << bcsr4.transpose().toDnString() << std::endl;
+
+
+    int A4_p[6] = {0,2,4,7,10,10};
+    int A4_j[10] = {2,7,0,7,2,5,6,1,3,5};
+    int R4_p[9] = {0};
+    int R4_j[10] = {0};
+    scipy_tocsc(5,8,A4_p,A4_j,R4_p,R4_j);
+
+    std::cout << "Scipy:\n" << scipy_tostr(8, 10, R4_p, R4_j) << "\n";
 
     printf("###################################################\n");
 
@@ -133,12 +143,68 @@ int main(int argc, char const *argv[])
         0, 0, 0, 0, 0, 0,
         1, 1, 1, 1, 1, 0,
         0, 1, 0, 0, 1, 0};
-    
+
     BCSR bcsr6(7, 6, bmat6), bcsr6bis(7, 6, bmat6bis);
-    std::cout << bcsr6 << "\n" << bcsr6.toDnString() << "\n";
-    std::cout << bcsr6bis << "\n" << bcsr6bis.toDnString() << "\n";
+    std::cout << bcsr6 << "\n"
+              << bcsr6.toDnString() << "\n";
+    std::cout << bcsr6bis << "\n"
+              << bcsr6bis.toDnString() << "\n";
     bcsr6 &= bcsr6bis;
-    std::cout << bcsr6 << "\n" << bcsr6.toDnString() << "\n";
+    std::cout << bcsr6 << "\n"
+              << bcsr6.toDnString() << "\n";
+
+    printf("###################################################\n");
+
+    u_int8_t bmat7[4 * 4] = {
+        1, 0, 1, 1,
+        1, 0, 1, 0,
+        0, 0, 0, 0,
+        1, 1, 0, 0};
+
+    u_int8_t bmat7bis[4 * 4] = {
+        0, 1, 1, 0,
+        1, 0, 1, 0,
+        1, 1, 0, 0,
+        1, 0, 1, 0};
+
+    BCSR bcsr7(4, 4, bmat7), bcsr7bis(4, 4, bmat7bis);
+
+    std::cout << bcsr7 << "\n"
+              << bcsr7bis << "\n";
+    BCSR bcsr7res(bcsr7 * bcsr7bis);
+    std::cout << bcsr7res << "\n"
+              << bcsr7res.toDnString() << "\n";
+
+    u_int8_t bmat8[4 * 5] = {
+        1, 0, 1, 1, 1,
+        0, 0, 0, 1, 0,
+        0, 0, 0, 0, 0,
+        1, 1, 0, 0, 0};
+
+    u_int8_t bmat8bis[5 * 4] = {
+        0, 1, 1, 0,
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+        0, 0, 1, 0,
+        1, 0, 0, 1};
+
+    BCSR bcsr8(4, 5, bmat8), bcsr8bis(5, 4, bmat8bis);
+
+    std::cout << bcsr8.toCondensedString(',') << "\n"
+              << bcsr8bis.toCondensedString(',') << "\n";
+    BCSR bcsr8res(bcsr8 * bcsr8bis);
+    std::cout << bcsr8res.toCondensedString() << "\n";
+    // std::cout << bcsr8res.toDnString() << "\n";
+
+    int A8_p[5] = {0, 4, 5, 5, 7};
+    int A8_j[7] = {0, 2, 3, 4, 3, 0, 1};
+    int B8_p[6] = {0, 2, 3, 4, 5, 7};
+    int B8_j[7] = {1, 2, 0, 0, 2, 0, 3};
+    int R8_p[10] = {0};
+    int R8_j[10] = {0};
+
+    scipy_csr_matmat_binary(4, 4, A8_p, A8_j, B8_p, B8_j, R8_p, R8_j);
+    std::cout << "Scipy:\n" << scipy_tostr(4, 8, R8_p, R8_j) << "\n";
 
     return 0;
 }
