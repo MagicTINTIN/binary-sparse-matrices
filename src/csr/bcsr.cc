@@ -321,6 +321,8 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
                     _indices.insert(_indices.begin() + i, col);
                     // _nz_number++;
                     inserted = true;
+                    // TODO://
+                    break;
                 }
                 // if the value was already 1, then there is no change
                 else if (col == _indices[i])
