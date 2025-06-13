@@ -69,13 +69,12 @@ int main(int argc, char const *argv[])
         0, 0, 1};
 
     BCSR bcsr3(4, 3, bmat3);
-    BCSR bcsr3_0(4,3);
-    BCSR bcsr3t =  bcsr3.transpose();
-    std::cout << bcsr3 << "\n" ;
+    BCSR bcsr3_0(4, 3);
+    BCSR bcsr3t = bcsr3.transpose();
+    std::cout << bcsr3 << "\n";
     std::cout << bcsr3.toDnString() << "\n\n";
     std::cout << bcsr3t << "\n";
     std::cout << bcsr3.transpose().toDnString() << std::endl;
-
 
     printf("###################################################\n");
 
@@ -97,7 +96,6 @@ int main(int argc, char const *argv[])
     // std::cout << bcsr4.transpose().transpose() << "\n";
     // std::cout << bcsr4.transpose().toDnString() << std::endl;
 
-
     printf("###################################################\n");
 
     u_int8_t bmat5[4 * 3] = {
@@ -107,16 +105,40 @@ int main(int argc, char const *argv[])
         0, 0, 1};
 
     u_int8_t bmat5diff[4 * 3] = {
-        1, 0, 0,
-        0, 1, 0,
-        0, 1, 0,
-        0, 0, 1};
+        0, 0, 0,
+        0, 1, 1,
+        1, 1, 0,
+        0, 0, 0};
 
     BCSR bcsr5(4, 3, bmat3);
-    BCSR bcsr5diff(4,3,bmat5diff);
-    // BCSR bcsr5res = bcsr5 & bcsr5diff;
-    // std::cout << bcsr5res << "\n" ;
-    // std::cout << bcsr5res.toDnString() << "\n\n";
+    BCSR bcsr5diff(4, 3, bmat5diff);
+    BCSR bcsr5res = bcsr5 & bcsr5diff;
+    std::cout << bcsr5res << "\n";
+    std::cout << bcsr5res.toDnString() << "\n\n";
+
+    u_int8_t bmat6[7 * 6] = {
+        1, 0, 0, 1, 0, 1,
+        0, 0, 0, 0, 1, 0,
+        0, 1, 1, 0, 0, 0,
+        1, 1, 0, 0, 0, 0,
+        0, 1, 0, 1, 0, 1,
+        0, 1, 0, 1, 1, 0,
+        0, 0, 1, 0, 0, 1};
+
+    u_int8_t bmat6bis[7 * 6] = {
+        0, 1, 0, 0, 0, 1,
+        0, 0, 0, 1, 0, 1,
+        1, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 0,
+        0, 1, 0, 0, 1, 0};
+    
+    BCSR bcsr6(7, 6, bmat6), bcsr6bis(7, 6, bmat6bis);
+    std::cout << bcsr6 << "\n" << bcsr6.toDnString() << "\n";
+    std::cout << bcsr6bis << "\n" << bcsr6bis.toDnString() << "\n";
+    bcsr6 &= bcsr6bis;
+    std::cout << bcsr6 << "\n" << bcsr6.toDnString() << "\n";
 
     return 0;
 }

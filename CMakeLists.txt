@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(demo)
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+# add_compile_options(-fsanitize=address)
+# add_link_options(-fsanitize=address)
 
 # Adding sources
 set(SOURCES
