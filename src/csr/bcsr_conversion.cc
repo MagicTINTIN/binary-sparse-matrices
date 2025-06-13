@@ -19,7 +19,7 @@ std::ostream &operator<<(
     return std::operator<<(stream, matrix.toString());
 }
 
-std::vector<u_int8_t> BCSR::toDenseVector() const
+std::vector<u_int8_t> BCSR::toDenseMatrix() const
 {
     std::vector<u_int8_t> mat(_width * _height);
 
@@ -74,7 +74,7 @@ std::string BCSR::toDnString() const
     }
 
     std::string ret("[");
-    std::vector<u_int8_t> m = toDenseVector();
+    std::vector<u_int8_t> m = toDenseMatrix();
     for (size_t line = 0; line < _height; line++)
     {
         if (line == 0)

@@ -48,7 +48,7 @@ public:
     /**
      * @returns a dense matrix
      */
-    std::vector<u_int8_t> toDenseVector() const;
+    std::vector<u_int8_t> toDenseMatrix() const;
     /**
      * Convert the BCSR matrix to a printable string
      */
@@ -159,5 +159,37 @@ public:
 
 std::ostream &operator<<(std::ostream &stream, BCSR &matrix);
 std::ostream &operator<<(std::ostream &stream, const BCSR &matrix);
+
+// Scipy comparison
+void scipy_csr_matmat_binary(const int n_row,
+                             const int n_col,
+                             const int Ap[],
+                             const int Aj[],
+                             const int Bp[],
+                             const int Bj[],
+                             int Cp[],
+                             int Cj[]);
+
+void scipy_csr_matmat(const int n_row,
+                      const int n_col,
+                      const int Ap[],
+                      const int Aj[],
+                      const char Ax[],
+                      const int Bp[],
+                      const int Bj[],
+                      const char Bx[],
+                      int Cp[],
+                      int Cj[],
+                      char Cx[]);
+
+void scipy_tocsc(const int n_row,
+                 const int n_col,
+                 const int Ap[],
+                 const int Aj[],
+                 //    const char Ax[],
+                 int Bp[],
+                 int Bi[] //,
+                          //  char Bx[]
+);
 
 #endif // BCSR_HH

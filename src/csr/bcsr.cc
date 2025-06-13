@@ -251,7 +251,7 @@ void BCSR::operationTimesMatrix(const BCSR &b)
     // if square matrices
     if (b._width == _width && b._height != _height)
     {
-        operationTimesSquareMatrix(b);
+        operationTimesMatrix(b);
     }
 
     // TODO: 
@@ -267,10 +267,18 @@ void BCSR::operationTimesSquareMatrix(const BCSR &b)
     }
 }
 
+BCSR BCSR::operator*(const BCSR &b) const
+{
+    // FIXME:
+    BCSR result(*this);
+    result.operationTimesSquareMatrix(b);
+    return result;
+}
+
 BCSR &BCSR::operator*=(const BCSR &b)
 {
     // TODO: insert return statement here
-    operationAnd(b);
+    operationTimesMatrix(b);
     return *this;
 }
 
