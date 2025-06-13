@@ -44,21 +44,19 @@ public:
      */
     BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number);
 
+    // ######### Conversions to dense and string #########
     /**
      * @returns a dense matrix
      */
     std::vector<u_int8_t> toDenseVector() const;
-
     /**
      * Convert the BCSR matrix to a printable string
      */
     std::string toString() const;
-
     /**
      * Convert the BCSR matrix in dense form to a printable string
      */
     std::string toDnString() const;
-
     /**
      * check ordering of the indices
      * TODO: remove ?
@@ -73,7 +71,7 @@ public:
      */
     bool checkOrder(bool verbose) const;
 
-    // or operation with matrices
+    // ######### OR operation with matrices #########
     /**
      * @note equivalent to operation+= and operation|=
      */
@@ -89,8 +87,7 @@ public:
     BCSR operator|(const BCSR &b) const;
     BCSR operator+(const BCSR &b) const;
 
-
-    // and operation with matrices
+    // ######### AND operation with matrices #########
     /**
      * @note equivalent to hadamard multiplication
      */
@@ -104,7 +101,22 @@ public:
      */
     BCSR &operator&=(const BCSR &b);
 
+    // ######### MULTIPLY operation with matrice matrice #########
+    /**
+     * @note not fully implemented, only for square matrices
+     */
+    void operationTimesMatrix(const BCSR &b);
+    void operationTimesSquareMatrix(const BCSR &b);
+    /**
+     * @note not fully implemented, only for square matrices
+     */
+    BCSR operator*(const BCSR &b) const;
+    /**
+     * @note not fully implemented, only for square matrices
+     */
+    BCSR &operator*=(const BCSR &b);
 
+    // ######### TRANSPOSITION operation #########
     /**
      * Will transpose the matrix
      * @warning it modifies the current matrix!
@@ -117,6 +129,7 @@ public:
      */
     BCSR transpose() const;
 
+    // ######### SET RESET VALUE #########
     /**
      * Set a value in the matrix
      * @param row of the value
@@ -125,7 +138,6 @@ public:
      * @warning this can be a costly operation
      */
     void set(const u_int32_t row, const u_int32_t col, const u_int8_t value);
-
     /**
      * Set the value at (row,col) to 1 in the matrix
      * @param row of the value
@@ -133,7 +145,6 @@ public:
      * @warning this can be a costly operation
      */
     void set(const u_int32_t row, const u_int32_t col);
-
     /**
      * Set the value at (row,col) to 0 in the matrix
      * @param row of the value
@@ -141,6 +152,8 @@ public:
      * @warning this can be a costly operation
      */
     void reset(const u_int32_t row, const u_int32_t col);
+
+    // Not needed for the moment
     // ~BCSR();
 };
 
