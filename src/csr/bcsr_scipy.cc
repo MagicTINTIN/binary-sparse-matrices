@@ -75,11 +75,11 @@ void my_scipy_tocsc(const u_int32_t n_row,
 
     for (u_int32_t n = 0; n < nnz; n++)
     {
-        Bp[Aj[n]]++;
+        Bp[Aj[n]+1]++;
     }
 
     // cumsum the nnz per column to get Bp[]
-    for (u_int32_t col = 1, prevSum = 0; col <= n_col; col++)
+    for (u_int32_t col = 1, prevSum = Bp[0]; col <= n_col; col++)
     {
         prevSum += Bp[col];
         Bp[col] = prevSum;
