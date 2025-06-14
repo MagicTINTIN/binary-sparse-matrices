@@ -1,11 +1,25 @@
 #!/usr/bin/env python3
 import random
+import sys
 
 def main():
-    height = int(input("Matrix height: "))
-    width = int(input("Matrix width: "))
-    p = float(input("1-value probability : "))
-    oneliner = input("one-liner (-/no) : ")
+    height = 0
+    height = 0
+    p = 0.
+    oneliner = ""
+    if len(sys.argv) > 1:
+        if len(sys.argv) != 4: #sys.argv[1] == "-h" or sys.argv[1] == "--help" or 
+            print(f"You can use params like this: {sys.argv[0]} <height> <width> <proba>")
+            exit(0)
+        else:
+            height = int(sys.argv[1])
+            width = int(sys.argv[2])
+            p = float(sys.argv[3])
+    else:
+        height = int(input("Matrix height: "))
+        width = int(input("Matrix width: "))
+        p = float(input("1-value probability : "))
+        oneliner = input("one-liner (-/no) : ")
 
     data = [
         1 if random.random() < p else 0
