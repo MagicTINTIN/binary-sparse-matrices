@@ -7,41 +7,41 @@
 #include <algorithm>
 #include <sstream>
 
-void scipy_tocsc(const int n_row,
-                 const int n_col,
-                 const int Ap[],
-                 const int Aj[],
+void scipy_tocsc(const u_int32_t n_row,
+                 const u_int32_t n_col,
+                 const u_int32_t Ap[],
+                 const u_int32_t Aj[],
                  //    const char Ax[],
-                 int Bp[],
-                 int Bi[] //,
+                 u_int32_t Bp[],
+                 u_int32_t Bi[] //,
                           //  char Bx[]
 )
 {
-    const int nnz = Ap[n_row];
+    const u_int32_t nnz = Ap[n_row];
 
     // compute number of non-zero entries per column of A
     std::fill(Bp, Bp + n_col, 0);
 
-    for (int n = 0; n < nnz; n++)
+    for (u_int32_t n = 0; n < nnz; n++)
     {
         Bp[Aj[n]]++;
     }
 
     // cumsum the nnz per column to get Bp[]
-    for (int col = 0, cumsum = 0; col < n_col; col++)
+    for (u_int32_t col = 0, cumsum = 0; col < n_col; col++)
     {
-        int temp = Bp[col];
+        u_int32_t temp = Bp[col];
         Bp[col] = cumsum;
         cumsum += temp;
     }
     Bp[n_col] = nnz;
 
-    for (int row = 0; row < n_row; row++)
+    for (u_int32_t row = 0; row < n_row; row++)
     {
-        for (int jj = Ap[row]; jj < Ap[row + 1]; jj++)
+        for (u_int32_t jj = Ap[row]; jj < Ap[row + 1]; jj++)
         {
-            int col = Aj[jj];
-            int dest = Bp[col];
+            u_int32_t col = Aj[jj];
+            u_int32_t dest = Bp[col];
 
             Bi[dest] = row;
             // Bx[dest] = Ax[jj];
@@ -50,50 +50,99 @@ void scipy_tocsc(const int n_row,
         }
     }
 
-    for (int col = 0, last = 0; col <= n_col; col++)
+    for (u_int32_t col = 0, last = 0; col <= n_col; col++)
     {
-        int temp = Bp[col];
+        u_int32_t temp = Bp[col];
         Bp[col] = last;
         last = temp;
     }
 }
 
-void scipy_csr_matmat(const int n_row,
-                      const int n_col,
-                      const int Ap[],
-                      const int Aj[],
+void my_scipy_tocsc(const u_int32_t n_row,
+                 const u_int32_t n_col,
+                 const u_int32_t Ap[],
+                 const u_int32_t Aj[],
+                 //    const char Ax[],
+                 u_int32_t Bp[],
+                 u_int32_t Bi[] //,
+                          //  char Bx[]
+)
+{
+    const u_int32_t nnz = Ap[n_row];
+
+    // compute number of non-zero entries per column of A
+    std::fill(Bp, Bp + n_col, 0);
+
+    for (u_int32_t n = 0; n < nnz; n++)
+    {
+        Bp[Aj[n]]++;
+    }
+
+    // cumsum the nnz per column to get Bp[]
+    for (u_int32_t col = 1, prevSum = 0; col <= n_col; col++)
+    {
+        prevSum += Bp[col];
+        Bp[col] = prevSum;
+    }
+    Bp[n_col] = nnz;
+
+    for (u_int32_t row = 0; row < n_row; row++)
+    {
+        for (u_int32_t jj = Ap[row]; jj < Ap[row + 1]; jj++)
+        {
+            u_int32_t col = Aj[jj];
+            u_int32_t dest = Bp[col];
+
+            Bi[dest] = row;
+            // Bx[dest] = Ax[jj];
+
+            Bp[col]++;
+        }
+    }
+
+    for (u_int32_t col = n_col; col > 0; col--)
+    {
+        Bp[col] = Bp[col - 1];
+    }
+    Bp[0] = 0;
+}
+
+void scipy_csr_matmat(const u_int32_t n_row,
+                      const u_int32_t n_col,
+                      const u_int32_t Ap[],
+                      const u_int32_t Aj[],
                       const char Ax[],
-                      const int Bp[],
-                      const int Bj[],
+                      const u_int32_t Bp[],
+                      const u_int32_t Bj[],
                       const char Bx[],
-                      int Cp[],
-                      int Cj[],
+                      u_int32_t Cp[],
+                      u_int32_t Cj[],
                       char Cx[])
 {
-    std::vector<int> next(n_col, -1);
+    std::vector<u_int32_t> next(n_col, -1);
     std::vector<char> sums(n_col, 0);
 
-    int nnz = 0;
+    u_int32_t nnz = 0;
 
     Cp[0] = 0;
 
-    for (int i = 0; i < n_row; i++)
+    for (u_int32_t i = 0; i < n_row; i++)
     {
-        int head = -2;
-        int length = 0;
+        u_int32_t head = -2;
+        u_int32_t length = 0;
 
-        int jj_start = Ap[i];
-        int jj_end = Ap[i + 1];
-        for (int jj = jj_start; jj < jj_end; jj++)
+        u_int32_t jj_start = Ap[i];
+        u_int32_t jj_end = Ap[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
-            int j = Aj[jj];
+            u_int32_t j = Aj[jj];
             char v = Ax[jj];
 
-            int kk_start = Bp[j];
-            int kk_end = Bp[j + 1];
-            for (int kk = kk_start; kk < kk_end; kk++)
+            u_int32_t kk_start = Bp[j];
+            u_int32_t kk_end = Bp[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
             {
-                int k = Bj[kk];
+                u_int32_t k = Bj[kk];
 
                 sums[k] += v * Bx[kk];
 
@@ -106,7 +155,7 @@ void scipy_csr_matmat(const int n_row,
             }
         }
 
-        for (int jj = 0; jj < length; jj++)
+        for (u_int32_t jj = 0; jj < length; jj++)
         {
 
             if (sums[head] != 0)
@@ -116,7 +165,7 @@ void scipy_csr_matmat(const int n_row,
                 nnz++;
             }
 
-            int temp = head;
+            u_int32_t temp = head;
             head = next[head];
 
             next[temp] = -1; // clear arrays
@@ -127,39 +176,39 @@ void scipy_csr_matmat(const int n_row,
     }
 }
 
-void scipy_csr_matmat_binary(const int n_row,
-                             const int n_col,
-                             const int Ap[],
-                             const int Aj[],
-                             const int Bp[],
-                             const int Bj[],
-                             int Cp[],
-                             int Cj[])
+void scipy_csr_matmat_binary(const u_int32_t n_row,
+                             const u_int32_t n_col,
+                             const u_int32_t Ap[],
+                             const u_int32_t Aj[],
+                             const u_int32_t Bp[],
+                             const u_int32_t Bj[],
+                             u_int32_t Cp[],
+                             u_int32_t Cj[])
 {
-    std::vector<int> next(n_col, -1);
+    std::vector<u_int32_t> next(n_col, -1);
     std::vector<char> sums(n_col, 0);
 
-    int nnz = 0;
+    u_int32_t nnz = 0;
 
     Cp[0] = 0;
 
-    for (int i = 0; i < n_row; i++)
+    for (u_int32_t i = 0; i < n_row; i++)
     {
-        int head = -2;
-        int length = 0;
+        u_int32_t head = -2;
+        u_int32_t length = 0;
 
-        int jj_start = Ap[i];
-        int jj_end = Ap[i + 1];
-        for (int jj = jj_start; jj < jj_end; jj++)
+        u_int32_t jj_start = Ap[i];
+        u_int32_t jj_end = Ap[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
-            int j = Aj[jj];
+            u_int32_t j = Aj[jj];
             char v = 1;
 
-            int kk_start = Bp[j];
-            int kk_end = Bp[j + 1];
-            for (int kk = kk_start; kk < kk_end; kk++)
+            u_int32_t kk_start = Bp[j];
+            u_int32_t kk_end = Bp[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
             {
-                int k = Bj[kk];
+                u_int32_t k = Bj[kk];
 
                 sums[k] += 1;
 
@@ -172,7 +221,7 @@ void scipy_csr_matmat_binary(const int n_row,
             }
         }
 
-        for (int jj = 0; jj < length; jj++)
+        for (u_int32_t jj = 0; jj < length; jj++)
         {
 
             if (sums[head] != 0)
@@ -182,7 +231,7 @@ void scipy_csr_matmat_binary(const int n_row,
                 nnz++;
             }
 
-            int temp = head;
+            u_int32_t temp = head;
             head = next[head];
 
             next[temp] = -1; // clear arrays
@@ -195,8 +244,8 @@ void scipy_csr_matmat_binary(const int n_row,
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
-                        const int Mp[],
-                        const int Mj[],
+                        const u_int32_t Mp[],
+                        const u_int32_t Mj[],
                         const char separator)
 {
     if (n_row == 0)
@@ -226,8 +275,8 @@ std::string scipy_tostr(const u_int32_t n_row,
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
-                        const int Mp[],
-                        const int Mj[])
+                        const u_int32_t Mp[],
+                        const u_int32_t Mj[])
 {
     return scipy_tostr(n_row, n_nz, Mp, Mj, '|');
 }

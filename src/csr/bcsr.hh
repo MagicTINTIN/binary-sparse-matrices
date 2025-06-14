@@ -168,55 +168,55 @@ std::ostream &operator<<(std::ostream &stream, BCSR &matrix);
 std::ostream &operator<<(std::ostream &stream, const BCSR &matrix);
 
 // Scipy comparison
-void scipy_csr_matmat_binary(const int n_row,
-                             const int n_col,
-                             const int Ap[],
-                             const int Aj[],
-                             const int Bp[],
-                             const int Bj[],
-                             int Cp[],
-                             int Cj[]);
+void scipy_csr_matmat_binary(const u_int32_t n_row,
+                             const u_int32_t n_col,
+                             const u_int32_t Ap[],
+                             const u_int32_t Aj[],
+                             const u_int32_t Bp[],
+                             const u_int32_t Bj[],
+                             u_int32_t Cp[],
+                             u_int32_t Cj[]);
 
-void scipy_csr_matmat(const int n_row,
-                      const int n_col,
-                      const int Ap[],
-                      const int Aj[],
+void scipy_csr_matmat(const u_int32_t n_row,
+                      const u_int32_t n_col,
+                      const u_int32_t Ap[],
+                      const u_int32_t Aj[],
                       const char Ax[],
-                      const int Bp[],
-                      const int Bj[],
+                      const u_int32_t Bp[],
+                      const u_int32_t Bj[],
                       const char Bx[],
-                      int Cp[],
-                      int Cj[],
+                      u_int32_t Cp[],
+                      u_int32_t Cj[],
                       char Cx[]);
 
-void scipy_tocsc(const int n_row,
-                 const int n_col,
-                 const int Ap[],
-                 const int Aj[],
+void scipy_tocsc(const u_int32_t n_row,
+                 const u_int32_t n_col,
+                 const u_int32_t Ap[],
+                 const u_int32_t Aj[],
                  //    const char Ax[],
-                 int Bp[],
-                 int Bi[] //,
+                 u_int32_t Bp[],
+                 u_int32_t Bi[] //,
                           //  char Bx[]
 );
-void my_scipy_tocsc(const int n_row,
-                 const int n_col,
-                 const int Ap[],
-                 const int Aj[],
+void my_scipy_tocsc(const u_int32_t n_row,
+                 const u_int32_t n_col,
+                 const u_int32_t Ap[],
+                 const u_int32_t Aj[],
                  //    const char Ax[],
-                 int Bp[],
-                 int Bi[] //,
+                 u_int32_t Bp[],
+                 u_int32_t Bi[] //,
                           //  char Bx[]
 );
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
-                        const int Mp[],
-                        const int Mj[]);
+                        const u_int32_t Mp[],
+                        const u_int32_t Mj[]);
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
-                        const int Mp[],
-                        const int Mj[],
+                        const u_int32_t Mp[],
+                        const u_int32_t Mj[],
                         const char separator);
 
 #endif // BCSR_HH

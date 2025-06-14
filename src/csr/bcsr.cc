@@ -9,9 +9,26 @@ bool BCSR::checkOrder(bool verbose) const
 {
     if (_indices.size() != _index_pointers[_index_pointers.size() - 1])
     {
+        if (_index_pointers[_index_pointers.size() - 1] > _indices.size()) {
+            if (verbose)
+                    fprintf(stderr, "Size of indices (=%ld) not equal (<) to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
+
+                return false;
+        }
+        for (size_t i = _index_pointers[_height]; i < _indices.size(); i++)
+        {
+            if (_indices[i] > 0)
+            {
+                if (verbose)
+                    fprintf(stderr, "Size of indices (=%ld) not equal (>) to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
+
+                return false;
+            }
+        }
+
         if (verbose)
-            fprintf(stderr, "Size of indices (=%ld) not equal to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
-        return false;
+            fprintf(stderr, "(WARNING) Size of indices (=%ld) not equal to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
+        // return false;
     }
 
     for (int i = 0; i < _height; ++i)
@@ -260,14 +277,15 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
             {
                 // will skip the row if B current row is empty
                 u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB - 1]);
-                
+
                 while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB])
                 {
                     if (_indices[colA_ptr] < bT._indices[colB_ptr])
                         colA_ptr++;
                     else if (_indices[colA_ptr] > bT._indices[colB_ptr])
                         colB_ptr++;
-                    else {
+                    else
+                    {
                         result._indices.push_back(rowB - 1);
                         non_zero_count++;
                         break; // if we have a 1 then we know it will be there
@@ -292,9 +310,6 @@ BCSR &BCSR::operator*=(const BCSR &b)
     return *this;
 }
 
-
-
-
 BCSR &BCSR::selfTranspose()
 {
     return *this = transpose();
@@ -305,9 +320,9 @@ BCSR BCSR::transpose() const
     BCSR result(_width, _height, _index_pointers[_height]);
 
     // count number of values in each column
-    for (u_int8_t col : _indices)
+    for (u_int32_t col_idx = 0; col_idx < _index_pointers[_height]; col_idx++)
     {
-        result._index_pointers[col + 1]++;
+        result._index_pointers[_indices[col_idx] + 1]++;
     }
 
     // calculate cumulative sums
@@ -333,9 +348,6 @@ BCSR BCSR::transpose() const
 
     return result;
 }
-
-
-
 
 void BCSR::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
 {
