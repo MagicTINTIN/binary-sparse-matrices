@@ -55,7 +55,7 @@ std::string BCSR::toString() const
     }
 
     oss << "]\nIndices (Columns): [";
-    for (size_t i = 0; i < _indices.size(); ++i) {
+    for (size_t i = 0; i < _index_pointers[_height]; ++i) {
         if (i) oss << "|";
         oss << _indices[i];
     }
@@ -72,18 +72,18 @@ std::string BCSR::toCondensedString() const
 std::string BCSR::toCondensedString(char const separator) const
 {
     if (_width == 0 || _height == 0) 
-        return "[0]\n[0]";
+        return "(1)[0]\n(1)[0]";
 
     std::ostringstream oss;
-    oss << "[";
+    oss << "("<< _height + 1<<")[";
 
     for (size_t i = 0; i <= _height; ++i) {
         if (i) oss << separator;
         oss << _index_pointers[i];
     }
 
-    oss << "]\n[";
-    for (size_t i = 0; i < _indices.size(); ++i) {
+    oss << "]\n(" << _index_pointers[_height] << ")[";
+    for (size_t i = 0; i < _index_pointers[_height]; ++i) {
         if (i) oss << separator;
         oss << _indices[i];
     }

@@ -198,6 +198,15 @@ void scipy_tocsc(const int n_row,
                  int Bi[] //,
                           //  char Bx[]
 );
+void my_scipy_tocsc(const int n_row,
+                 const int n_col,
+                 const int Ap[],
+                 const int Aj[],
+                 //    const char Ax[],
+                 int Bp[],
+                 int Bi[] //,
+                          //  char Bx[]
+);
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
