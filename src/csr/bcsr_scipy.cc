@@ -17,6 +17,16 @@ void scipy_canonicalize(const u_int32_t n_row,
     }
 }
 
+void scipy_canonicalize(const u_int32_t n_row,
+                        std::vector<u_int32_t> &Ap,
+                        std::vector<u_int32_t> &Aj)
+{
+    for (size_t r = 0; r < n_row; r++)
+    {
+        std::sort(Aj.begin() + Ap[r], Aj.begin() + Ap[r+1]);
+    }
+}
+
 void scipy_tocsc(const u_int32_t n_row,
                  const u_int32_t n_col,
                  const u_int32_t Ap[],
@@ -203,7 +213,18 @@ void scipy_csr_matmat(const u_int32_t n_row,
     }
 }
 
-void scipy_csr_matmat(const u_int32_t n_row, const u_int32_t n_col, const std::vector<u_int32_t> &Ap, const std::vector<u_int32_t> &Aj, const char Ax[], const std::vector<u_int32_t> &Bp, const std::vector<u_int32_t> &Bj, const char Bx[], std::vector<u_int32_t> &Cp, std::vector<u_int32_t> &Cj, char Cx[])
+void scipy_csr_matmat(
+    const u_int32_t n_row,
+    const u_int32_t n_col,
+    const std::vector<u_int32_t> &Ap,
+    const std::vector<u_int32_t> &Aj,
+    const char Ax[],
+    const std::vector<u_int32_t> &Bp,
+    const std::vector<u_int32_t> &Bj,
+    const char Bx[],
+    std::vector<u_int32_t> &Cp,
+    std::vector<u_int32_t> &Cj,
+    char Cx[])
 {
     std::vector<u_int32_t> next(n_col, -1);
     std::vector<char> sums(n_col, 0);
@@ -270,6 +291,72 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
                              const u_int32_t Bj[],
                              u_int32_t Cp[],
                              u_int32_t Cj[])
+{
+    std::vector<u_int32_t> next(n_col, -1);
+    std::vector<char> sums(n_col, 0);
+
+    u_int32_t nnz = 0;
+
+    Cp[0] = 0;
+
+    for (u_int32_t i = 0; i < n_row; i++)
+    {
+        u_int32_t head = -2;
+        u_int32_t length = 0;
+
+        u_int32_t jj_start = Ap[i];
+        u_int32_t jj_end = Ap[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
+        {
+            u_int32_t j = Aj[jj];
+            char v = 1;
+
+            u_int32_t kk_start = Bp[j];
+            u_int32_t kk_end = Bp[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
+            {
+                u_int32_t k = Bj[kk];
+
+                sums[k] += 1;
+
+                if (next[k] == -1)
+                {
+                    next[k] = head;
+                    head = k;
+                    length++;
+                }
+            }
+        }
+
+        for (u_int32_t jj = 0; jj < length; jj++)
+        {
+
+            if (sums[head] != 0)
+            {
+                Cj[nnz] = head;
+                // Cx[nnz] = sums[head];
+                nnz++;
+            }
+
+            u_int32_t temp = head;
+            head = next[head];
+
+            next[temp] = -1; // clear arrays
+            sums[temp] = 0;
+        }
+
+        Cp[i + 1] = nnz;
+    }
+}
+
+void scipy_csr_matmat_binary(const u_int32_t n_row,
+                             const u_int32_t n_col,
+                             const std::vector<u_int32_t> &Ap,
+                             const std::vector<u_int32_t> &Aj,
+                             const std::vector<u_int32_t> &Bp,
+                             const std::vector<u_int32_t> &Bj,
+                             std::vector<u_int32_t> &Cp,
+                             std::vector<u_int32_t> &Cj)
 {
     std::vector<u_int32_t> next(n_col, -1);
     std::vector<char> sums(n_col, 0);

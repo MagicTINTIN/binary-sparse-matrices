@@ -364,24 +364,37 @@ int main(int argc, char const *argv[])
 
     // std::vector<u_int32_t> T1R2_p(251, 0);
     // std::vector<u_int32_t> T1R2_j(11235, 0);
+    
+    c_go();
 
     u_int32_t T2R_p[401] = {0};
     u_int32_t T2R_j[13000] = {0};
-
-    c_go();
     scipy_csr_matmat_binary(400, 400, T2A_p, T2A_j, T2B_p, T2B_j, T2R_p, T2R_j);
+    scipy_canonicalize(400, T2R_p, T2R_j);
     c_stop("Scipy");
 
-    scipy_canonicalize(400, T2R_p, T2R_j);
+    c_go();
+    std::vector<u_int32_t> T2R_p_v(400);
+    std::vector<u_int32_t> T2R_j_v(13000);
+
+    scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
+    scipy_canonicalize(400, T2R_p_v, T2R_j_v);
+    c_stop("Scipy vecs");
+
+
+    c_go();
+    T2B.transpose();
+    c_stop("Transpose");
 
     c_go();
     T2A * T2B;
     c_stop("Moi");
     
-    std::cout << "Res:\n" << (T2A * T2B).toCondensedString() << std::endl;
-    
-    std::cout << "Scipy:\n"
-                << scipy_tostr(400, 12048, T2R_p, T2R_j) << "\n";
+    // std::cout << "Res:\n" << (T2A * T2B).toCondensedString() << std::endl;
+    // std::cout << "Scipy:\n"
+    //             << scipy_tostr(400, 12048, T2R_p, T2R_j) << "\n";
+    // std::cout << "Scipy (vector):\n"
+    //             << scipy_tostr(400, 12048, T2R_p_v, T2R_j_v) << "\n";
 
     return 0;
 }
