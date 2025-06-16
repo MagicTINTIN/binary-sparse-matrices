@@ -261,11 +261,11 @@ BCSR &BCSR::operator&=(const BCSR &b)
 
 BCSR BCSR::operationTimesMatrix(const BCSR &b) const
 {
-    if (b._height != _width)
-    {
-        fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
-        exit(EXIT_FAILURE);
-    }
+    // if (b._height != _width)
+    // {
+    //     fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
+    //     exit(EXIT_FAILURE);
+    // }
 
     BCSR result(_height, b._width), bT(b.transpose());
     u_int32_t non_zero_count = 0;
@@ -274,12 +274,12 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
         // if a line only contains zeros, then the output line will only contains 0 too (skip n useless check loops)
         if (_index_pointers[rowA] - _index_pointers[rowA - 1] > 0)
         {
-            for (size_t rowB = 1; rowB <= bT._height; rowB++)
+            for (size_t rowB = 0; rowB < bT._height; rowB++)
             {
                 // will skip the row if B current row is empty
-                u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB - 1]);
+                u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB]);
 
-                while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB])
+                while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB + 1])
                 {
                     if (_indices[colA_ptr] < bT._indices[colB_ptr])
                         colA_ptr++;
@@ -287,7 +287,8 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
                         colB_ptr++;
                     else
                     {
-                        result._indices.emplace_back(rowB - 1);
+                        // result._indices.emplace_back(rowB);
+                        result._indices[non_zero_count] = rowB;
                         non_zero_count++;
                         break; // if we have a 1 then we know it will be there
                     }
@@ -478,9 +479,9 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
 BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) //, _nz_number(0)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
-    _indices = std::vector<u_int32_t>();
+    _indices = std::vector<u_int32_t>(13000);
     // TODO: change with an heuristic
-    _indices.reserve(13000);
+    // _indices.reserve(13000);
 }
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]) : _height(height), _width(width)
