@@ -349,23 +349,39 @@ int main(int argc, char const *argv[])
 
     BCSR T2A(400, 400, _T2A);
     // BCSR T2A(400, 400, T2A_p, T2A_j);
-    std::cout << T2A.toCondensedString(',') << std::endl
-              << std::endl
-              << std::endl;
+    // std::cout << T2A.toCondensedString(',') << std::endl
+    //           << std::endl
+    //           << std::endl;
 
     BCSR T2B(400, 400, _T2B);
     // BCSR T2B(400, 400, T2B_p, T2B_j);
-    std::cout << T2B.toCondensedString(',') << std::endl;
+    // std::cout << T2B.toCondensedString(',') << std::endl;
 
-    std::cout << "Res:\n" << (T2A * T2B).toCondensedString() << std::endl;
-
-    // std::vector<u_int32_t> T1A_p_v(T1A_p, T1A_p + 451);
-    // std::vector<u_int32_t> T1A_j_v(T1A_j, T1A_j + 11235);
+    std::vector<u_int32_t> T2A_p_v(T2A_p, T2A_p + 401);
+    std::vector<u_int32_t> T2A_j_v(T2A_j, T2A_j + 3167);
+    std::vector<u_int32_t> T2B_p_v(T2B_p, T2B_p + 401);
+    std::vector<u_int32_t> T2B_j_v(T2B_j, T2B_j + 1578);
 
     // std::vector<u_int32_t> T1R2_p(251, 0);
     // std::vector<u_int32_t> T1R2_j(11235, 0);
-    // c_go();
-    // scipy_csr_matmat_binary(70, 70, T2A_p, T2A_j, T2B_p, T2B_j, T2R_p, T2R_j);
-    // c_stop("Scipy");
+
+    u_int32_t T2R_p[401] = {0};
+    u_int32_t T2R_j[13000] = {0};
+
+    c_go();
+    scipy_csr_matmat_binary(400, 400, T2A_p, T2A_j, T2B_p, T2B_j, T2R_p, T2R_j);
+    c_stop("Scipy");
+
+    scipy_canonicalize(400, T2R_p, T2R_j);
+
+    c_go();
+    T2A * T2B;
+    c_stop("Moi");
+    
+    std::cout << "Res:\n" << (T2A * T2B).toCondensedString() << std::endl;
+    
+    std::cout << "Scipy:\n"
+                << scipy_tostr(400, 12048, T2R_p, T2R_j) << "\n";
+
     return 0;
 }

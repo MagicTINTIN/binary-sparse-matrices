@@ -239,6 +239,10 @@ void my_scipy_tocsc(const u_int32_t n_row,
                                                //  char Bx[]
 );
 
+void scipy_canonicalize(const u_int32_t n_row,
+                        u_int32_t Ap[],
+                        u_int32_t Aj[]);
+
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
                         const u_int32_t Mp[],

@@ -7,6 +7,16 @@
 #include <algorithm>
 #include <sstream>
 
+void scipy_canonicalize(const u_int32_t n_row,
+                        u_int32_t Ap[],
+                        u_int32_t Aj[])
+{
+    for (size_t r = 0; r < n_row; r++)
+    {
+        std::sort(Aj + Ap[r], Aj + Ap[r+1]);
+    }
+}
+
 void scipy_tocsc(const u_int32_t n_row,
                  const u_int32_t n_col,
                  const u_int32_t Ap[],
