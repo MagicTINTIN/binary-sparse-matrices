@@ -60,18 +60,18 @@ void scipy_tocsc(const u_int32_t n_row,
 
 void my_scipy_tocsc(const u_int32_t n_row,
                     const u_int32_t n_col,
-                    const u_int32_t Ap[],
-                    const u_int32_t Aj[],
+                    const std::vector<u_int32_t> &Ap,
+                    const std::vector<u_int32_t> &Aj,
                     //    const char Ax[],
-                    u_int32_t Bp[],
-                    u_int32_t Bi[] //,
+                    std::vector<u_int32_t> &Bp,
+                    std::vector<u_int32_t> &Bi //,
                                    //  char Bx[]
 )
 {
     const u_int32_t nnz = Ap[n_row];
 
     // compute number of non-zero entries per column of A
-    std::fill(Bp, Bp + n_col, 0);
+    // std::fill(Bp, 0);
 
     // for (u_int32_t n = 0; n < nnz; n++)
     // {
@@ -292,8 +292,47 @@ std::string scipy_tostr(const u_int32_t n_row,
 
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
+                        const std::vector<u_int32_t> &Mp,
+                        const std::vector<u_int32_t> &Mj,
+                        const char separator)
+{
+    if (n_row == 0)
+        return "[0]\n[]";
+
+    std::ostringstream oss;
+    oss << "[";
+
+    for (size_t i = 0; i <= n_row; ++i)
+    {
+        if (i)
+            oss << "|";
+        oss << Mp[i];
+    }
+
+    oss << "]\n[";
+    for (size_t i = 0; i < n_nz; ++i)
+    {
+        if (i)
+            oss << "|";
+        oss << Mj[i];
+    }
+    oss << "]";
+
+    return oss.str();
+}
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
                         const u_int32_t Mp[],
                         const u_int32_t Mj[])
+{
+    return scipy_tostr(n_row, n_nz, Mp, Mj, '|');
+}
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const std::vector<u_int32_t> &Mp,
+                        const std::vector<u_int32_t> &Mj)
 {
     return scipy_tostr(n_row, n_nz, Mp, Mj, '|');
 }

@@ -287,7 +287,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
                         colB_ptr++;
                     else
                     {
-                        result._indices.push_back(rowB - 1);
+                        result._indices.emplace_back(rowB - 1);
                         non_zero_count++;
                         break; // if we have a 1 then we know it will be there
                     }
@@ -389,7 +389,7 @@ BCSR BCSR::transpose() const
         result._index_pointers[col] = last;
         last = temp;
     }
-    
+
     return result;
 }
 
@@ -483,6 +483,14 @@ BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) /
     _indices.reserve(13000);
 }
 
+BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]) : _height(height), _width(width)
+{
+    // _nz_number = 0;
+    _index_pointers = std::vector<u_int32_t>(index_pointers, index_pointers + height + 1);
+    _indices = std::vector<u_int32_t>(indices, indices + index_pointers[height]);
+    printf("%ld %ld\n", _index_pointers.size(), _indices.size());
+}
+
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
     // _nz_number = 0;
@@ -493,10 +501,10 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(heigh
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width) //, _nz_number(nz_number)
 {
-    // _index_pointers = std::vector<u_int32_t>(height + 1, 0);
-    // _indices = std::vector<u_int32_t>(nz_number, 0);
-    _index_pointers = std::vector<u_int32_t>(height + 1);
-    _indices = std::vector<u_int32_t>(nz_number);
+    _index_pointers = std::vector<u_int32_t>(height + 1, 0);
+    _indices = std::vector<u_int32_t>(nz_number, 0);
+    // _index_pointers = std::vector<u_int32_t>(height + 1);
+    // _indices = std::vector<u_int32_t>(nz_number);
 }
 // CSR::~CSR()
 // {

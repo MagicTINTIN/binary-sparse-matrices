@@ -29,6 +29,15 @@ public:
     BCSR(u_int32_t height, u_int32_t width);
 
     /**
+     * Initialise a BCSR matrix using bcsr matrix params
+     * @param height the matrix height/rows
+     * @param width the matrix width/columns
+     * @param index_pointers an array of index pointers (rows)
+     * @param indices an array of indices (columns)
+     */
+    BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]);
+
+    /**
      * Initialise a BCSR matrix using a dense matrix
      * @param height the matrix height/rows
      * @param width the matrix width/columns
@@ -198,14 +207,24 @@ void scipy_tocsc(const u_int32_t n_row,
                  u_int32_t Bi[] //,
                           //  char Bx[]
 );
+// void my_scipy_tocsc(const u_int32_t n_row,
+//                  const u_int32_t n_col,
+//                  const u_int32_t Ap[],
+//                  const u_int32_t Aj[],
+//                  //    const char Ax[],
+//                  u_int32_t Bp[],
+//                  u_int32_t Bi[] //,
+//                           //  char Bx[]
+// );
+
 void my_scipy_tocsc(const u_int32_t n_row,
-                 const u_int32_t n_col,
-                 const u_int32_t Ap[],
-                 const u_int32_t Aj[],
-                 //    const char Ax[],
-                 u_int32_t Bp[],
-                 u_int32_t Bi[] //,
-                          //  char Bx[]
+                    const u_int32_t n_col,
+                    const std::vector<u_int32_t> &Ap,
+                    const std::vector<u_int32_t> &Aj,
+                    //    const char Ax[],
+                    std::vector<u_int32_t> &Bp,
+                    std::vector<u_int32_t> &Bi //,
+                                   //  char Bx[]
 );
 
 std::string scipy_tostr(const u_int32_t n_row,
@@ -217,6 +236,17 @@ std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
                         const u_int32_t Mp[],
                         const u_int32_t Mj[],
+                        const char separator);
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const std::vector<u_int32_t> &Mp,
+                        const std::vector<u_int32_t> &Mj);
+
+std::string scipy_tostr(const u_int32_t n_row,
+                        const u_int32_t n_nz,
+                        const std::vector<u_int32_t> &Mp,
+                        const std::vector<u_int32_t> &Mj,
                         const char separator);
 
 #endif // BCSR_HH

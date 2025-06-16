@@ -143,7 +143,7 @@ void BCSR::insertDn2BCSR(u_int8_t values[])
         {
             if (values[row * _width + col])
             {
-                _indices.push_back(col);
+                _indices.emplace_back(col);
                 // _nz_number++;
                 // printf("adding {%d;%d}\n", row, col);
             }
