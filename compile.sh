@@ -8,7 +8,9 @@ makearg=""
 cmakearg=""
 folder="build"
 for arg in "$@"; do
-    if [ "$arg" = "--release" ]; then
+    if [ "$arg" = "--both" ]; then
+        ./compile.sh --release --fastcomile && ./compile.sh --debug --fastcomile && exit
+    elif [ "$arg" = "--release" ]; then
         cmakearg+=" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-O3\" "
     elif [ "$arg" = "--debug" ]; then
         cmakearg+=" -DCMAKE_BUILD_TYPE=Debug "
