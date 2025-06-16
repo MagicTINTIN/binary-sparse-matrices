@@ -50,16 +50,6 @@ void scipy_tocsc(const u_int32_t n_row,
         }
     }
 
-    // printf("Spy[");
-    // for (size_t i = 0; i < Bp[n_col]; i++)
-    // {
-    //     if (i == 0)
-    //         printf("%d", Bi[i]);
-    //     else
-    //         printf(",%d", Bi[i]);
-    // }
-    // printf("]");
-
     for (u_int32_t col = 0, last = 0; col <= n_col; col++)
     {
         u_int32_t temp = Bp[col];
@@ -83,18 +73,29 @@ void my_scipy_tocsc(const u_int32_t n_row,
     // compute number of non-zero entries per column of A
     std::fill(Bp, Bp + n_col, 0);
 
+    // for (u_int32_t n = 0; n < nnz; n++)
+    // {
+    //     Bp[Aj[n] + 1]++;
+    // }
+
     for (u_int32_t n = 0; n < nnz; n++)
     {
-        Bp[Aj[n] + 1]++;
+        Bp[Aj[n]]++;
     }
 
     // cumsum the nnz per column to get Bp[]
-    for (u_int32_t col = 1, prevSum = Bp[0]; col <= n_col; col++)
+    // for (u_int32_t col = 1, prevSum = Bp[0]; col <= n_col; col++)
+    // {
+    //     prevSum += Bp[col];
+    //     Bp[col] = prevSum;
+    // }
+    for (u_int32_t col = 0, cumsum = 0; col < n_col; col++)
     {
-        prevSum += Bp[col];
-        Bp[col] = prevSum;
+        u_int32_t temp = Bp[col];
+        Bp[col] = cumsum;
+        cumsum += temp;
     }
-    // Bp[n_col] = nnz;
+    Bp[n_col] = nnz;
 
     for (u_int32_t row = 0; row < n_row; row++)
     {
@@ -110,21 +111,17 @@ void my_scipy_tocsc(const u_int32_t n_row,
         }
     }
 
-    // printf("MS [");
-    // for (size_t i = 0; i < Bp[n_col]; i++)
+    // for (u_int32_t col = n_col; col > 0; col--)
     // {
-    //     if (i == 0)
-    //         printf("%d", Bi[i]);
-    //     else
-    //         printf(",%d", Bi[i]);
+    //     Bp[col] = Bp[col - 1];
     // }
-    // printf("]");
-
-    for (u_int32_t col = n_col; col > 0; col--)
+    // Bp[0] = 0;
+    for (u_int32_t col = 0, last = 0; col <= n_col; col++)
     {
-        Bp[col] = Bp[col - 1];
+        u_int32_t temp = Bp[col];
+        Bp[col] = last;
+        last = temp;
     }
-    Bp[0] = 0;
 }
 
 void scipy_csr_matmat(const u_int32_t n_row,

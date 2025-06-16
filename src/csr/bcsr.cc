@@ -316,19 +316,60 @@ BCSR &BCSR::selfTranspose()
     return *this = transpose();
 }
 
+// BCSR BCSR::transpose() const
+// {
+//     BCSR result(_width, _height, _index_pointers[_height]);
+
+//     // count number of values in each column
+//     for (u_int32_t col_idx = 0; col_idx < _index_pointers[_height]; col_idx++)
+//     {
+//         result._index_pointers[_indices[col_idx] + 1]++;
+//     }
+
+//     // calculate cumulative sums
+//     for (u_int32_t c = 1; c <= result._height; c++)
+//         result._index_pointers[c] += result._index_pointers[c - 1];
+
+//     for (u_int32_t row = 0; row < _height; row++)
+//     {
+//         for (u_int32_t col_index = _index_pointers[row]; col_index < _index_pointers[row + 1]; col_index++)
+//         {
+//             // TODO: simplify
+//             u_int32_t col = _indices[col_index];
+//             u_int32_t dest = result._index_pointers[col];
+//             result._indices[dest] = row;
+//             result._index_pointers[col]++;
+//         }
+//     }
+
+//     for (u_int32_t col_idx = result._height; col_idx > 0; col_idx--)
+//     {
+//         result._index_pointers[col_idx] = result._index_pointers[col_idx - 1];
+//     }
+//     result._index_pointers[0] = 0;
+
+//     return result;
+// }
+
 BCSR BCSR::transpose() const
 {
     BCSR result(_width, _height, _index_pointers[_height]);
+    const u_int32_t nnz = _index_pointers[_height];
 
     // count number of values in each column
     for (u_int32_t col_idx = 0; col_idx < _index_pointers[_height]; col_idx++)
     {
-        result._index_pointers[_indices[col_idx] + 1]++;
+        result._index_pointers[_indices[col_idx]]++;
     }
 
     // calculate cumulative sums
-    for (u_int32_t c = 1; c <= result._height; c++)
-        result._index_pointers[c] += result._index_pointers[c - 1];
+    for (u_int32_t col = 0, cumsum = 0; col < _width; col++)
+    {
+        u_int32_t temp = result._index_pointers[col];
+        result._index_pointers[col] = cumsum;
+        cumsum += temp;
+    }
+    result._index_pointers[_width] = nnz;
 
     for (u_int32_t row = 0; row < _height; row++)
     {
@@ -342,33 +383,13 @@ BCSR BCSR::transpose() const
         }
     }
 
-    // printf("Moi[");
-    // for (size_t i = 0; i < _index_pointers[_height]; i++)
-    // {
-    //     if (i == 0)
-    //         printf("%d", result._indices[i]);
-    //     else
-    //         printf(",%d", result._indices[i]);
-    // }
-    // printf("]\n");
-
-    for (u_int32_t col_idx = result._height; col_idx > 0; col_idx--)
+    for (u_int32_t col = 0, last = 0; col <= _width; col++)
     {
-        result._index_pointers[col_idx] = result._index_pointers[col_idx - 1];
+        u_int32_t temp = result._index_pointers[col];
+        result._index_pointers[col] = last;
+        last = temp;
     }
-    result._index_pointers[0] = 0;
-
-
-    // printf("[");
-    // for (size_t i = 0; i <= _width; i++)
-    // {
-    //     if (i == 0)
-    //         printf("%d", result._index_pointers[i]);
-    //     else
-    //         printf(",%d", result._index_pointers[i]);
-    // }
-    // printf("]\n");
-
+    
     return result;
 }
 
@@ -459,7 +480,7 @@ BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) /
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
     _indices = std::vector<u_int32_t>();
     // TODO: change with an heuristic
-    _indices.reserve(15000);
+    _indices.reserve(13000);
 }
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
@@ -472,8 +493,10 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(heigh
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width) //, _nz_number(nz_number)
 {
-    _index_pointers = std::vector<u_int32_t>(height + 1, 0);
-    _indices = std::vector<u_int32_t>(nz_number, 0);
+    // _index_pointers = std::vector<u_int32_t>(height + 1, 0);
+    // _indices = std::vector<u_int32_t>(nz_number, 0);
+    _index_pointers = std::vector<u_int32_t>(height + 1);
+    _indices = std::vector<u_int32_t>(nz_number);
 }
 // CSR::~CSR()
 // {
