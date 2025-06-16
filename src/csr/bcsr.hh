@@ -198,6 +198,18 @@ void scipy_csr_matmat(const u_int32_t n_row,
                       u_int32_t Cj[],
                       char Cx[]);
 
+void scipy_csr_matmat(const u_int32_t n_row,
+                      const u_int32_t n_col,
+                      const std::vector<u_int32_t> &Ap,
+                      const std::vector<u_int32_t> &Aj,
+                      const char Ax[],
+                      const std::vector<u_int32_t> &Bp,
+                      const std::vector<u_int32_t> &Bj,
+                      const char Bx[],
+                      std::vector<u_int32_t> &Cp,
+                      std::vector<u_int32_t> &Cj,
+                      char Cx[]);
+
 void scipy_tocsc(const u_int32_t n_row,
                  const u_int32_t n_col,
                  const u_int32_t Ap[],
@@ -205,7 +217,7 @@ void scipy_tocsc(const u_int32_t n_row,
                  //    const char Ax[],
                  u_int32_t Bp[],
                  u_int32_t Bi[] //,
-                          //  char Bx[]
+                                //  char Bx[]
 );
 // void my_scipy_tocsc(const u_int32_t n_row,
 //                  const u_int32_t n_col,
@@ -224,7 +236,7 @@ void my_scipy_tocsc(const u_int32_t n_row,
                     //    const char Ax[],
                     std::vector<u_int32_t> &Bp,
                     std::vector<u_int32_t> &Bi //,
-                                   //  char Bx[]
+                                               //  char Bx[]
 );
 
 std::string scipy_tostr(const u_int32_t n_row,

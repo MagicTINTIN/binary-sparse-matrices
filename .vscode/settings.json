@@ -79,6 +79,7 @@
         "ios": "cpp",
         "locale": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "t2b": "cpp"
     }
 }
