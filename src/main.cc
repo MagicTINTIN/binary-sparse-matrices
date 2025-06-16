@@ -61,13 +61,7 @@ void c_stop()
     c_stop("");
 }
 
-int main(int argc, char const *argv[])
-{
-    std::cout << "Starting...\n";
-    // c_go();
-    // long_operation();
-    // c_stop();
-
+void m_tests() {
     u_int8_t mat[7 * 5] = {
         8, 0, 2, 0, 0,
         0, 0, 5, 0, 0,
@@ -280,6 +274,15 @@ int main(int argc, char const *argv[])
     c_stop("Moi");
     std::cout << "Scipy:\n"
               << scipy_tostr(4, 8, R8_p, R8_j) << "\n";
+}
+
+int main(int argc, char const *argv[])
+{
+    std::cout << "Starting...\n";
+    // c_go();
+    // long_operation();
+    // c_stop();
+
 
     printf("###################################################\n");
     printf("################### BENCH TESTS ###################\n");

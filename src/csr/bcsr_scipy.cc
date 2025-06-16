@@ -13,7 +13,7 @@ void scipy_canonicalize(const u_int32_t n_row,
 {
     for (size_t r = 0; r < n_row; r++)
     {
-        std::sort(Aj + Ap[r], Aj + Ap[r+1]);
+        std::sort(Aj + Ap[r], Aj + Ap[r + 1]);
     }
 }
 
@@ -23,7 +23,7 @@ void scipy_canonicalize(const u_int32_t n_row,
 {
     for (size_t r = 0; r < n_row; r++)
     {
-        std::sort(Aj.begin() + Ap[r], Aj.begin() + Ap[r+1]);
+        std::sort(Aj.begin() + Ap[r], Aj.begin() + Ap[r + 1]);
     }
 }
 
@@ -364,9 +364,13 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
     u_int32_t nnz = 0;
 
     Cp[0] = 0;
+    size_t nbLoop = 0;
+    size_t nbOp = 0;
 
     for (u_int32_t i = 0; i < n_row; i++)
     {
+        nbLoop++;
+        nbOp += 8;
         u_int32_t head = -2;
         u_int32_t length = 0;
 
@@ -374,6 +378,8 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
         u_int32_t jj_end = Ap[i + 1];
         for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
+            nbLoop++;
+            nbOp += 6;
             u_int32_t j = Aj[jj];
             char v = 1;
 
@@ -381,12 +387,15 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
             u_int32_t kk_end = Bp[j + 1];
             for (u_int32_t kk = kk_start; kk < kk_end; kk++)
             {
+                nbLoop++;
+                nbOp += 2;
                 u_int32_t k = Bj[kk];
 
                 sums[k] += 1;
 
                 if (next[k] == -1)
                 {
+                    nbOp += 3;
                     next[k] = head;
                     head = k;
                     length++;
@@ -396,9 +405,11 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
 
         for (u_int32_t jj = 0; jj < length; jj++)
         {
-
+            nbLoop++;
+            nbOp += 4;
             if (sums[head] != 0)
             {
+                nbOp += 2;
                 Cj[nnz] = head;
                 // Cx[nnz] = sums[head];
                 nnz++;

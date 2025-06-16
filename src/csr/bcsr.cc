@@ -261,26 +261,34 @@ BCSR &BCSR::operator&=(const BCSR &b)
 
 BCSR BCSR::operationTimesMatrix(const BCSR &b) const
 {
-    // if (b._height != _width)
-    // {
-    //     fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
-    //     exit(EXIT_FAILURE);
-    // }
+    if (b._height != _width)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
+        exit(EXIT_FAILURE);
+    }
+
+    size_t nbLoop = 0;
+    size_t nbOp = 0;
 
     BCSR result(_height, b._width), bT(b.transpose());
     u_int32_t non_zero_count = 0;
     for (size_t rowA = 1; rowA <= _height; rowA++)
     {
+        nbLoop++;
         // if a line only contains zeros, then the output line will only contains 0 too (skip n useless check loops)
+        nbOp+=3;
         if (_index_pointers[rowA] - _index_pointers[rowA - 1] > 0)
         {
             for (size_t rowB = 0; rowB < bT._height; rowB++)
             {
+                nbLoop++;
                 // will skip the row if B current row is empty
                 u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB]);
-
+                nbOp+=4;
                 while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB + 1])
                 {
+                    nbLoop++;
+                    nbOp+=2;
                     if (_indices[colA_ptr] < bT._indices[colB_ptr])
                         colA_ptr++;
                     else if (_indices[colA_ptr] > bT._indices[colB_ptr])
