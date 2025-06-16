@@ -9,11 +9,12 @@ bool BCSR::checkOrder(bool verbose) const
 {
     if (_indices.size() != _index_pointers[_index_pointers.size() - 1])
     {
-        if (_index_pointers[_index_pointers.size() - 1] > _indices.size()) {
+        if (_index_pointers[_index_pointers.size() - 1] > _indices.size())
+        {
             if (verbose)
-                    fprintf(stderr, "Size of indices (=%ld) not equal (<) to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
+                fprintf(stderr, "Size of indices (=%ld) not equal (<) to last index pointer (=%d)!\n", _indices.size(), _index_pointers[_index_pointers.size() - 1]);
 
-                return false;
+            return false;
         }
         for (size_t i = _index_pointers[_height]; i < _indices.size(); i++)
         {
@@ -326,7 +327,7 @@ BCSR BCSR::transpose() const
     }
 
     // calculate cumulative sums
-    for (u_int8_t c = 1; c <= result._height; c++)
+    for (u_int32_t c = 1; c <= result._height; c++)
         result._index_pointers[c] += result._index_pointers[c - 1];
 
     for (u_int32_t row = 0; row < _height; row++)
@@ -334,17 +335,39 @@ BCSR BCSR::transpose() const
         for (u_int32_t col_index = _index_pointers[row]; col_index < _index_pointers[row + 1]; col_index++)
         {
             // TODO: simplify
-            u_int8_t col = _indices[col_index];
-            u_int8_t dest = result._index_pointers[col];
+            u_int32_t col = _indices[col_index];
+            u_int32_t dest = result._index_pointers[col];
             result._indices[dest] = row;
             result._index_pointers[col]++;
         }
     }
+
+    // printf("Moi[");
+    // for (size_t i = 0; i < _index_pointers[_height]; i++)
+    // {
+    //     if (i == 0)
+    //         printf("%d", result._indices[i]);
+    //     else
+    //         printf(",%d", result._indices[i]);
+    // }
+    // printf("]\n");
+
     for (u_int32_t col_idx = result._height; col_idx > 0; col_idx--)
     {
         result._index_pointers[col_idx] = result._index_pointers[col_idx - 1];
     }
     result._index_pointers[0] = 0;
+
+
+    // printf("[");
+    // for (size_t i = 0; i <= _width; i++)
+    // {
+    //     if (i == 0)
+    //         printf("%d", result._index_pointers[i]);
+    //     else
+    //         printf(",%d", result._index_pointers[i]);
+    // }
+    // printf("]\n");
 
     return result;
 }
@@ -435,6 +458,7 @@ BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) /
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
     _indices = std::vector<u_int32_t>();
+    // TODO: change with an heuristic
     _indices.reserve(15000);
 }
 

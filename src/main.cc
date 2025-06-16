@@ -316,6 +316,8 @@ u_int8_t _T1[450*250] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
     //           << scipy_tostr(250, 11235, T1R_p, T1R_j) << "\n";
     // std::cout << "My Scipy:\n"
     //           << scipy_tostr(250, 11235, T1R2_p, T1R2_j) << "\n";
+    // std::cout << "Moi:\n"
+    //           << T1.transpose().toCondensedString() << "\n";
 
     return 0;
 }

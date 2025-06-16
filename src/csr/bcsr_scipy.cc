@@ -14,7 +14,7 @@ void scipy_tocsc(const u_int32_t n_row,
                  //    const char Ax[],
                  u_int32_t Bp[],
                  u_int32_t Bi[] //,
-                          //  char Bx[]
+                                //  char Bx[]
 )
 {
     const u_int32_t nnz = Ap[n_row];
@@ -50,6 +50,16 @@ void scipy_tocsc(const u_int32_t n_row,
         }
     }
 
+    // printf("Spy[");
+    // for (size_t i = 0; i < Bp[n_col]; i++)
+    // {
+    //     if (i == 0)
+    //         printf("%d", Bi[i]);
+    //     else
+    //         printf(",%d", Bi[i]);
+    // }
+    // printf("]");
+
     for (u_int32_t col = 0, last = 0; col <= n_col; col++)
     {
         u_int32_t temp = Bp[col];
@@ -59,13 +69,13 @@ void scipy_tocsc(const u_int32_t n_row,
 }
 
 void my_scipy_tocsc(const u_int32_t n_row,
-                 const u_int32_t n_col,
-                 const u_int32_t Ap[],
-                 const u_int32_t Aj[],
-                 //    const char Ax[],
-                 u_int32_t Bp[],
-                 u_int32_t Bi[] //,
-                          //  char Bx[]
+                    const u_int32_t n_col,
+                    const u_int32_t Ap[],
+                    const u_int32_t Aj[],
+                    //    const char Ax[],
+                    u_int32_t Bp[],
+                    u_int32_t Bi[] //,
+                                   //  char Bx[]
 )
 {
     const u_int32_t nnz = Ap[n_row];
@@ -75,7 +85,7 @@ void my_scipy_tocsc(const u_int32_t n_row,
 
     for (u_int32_t n = 0; n < nnz; n++)
     {
-        Bp[Aj[n]+1]++;
+        Bp[Aj[n] + 1]++;
     }
 
     // cumsum the nnz per column to get Bp[]
@@ -84,7 +94,7 @@ void my_scipy_tocsc(const u_int32_t n_row,
         prevSum += Bp[col];
         Bp[col] = prevSum;
     }
-    Bp[n_col] = nnz;
+    // Bp[n_col] = nnz;
 
     for (u_int32_t row = 0; row < n_row; row++)
     {
@@ -99,6 +109,16 @@ void my_scipy_tocsc(const u_int32_t n_row,
             Bp[col]++;
         }
     }
+
+    // printf("MS [");
+    // for (size_t i = 0; i < Bp[n_col]; i++)
+    // {
+    //     if (i == 0)
+    //         printf("%d", Bi[i]);
+    //     else
+    //         printf(",%d", Bi[i]);
+    // }
+    // printf("]");
 
     for (u_int32_t col = n_col; col > 0; col--)
     {
