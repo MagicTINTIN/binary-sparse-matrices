@@ -72,20 +72,21 @@ std::string BLIL::toCondensedString(char const separator) const
     if (_width == 0 || _height == 0) 
         return "(1)[0]\n(1)[0]";
 
+    // TODO:
     std::ostringstream oss;
-    oss << "("<< _height + 1<<")[";
+    // oss << "("<< _height + 1<<")[";
 
-    for (size_t i = 0; i <= _height; ++i) {
-        if (i) oss << separator;
-        oss << _index_pointers[i];
-    }
+    // for (size_t i = 0; i <= _height; ++i) {
+    //     if (i) oss << separator;
+    //     oss << _index_pointers[i];
+    // }
 
-    oss << "]\n(" << _index_pointers[_height] << ")[";
-    for (size_t i = 0; i < _index_pointers[_height]; ++i) {
-        if (i) oss << separator;
-        oss << _indices[i];
-    }
-    oss << "]";
+    // oss << "]\n(" << _index_pointers[_height] << ")[";
+    // for (size_t i = 0; i < _index_pointers[_height]; ++i) {
+    //     if (i) oss << separator;
+    //     oss << _indices[i];
+    // }
+    // oss << "]";
 
     return oss.str();
 }

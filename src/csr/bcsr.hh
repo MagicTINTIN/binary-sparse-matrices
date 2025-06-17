@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <vector>
 #include <string>
+#include "../lil/blil.hh"
 
 class BCSR
 {
@@ -61,6 +62,12 @@ public:
      * @param nz_number number of non zero values (optimisation to prevent too many resizes)
      */
     BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number);
+
+    /**
+     * Initialise a BCSR matrix using a BLIL one
+     * @param matrix in BLIL format
+     */
+    BCSR(BLIL matrix);
 
     // ######### Conversions to dense and string #########
     /**

@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <vector>
 #include <string>
+#include "../csr/bcsr.hh"
 
 class BLIL
 {
@@ -12,13 +13,6 @@ private:
     u_int32_t _width, _height;
     // u_int32_t _nz_number; // equal last value of _index_pointers
     std::vector<std::vector<u_int32_t>> _rows;
-
-    /**
-     * Insert a dense matrix in the current BLIL matrix
-     * @param values[] a array-like dense matrix
-     */
-    void insertCSR2BLIL(u_int8_t values[]);
-
 public:
     /**
      * Initialise a 0-filled BLIL matrix
@@ -60,6 +54,12 @@ public:
      * @param nz_number number of non zero values (optimisation to prevent too many resizes)
      */
     BLIL(u_int32_t height, u_int32_t width, u_int32_t nz_number);
+
+    /**
+     * Initialise a BLIL matrix using a BCSR one
+     * @param matrix in BCSR format
+     */
+    BLIL(BCSR matrix);
 
     // ######### Conversions to dense and string #########
     /**
