@@ -431,6 +431,78 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
     }
 }
 
+void my_scipy_csr_matmat_binary(const u_int32_t n_row,
+                             const u_int32_t n_col,
+                             const std::vector<u_int32_t> &Ap,
+                             const std::vector<u_int32_t> &Aj,
+                             const std::vector<u_int32_t> &Bp,
+                             const std::vector<u_int32_t> &Bj,
+                             std::vector<u_int32_t> &Cp,
+                             std::vector<u_int32_t> &Cj)
+{
+    std::vector<u_int32_t> next(n_col, -1);
+
+    u_int32_t nnz = 0;
+
+    Cp[0] = 0;
+    for (u_int32_t i = 0; i < n_row; i++)
+    {
+        u_int32_t head = -2;
+        u_int32_t length = 0;
+
+        u_int32_t jj_start = Ap[i];
+        u_int32_t jj_end = Ap[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
+        {
+            // nbLoop++;
+            // nbOp += 6;
+            u_int32_t j = Aj[jj];   // column index j in A
+            // char v = 1;             // A(i,j) value
+
+            u_int32_t kk_start = Bp[j];
+            u_int32_t kk_end = Bp[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
+            {
+                // nbLoop++;
+                // nbOp += 2;
+                u_int32_t k = Bj[kk];
+
+                if (next[k] == -1)
+                {
+                    // nbOp += 3;
+                    next[k] = head;
+                    head = k;
+                    length++;
+                }
+            }
+        }
+
+        for (u_int32_t jj = 0; jj < length; jj++)
+        {
+            // nbLoop++;
+            // nbOp += 4;
+            // if (sums[head] != 0)
+            // {
+                // Cj[nnz] = head;
+            //     // nbOp += 2;
+            //     // Cx[nnz] = sums[head];
+                // nnz++;
+            // }
+
+                Cj[nnz] = head;
+                nnz++;
+            u_int32_t temp = head;
+            head = next[head];
+
+            next[temp] = -1; // clear arrays
+            // sums[temp] = 0;
+        }
+
+        Cp[i + 1] = nnz;
+    }
+}
+
+
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
                         const u_int32_t Mp[],

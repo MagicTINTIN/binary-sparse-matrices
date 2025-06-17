@@ -299,7 +299,7 @@ int main(int argc, char const *argv[])
     // long_operation();
     // c_stop();
 
-    understand_multiplication();
+    // understand_multiplication();
 
     printf("###################################################\n");
     printf("################### BENCH TESTS ###################\n");
@@ -333,17 +333,17 @@ int main(int argc, char const *argv[])
     std::vector<u_int32_t> T1R2_p(251, 0);
     std::vector<u_int32_t> T1R2_j(11235, 0);
     my_scipy_tocsc(450, 250, T1A_p_v, T1A_j_v, T1R2_p, T1R2_j);
-    double r2 = c_stop("MY Scipy");
+    double r2 = c_stop("vec Scipy");
 
     c_go();
     T1.transpose();
     double r3 = c_stop("Moi");
 
     // fprintf(stderr,"%f,%f,%f,%f,%f,%f,%f\n",r1,r2,r3,a1,v1,v2,v3);
-    fprintf(stderr, "%f,%f,%f\n", r1, r2, r3);
+    // fprintf(stderr, "%f,%f,%f\n", r1, r2, r3);
     // std::cout << "Scipy:\n"
     //           << scipy_tostr(250, 11235, T1R_p, T1R_j) << "\n";
-    // std::cout << "My Scipy:\n"
+    // std::cout << "Vec Scipy:\n"
     //           << scipy_tostr(250, 11235, T1R2_p, T1R2_j) << "\n";
     // std::cout << "Moi:\n"
     //           << T1.transpose().toCondensedString() << "\n";
@@ -389,7 +389,7 @@ int main(int argc, char const *argv[])
     u_int32_t T2R_j[13000] = {0};
     scipy_csr_matmat_binary(400, 400, T2A_p, T2A_j, T2B_p, T2B_j, T2R_p, T2R_j);
     scipy_canonicalize(400, T2R_p, T2R_j);
-    c_stop("Scipy");
+    double m1 = c_stop("Scipy");
 
     c_go();
     std::vector<u_int32_t> T2R_p_v(400);
@@ -397,17 +397,29 @@ int main(int argc, char const *argv[])
 
     scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
     scipy_canonicalize(400, T2R_p_v, T2R_j_v);
-    c_stop("Scipy vecs");
-
-    std::cout << T2B << std::endl;
+    double m2 = c_stop("Scipy vecs");
 
     c_go();
-    T2B.transpose();
-    c_stop("Transpose");
+    std::vector<u_int32_t> T2R2_p_v(400);
+    std::vector<u_int32_t> T2R2_j_v(13000);
 
-    c_go();
-    T2A *T2B;
-    c_stop("Moi");
+    my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R2_p_v, T2R2_j_v);
+    scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
+    double m3 = c_stop("My bScipy");
+
+    // c_go();
+    // T2B.transpose();
+    // c_stop("Transpose");
+
+    // c_go();
+    // T2A *T2B;
+    // c_stop("Moi");
+    // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
+    fprintf(stderr, "%f,%f,%f\n", m1, m2, m3);
+
+
+    // std::cout << "My bScipy:\n"
+    //           << scipy_tostr(400, 12049, T2R2_p_v, T2R2_j_v) << "\n";
 
     // std::cout << "Res:\n" << (T2A * T2B).toCondensedString() << std::endl;
     // std::cout << "Scipy:\n"

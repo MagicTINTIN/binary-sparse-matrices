@@ -498,7 +498,7 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int3
 {
     _index_pointers = std::vector<u_int32_t>(index_pointers, index_pointers + height + 1);
     _indices = std::vector<u_int32_t>(indices, indices + index_pointers[height]);
-    printf("%ld %ld\n", _index_pointers.size(), _indices.size());
+    // printf("%ld %ld\n", _index_pointers.size(), _indices.size());
 }
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
