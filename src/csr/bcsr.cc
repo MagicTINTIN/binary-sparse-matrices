@@ -501,6 +501,13 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int3
     // printf("%ld %ld\n", _index_pointers.size(), _indices.size());
 }
 
+BCSR::BCSR(u_int32_t height, u_int32_t width, std::vector<u_int32_t> &index_pointers, std::vector<u_int32_t> &indices) : _height(height), _width(width)
+{
+    _index_pointers = std::vector<u_int32_t>(index_pointers.begin(), index_pointers.begin() + height + 1);
+    _indices = std::vector<u_int32_t>(indices.begin(), indices.begin() + index_pointers[height]);
+    // printf("%ld %ld\n", _index_pointers.size(), _indices.size());
+}
+
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1);

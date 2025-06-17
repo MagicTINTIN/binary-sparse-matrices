@@ -38,6 +38,15 @@ public:
     BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]);
 
     /**
+     * Initialise a BCSR matrix using bcsr matrix params
+     * @param height the matrix height/rows
+     * @param width the matrix width/columns
+     * @param index_pointers an array of index pointers (rows)
+     * @param indices an array of indices (columns)
+     */
+    BCSR(u_int32_t height, u_int32_t width, std::vector<u_int32_t> &index_pointers, std::vector<u_int32_t> &indices);
+
+    /**
      * Initialise a BCSR matrix using a dense matrix
      * @param height the matrix height/rows
      * @param width the matrix width/columns
@@ -204,14 +213,12 @@ void my_scipy_csr_matmat_binary(const u_int32_t n_row,
                                 std::vector<u_int32_t> &Cp,
                                 std::vector<u_int32_t> &Cj);
 
-void uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
+BCSR uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
                                         const u_int32_t n_col,
                                         const std::vector<u_int32_t> &Ap,
                                         const std::vector<u_int32_t> &Aj,
                                         const std::vector<u_int32_t> &Bp,
-                                        const std::vector<u_int32_t> &Bj,
-                                        std::vector<u_int32_t> &Cp,
-                                        std::vector<u_int32_t> &Cj);
+                                        const std::vector<u_int32_t> &Bj);
 
 void scipy_csr_matmat(const u_int32_t n_row,
                       const u_int32_t n_col,

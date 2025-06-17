@@ -398,6 +398,7 @@ int main(int argc, char const *argv[])
     scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
     scipy_canonicalize(400, T2R_p_v, T2R_j_v);
     double m2 = c_stop("Scipy vecs");
+    
 
     c_go();
     std::vector<u_int32_t> T2R2_p_v(400);
@@ -407,6 +408,14 @@ int main(int argc, char const *argv[])
     scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
     double m3 = c_stop("My bScipy");
 
+    c_go();
+    std::vector<u_int32_t> T2R3_p_v(400);
+    std::vector<u_int32_t> T2R3_j_v(13000);
+
+    my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R3_p_v, T2R3_j_v);
+    scipy_canonicalize(400, T2R3_p_v, T2R3_j_v);
+    double m4 = c_stop("My bScipy2");
+
     // c_go();
     // T2B.transpose();
     // c_stop("Transpose");
@@ -415,7 +424,7 @@ int main(int argc, char const *argv[])
     // T2A *T2B;
     // c_stop("Moi");
     // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
-    fprintf(stderr, "%f,%f,%f\n", m1, m2, m3);
+    fprintf(stderr, "%f,%f,%f\n", m2, m3, m4);
 
 
     // std::cout << "My bScipy:\n"
