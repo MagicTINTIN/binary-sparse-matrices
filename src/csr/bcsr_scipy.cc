@@ -586,7 +586,7 @@ BCSR uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
 
     std::vector<u_int32_t> index_pointers(n_row + 1);
     std::vector<u_int32_t> indices(0);
-    indices.reserve(13000);
+    // indices.reserve(13000);
 
     for (u_int32_t i = 0; i < n_row; i++)
     {

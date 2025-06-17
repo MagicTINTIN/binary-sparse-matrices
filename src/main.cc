@@ -391,13 +391,13 @@ int main(int argc, char const *argv[])
     scipy_canonicalize(400, T2R_p, T2R_j);
     double m1 = c_stop("Scipy");
 
-    c_go();
-    std::vector<u_int32_t> T2R_p_v(400);
-    std::vector<u_int32_t> T2R_j_v(13000);
+    // c_go();
+    // std::vector<u_int32_t> T2R_p_v(400);
+    // std::vector<u_int32_t> T2R_j_v(13000);
 
-    scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
-    scipy_canonicalize(400, T2R_p_v, T2R_j_v);
-    double m2 = c_stop("Scipy vecs");
+    // scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
+    // scipy_canonicalize(400, T2R_p_v, T2R_j_v);
+    // double m2 = c_stop("Scipy vecs");
     
 
     // c_go();
@@ -408,17 +408,17 @@ int main(int argc, char const *argv[])
     // scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
     // double m3 = c_stop("My bScipy");
 
-    c_go();
-    std::vector<u_int32_t> T2R3_p_v(400);
-    std::vector<u_int32_t> T2R3_j_v(13000);
+    // c_go();
+    // std::vector<u_int32_t> T2R3_p_v(400);
+    // std::vector<u_int32_t> T2R3_j_v(13000);
 
-    my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R3_p_v, T2R3_j_v);
-    scipy_canonicalize(400, T2R3_p_v, T2R3_j_v);
-    double m4 = c_stop("My bScipy2");
+    // my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R3_p_v, T2R3_j_v);
+    // scipy_canonicalize(400, T2R3_p_v, T2R3_j_v);
+    // double m4 = c_stop("My bScipy2");
 
-    c_go();
-    uninformed_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v);
-    double m5 = c_stop("uninfScipy");
+    // c_go();
+    // uninformed_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v);
+    // double m5 = c_stop("uninfScipy");
 
     // std::cout << uninformed_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v).toCondensedString() << std::endl;
 
@@ -426,17 +426,17 @@ int main(int argc, char const *argv[])
     // T2B.transpose();
     // c_stop("Transpose");
 
-    c_go();
-    T2A.operationTimesMatrix(T2B);
-    double m6 = c_stop("Moi");
+    // c_go();
+    // T2A.operationTimesMatrix(T2B);
+    // double m6 = c_stop("Moi");
 
 
     c_go();
     T2A *T2B;
     double m7 = c_stop("Moi2");
     // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
-    fprintf(stderr, "%f,%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6,m7);
-
+    // fprintf(stderr, "%f,%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6,m7);
+    fprintf(stderr, "%f,%f\n", m1,m7);
 
     // std::cout << "My bScipy:\n"
     //           << scipy_tostr(400, 12049, T2R2_p_v, T2R2_j_v) << "\n";
