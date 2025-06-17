@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <chrono>
 #include "csr/bcsr.hh"
+#include "lil/blil.hh"
 
 #include <cstring>
 
@@ -277,7 +278,7 @@ void m_tests()
               << scipy_tostr(4, 8, R8_p, R8_j) << "\n";
 }
 
-void understand_multiplication()
+void understand_multiplication_csr()
 {
     uint32_t Ap[3] = {0, 1, 3};
     uint32_t Aj[3] = {1, 0, 2};
@@ -292,15 +293,8 @@ void understand_multiplication()
                 << scipy_tostr(2, 4, Cp, Cj) << "\n";
 }
 
-int main(int argc, char const *argv[])
+void csr_benchmark()
 {
-    std::cout << "Starting...\n";
-    // c_go();
-    // long_operation();
-    // c_stop();
-
-    // understand_multiplication();
-
     printf("###################################################\n");
     printf("################### BENCH TESTS ###################\n");
     printf("###################################################\n");
@@ -432,12 +426,17 @@ int main(int argc, char const *argv[])
 
 
     c_go();
-    T2A *T2B;
+    T2A * T2B;
     double m7 = c_stop("Moi2");
     // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
     // fprintf(stderr, "%f,%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6,m7);
     fprintf(stderr, "%f,%f\n", m1,m7);
 
+    c_go();
+    T2A | T2B;
+    c_stop("Moi OR");
+
+    std::cout << (T2A | T2B) << std::endl;
     // std::cout << "My bScipy:\n"
     //           << scipy_tostr(400, 12049, T2R2_p_v, T2R2_j_v) << "\n";
 
@@ -446,6 +445,13 @@ int main(int argc, char const *argv[])
     //             << scipy_tostr(400, 12048, T2R_p, T2R_j) << "\n";
     // std::cout << "Scipy (vector):\n"
     //             << scipy_tostr(400, 12048, T2R_p_v, T2R_j_v) << "\n";
+}
+
+int main(int argc, char const *argv[])
+{
+    std::cout << "Starting...\n";
+
+    
 
     return 0;
 }
