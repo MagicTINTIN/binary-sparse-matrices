@@ -233,6 +233,7 @@ void scipy_csr_matmat(
 
     Cp[0] = 0;
 
+    // for row (i) in A's rows
     for (u_int32_t i = 0; i < n_row; i++)
     {
         u_int32_t head = -2;
@@ -240,11 +241,14 @@ void scipy_csr_matmat(
 
         u_int32_t jj_start = Ap[i];
         u_int32_t jj_end = Ap[i + 1];
+        // for the nnz columns of row in A
+        // accumulate A(i,:) * B(:,:) into sums[] (sums per B's (and C's by extension) columns)
         for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
-            u_int32_t j = Aj[jj];
-            char v = Ax[jj];
+            u_int32_t j = Aj[jj];   // column index j in A
+            char v = Ax[jj];        // A(i,j) value
 
+            // multiply this A(i,j) by row j of B (i.e. B(j,k) for all k)
             u_int32_t kk_start = Bp[j];
             u_int32_t kk_end = Bp[j + 1];
             for (u_int32_t kk = kk_start; kk < kk_end; kk++)
@@ -262,6 +266,7 @@ void scipy_csr_matmat(
             }
         }
 
+        // extract computed sums for row i
         for (u_int32_t jj = 0; jj < length; jj++)
         {
 
@@ -364,13 +369,13 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
     u_int32_t nnz = 0;
 
     Cp[0] = 0;
-    size_t nbLoop = 0;
-    size_t nbOp = 0;
+    // size_t nbLoop = 0;
+    // size_t nbOp = 0;
 
     for (u_int32_t i = 0; i < n_row; i++)
     {
-        nbLoop++;
-        nbOp += 8;
+        // nbLoop++;
+        // nbOp += 8;
         u_int32_t head = -2;
         u_int32_t length = 0;
 
@@ -378,24 +383,24 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
         u_int32_t jj_end = Ap[i + 1];
         for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
-            nbLoop++;
-            nbOp += 6;
-            u_int32_t j = Aj[jj];
-            char v = 1;
+            // nbLoop++;
+            // nbOp += 6;
+            u_int32_t j = Aj[jj];   // column index j in A
+            char v = 1;             // A(i,j) value
 
             u_int32_t kk_start = Bp[j];
             u_int32_t kk_end = Bp[j + 1];
             for (u_int32_t kk = kk_start; kk < kk_end; kk++)
             {
-                nbLoop++;
-                nbOp += 2;
+                // nbLoop++;
+                // nbOp += 2;
                 u_int32_t k = Bj[kk];
 
                 sums[k] += 1;
 
                 if (next[k] == -1)
                 {
-                    nbOp += 3;
+                    // nbOp += 3;
                     next[k] = head;
                     head = k;
                     length++;
@@ -405,11 +410,11 @@ void scipy_csr_matmat_binary(const u_int32_t n_row,
 
         for (u_int32_t jj = 0; jj < length; jj++)
         {
-            nbLoop++;
-            nbOp += 4;
+            // nbLoop++;
+            // nbOp += 4;
             if (sums[head] != 0)
             {
-                nbOp += 2;
+                // nbOp += 2;
                 Cj[nnz] = head;
                 // Cx[nnz] = sums[head];
                 nnz++;
