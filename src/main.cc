@@ -301,11 +301,10 @@ int main(int argc, char const *argv[])
     BCSR T1(450, 250, T1A_p, T1A_j);
 
     c_go();
-
     u_int32_t T1R_p[251] = {0};
     u_int32_t T1R_j[11235] = {0};
-
     double a1 = c_stop("array");
+    
     c_go();
     scipy_tocsc(450, 250, T1A_p, T1A_j, T1R_p, T1R_j);
     double r1 = c_stop("Scipy");
@@ -313,10 +312,10 @@ int main(int argc, char const *argv[])
     std::vector<u_int32_t> T1A_p_v(T1A_p, T1A_p + 451);
     std::vector<u_int32_t> T1A_j_v(T1A_j, T1A_j + 11235);
 
+    
+    c_go();
     std::vector<u_int32_t> T1R2_p(251, 0);
     std::vector<u_int32_t> T1R2_j(11235, 0);
-
-    c_go();
     my_scipy_tocsc(450, 250, T1A_p_v, T1A_j_v, T1R2_p, T1R2_j);
     double r2 = c_stop("MY Scipy");
 
@@ -384,6 +383,7 @@ int main(int argc, char const *argv[])
     scipy_canonicalize(400, T2R_p_v, T2R_j_v);
     c_stop("Scipy vecs");
 
+    std::cout << T2B << std::endl;
 
     c_go();
     T2B.transpose();

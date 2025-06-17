@@ -268,6 +268,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
     }
 
     size_t nbLoop = 0;
+    size_t mainLoop = 0;
     size_t nbOp = 0;
 
     BCSR result(_height, b._width), bT(b.transpose());
@@ -282,6 +283,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
             for (size_t rowB = 0; rowB < bT._height; rowB++)
             {
                 nbLoop++;
+                mainLoop++;
                 // will skip the row if B current row is empty
                 u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB]);
                 nbOp+=4;
@@ -484,17 +486,16 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
-BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width) //, _nz_number(0)
+BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
-    _indices = std::vector<u_int32_t>(13000);
+    _indices = std::vector<u_int32_t>();
     // TODO: change with an heuristic
-    // _indices.reserve(13000);
+    _indices.reserve(13000);
 }
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]) : _height(height), _width(width)
 {
-    // _nz_number = 0;
     _index_pointers = std::vector<u_int32_t>(index_pointers, index_pointers + height + 1);
     _indices = std::vector<u_int32_t>(indices, indices + index_pointers[height]);
     printf("%ld %ld\n", _index_pointers.size(), _indices.size());
@@ -502,13 +503,12 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int3
 
 BCSR::BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]) : _height(height), _width(width)
 {
-    // _nz_number = 0;
     _index_pointers = std::vector<u_int32_t>(height + 1);
     _indices = std::vector<u_int32_t>();
     insertDn2BCSR(values);
 }
 
-BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width) //, _nz_number(nz_number)
+BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
     _indices = std::vector<u_int32_t>(nz_number, 0);
