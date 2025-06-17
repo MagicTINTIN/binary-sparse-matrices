@@ -320,10 +320,74 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
     return BCSR(_height,b._width, index_pointers, indices);
 }
 
+// BCSR BCSR::operator*(const BCSR &b) const
+// {
+//     return operationTimesMatrix(b);
+// }
+
 BCSR BCSR::operator*(const BCSR &b) const
 {
-    return operationTimesMatrix(b);
+    if (b._height != _width)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
+        exit(EXIT_FAILURE);
+    }
+
+    BCSR res(_height,b._width);
+
+    std::vector<u_int32_t> next(b._width, -1);
+
+    u_int32_t nnz = 0;
+
+    // std::vector<u_int32_t> index_pointers(_height + 1);
+    // std::vector<u_int32_t> indices(0);
+    res._indices.reserve(13000);
+
+    for (u_int32_t i = 0; i < _height; i++)
+    {
+        res._index_pointers[i] = nnz;
+        u_int32_t head = -2;
+        u_int32_t length = 0;
+
+        u_int32_t jj_start = _index_pointers[i];
+        u_int32_t jj_end = _index_pointers[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
+        {
+            u_int32_t j = _indices[jj]; // column index j in A
+
+            u_int32_t kk_start = b._index_pointers[j];
+            u_int32_t kk_end = b._index_pointers[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
+            {
+                u_int32_t k = b._indices[kk];
+
+                if (next[k] == -1)
+                {
+                    next[k] = head;
+                    head = k;
+                    length++;
+                }
+            }
+        }
+
+        for (u_int32_t jj = 0; jj < length; jj++)
+        {
+            res._indices.emplace_back(head);
+            // Cj[nnz] = head;
+            nnz++;
+            u_int32_t temp = head;
+            head = next[head];
+
+            next[temp] = -1; // clear arrays
+        }
+
+        // Cp[i + 1] = nnz;
+    }
+    res._index_pointers[_height] = nnz;
+    scipy_canonicalize(_height, res._index_pointers, res._indices);
+    return res;
 }
+
 
 BCSR &BCSR::operator*=(const BCSR &b)
 {

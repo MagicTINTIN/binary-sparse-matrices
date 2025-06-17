@@ -51,8 +51,8 @@ double c_stop(std::string msg)
     // std::cout << ms_int.count() << "ms\n";
     // std::cout << ms_double.count() << "ms\n";
 
-    //std::cout << BOLD << CYAN_NORMAL_COLOR << "⏰ CHORONO[" << CYAN_DESAT_COLOR << std::setw(11) << msg << CYAN_NORMAL_COLOR << "]: "
-    //          << ms_double.count() << " ms" << NORMAL << std::endl;
+    std::cout << BOLD << CYAN_NORMAL_COLOR << "⏰ CHORONO[" << CYAN_DESAT_COLOR << std::setw(11) << msg << CYAN_NORMAL_COLOR << "]: "
+             << ms_double.count() << " ms" << NORMAL << std::endl;
     return ms_double.count();
 }
 
@@ -427,10 +427,15 @@ int main(int argc, char const *argv[])
     // c_stop("Transpose");
 
     c_go();
-    T2A *T2B;
+    T2A.operationTimesMatrix(T2B);
     double m6 = c_stop("Moi");
+
+
+    c_go();
+    T2A *T2B;
+    double m7 = c_stop("Moi2");
     // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
-    fprintf(stderr, "%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6);
+    fprintf(stderr, "%f,%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6,m7);
 
 
     // std::cout << "My bScipy:\n"
