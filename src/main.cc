@@ -51,8 +51,8 @@ double c_stop(std::string msg)
     // std::cout << ms_int.count() << "ms\n";
     // std::cout << ms_double.count() << "ms\n";
 
-    std::cout << BOLD << CYAN_NORMAL_COLOR << "⏰ CHORONO[" << CYAN_DESAT_COLOR << std::setw(11) << msg << CYAN_NORMAL_COLOR << "]: "
-              << ms_double.count() << " ms" << NORMAL << std::endl;
+    //std::cout << BOLD << CYAN_NORMAL_COLOR << "⏰ CHORONO[" << CYAN_DESAT_COLOR << std::setw(11) << msg << CYAN_NORMAL_COLOR << "]: "
+    //          << ms_double.count() << " ms" << NORMAL << std::endl;
     return ms_double.count();
 }
 
@@ -400,13 +400,13 @@ int main(int argc, char const *argv[])
     double m2 = c_stop("Scipy vecs");
     
 
-    c_go();
-    std::vector<u_int32_t> T2R2_p_v(400);
-    std::vector<u_int32_t> T2R2_j_v(13000);
+    // c_go();
+    // std::vector<u_int32_t> T2R2_p_v(400);
+    // std::vector<u_int32_t> T2R2_j_v(13000);
 
-    my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R2_p_v, T2R2_j_v);
-    scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
-    double m3 = c_stop("My bScipy");
+    // my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R2_p_v, T2R2_j_v);
+    // scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
+    // double m3 = c_stop("My bScipy");
 
     c_go();
     std::vector<u_int32_t> T2R3_p_v(400);
@@ -416,15 +416,21 @@ int main(int argc, char const *argv[])
     scipy_canonicalize(400, T2R3_p_v, T2R3_j_v);
     double m4 = c_stop("My bScipy2");
 
+    c_go();
+    uninformed_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v);
+    double m5 = c_stop("uninfScipy");
+
+    // std::cout << uninformed_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v).toCondensedString() << std::endl;
+
     // c_go();
     // T2B.transpose();
     // c_stop("Transpose");
 
-    // c_go();
-    // T2A *T2B;
-    // c_stop("Moi");
+    c_go();
+    T2A *T2B;
+    double m6 = c_stop("Moi");
     // fprintf(stdout, "%f,%f,%f\n", m1, m2, m3);
-    fprintf(stderr, "%f,%f,%f\n", m2, m3, m4);
+    fprintf(stderr, "%f,%f,%f,%f,%f\n", m1,m2, m4, m5,m6);
 
 
     // std::cout << "My bScipy:\n"

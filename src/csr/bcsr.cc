@@ -267,48 +267,57 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
         exit(EXIT_FAILURE);
     }
 
-    size_t nbLoop = 0;
-    size_t mainLoop = 0;
-    size_t nbOp = 0;
+    std::vector<u_int32_t> next(b._width, -1);
 
-    BCSR result(_height, b._width), bT(b.transpose());
-    u_int32_t non_zero_count = 0;
-    for (size_t rowA = 1; rowA <= _height; rowA++)
+    u_int32_t nnz = 0;
+
+    std::vector<u_int32_t> index_pointers(_height + 1);
+    std::vector<u_int32_t> indices(0);
+    indices.reserve(13000);
+
+    for (u_int32_t i = 0; i < _height; i++)
     {
-        nbLoop++;
-        // if a line only contains zeros, then the output line will only contains 0 too (skip n useless check loops)
-        nbOp+=3;
-        if (_index_pointers[rowA] - _index_pointers[rowA - 1] > 0)
+        index_pointers[i] = nnz;
+        u_int32_t head = -2;
+        u_int32_t length = 0;
+
+        u_int32_t jj_start = _index_pointers[i];
+        u_int32_t jj_end = _index_pointers[i + 1];
+        for (u_int32_t jj = jj_start; jj < jj_end; jj++)
         {
-            for (size_t rowB = 0; rowB < bT._height; rowB++)
+            u_int32_t j = _indices[jj]; // column index j in A
+
+            u_int32_t kk_start = b._index_pointers[j];
+            u_int32_t kk_end = b._index_pointers[j + 1];
+            for (u_int32_t kk = kk_start; kk < kk_end; kk++)
             {
-                nbLoop++;
-                mainLoop++;
-                // will skip the row if B current row is empty
-                u_int32_t colA_ptr(_index_pointers[rowA - 1]), colB_ptr(bT._index_pointers[rowB]);
-                nbOp+=4;
-                while (colA_ptr < _index_pointers[rowA] && colB_ptr < bT._index_pointers[rowB + 1])
+                u_int32_t k = b._indices[kk];
+
+                if (next[k] == -1)
                 {
-                    nbLoop++;
-                    nbOp+=2;
-                    if (_indices[colA_ptr] < bT._indices[colB_ptr])
-                        colA_ptr++;
-                    else if (_indices[colA_ptr] > bT._indices[colB_ptr])
-                        colB_ptr++;
-                    else
-                    {
-                        // result._indices.emplace_back(rowB);
-                        result._indices[non_zero_count] = rowB;
-                        non_zero_count++;
-                        break; // if we have a 1 then we know it will be there
-                    }
+                    next[k] = head;
+                    head = k;
+                    length++;
                 }
             }
         }
-        result._index_pointers[rowA] = non_zero_count;
-    }
 
-    return result;
+        for (u_int32_t jj = 0; jj < length; jj++)
+        {
+            indices.emplace_back(head);
+            // Cj[nnz] = head;
+            nnz++;
+            u_int32_t temp = head;
+            head = next[head];
+
+            next[temp] = -1; // clear arrays
+        }
+
+        // Cp[i + 1] = nnz;
+    }
+    index_pointers[_height] = nnz;
+    scipy_canonicalize(_height, index_pointers, indices);
+    return BCSR(_height,b._width, index_pointers, indices);
 }
 
 BCSR BCSR::operator*(const BCSR &b) const

@@ -580,13 +580,13 @@ BCSR uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
                                         const std::vector<u_int32_t> &Bp,
                                         const std::vector<u_int32_t> &Bj)
 {
-    BCSR res(n_row, n_col);
     std::vector<u_int32_t> next(n_col, -1);
 
     u_int32_t nnz = 0;
 
     std::vector<u_int32_t> index_pointers(n_row + 1);
     std::vector<u_int32_t> indices(0);
+    indices.reserve(13000);
 
     for (u_int32_t i = 0; i < n_row; i++)
     {
@@ -635,9 +635,9 @@ BCSR uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
 
         // Cp[i + 1] = nnz;
     }
-    index_pointers[n_row + 1] = nnz;
-
-    return res;
+    index_pointers[n_row] = nnz;
+    scipy_canonicalize(n_row, index_pointers, indices);
+    return BCSR(n_row,n_col, index_pointers, indices);
 }
 
 std::string scipy_tostr(const u_int32_t n_row,
