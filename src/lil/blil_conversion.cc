@@ -6,6 +6,8 @@
 #include <string>
 #include <sstream>
 
+#include "../csr/bcsr.hh"
+
 std::ostream &operator<<(
     std::ostream &stream,
     const BLIL &matrix)
@@ -18,6 +20,32 @@ std::ostream &operator<<(
     BLIL &matrix)
 {
     return std::operator<<(stream, matrix.toString());
+}
+
+BLIL::BLIL(BCSR matrix) : _width(matrix._width), _height(matrix._height)
+{
+    _rows = std::vector<std::vector<u_int32_t>>(_height);
+    for (size_t r = 0; r < _height; r++)
+    {
+        u_int32_t r_start = matrix._index_pointers[r];
+        u_int32_t r_stop = matrix._index_pointers[r + 1];
+        std::vector<u_int32_t> line(r_stop - r_start);
+        for (u_int32_t c = r_start, cc = 0; c < r_stop; c++, cc++)
+        {
+            line[cc] = matrix._indices[c];
+        }
+        _rows[r] = line;
+    }
+    
+}
+
+BCSR BLIL::toBCSR() const
+{
+    return BCSR(*this);
+}
+
+void BLIL::insertDn2BLIL(u_int8_t values[])
+{
 }
 
 std::vector<u_int8_t> BLIL::toDenseMatrix() const

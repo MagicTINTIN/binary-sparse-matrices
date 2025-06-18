@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "blil.hh"
 
 bool BCSR::checkOrder(bool verbose) const
 {
@@ -34,13 +33,18 @@ bool BCSR::checkOrder(bool verbose) const
         // return false;
     }
 
-    // TODO: check width (a row can't have more than _width elements)
     for (int i = 0; i < _height; ++i)
     {
         u_int8_t row_min_col = 0;
         bool first = true;
         for (int idx = _index_pointers[i]; idx < _index_pointers[i + 1]; ++idx)
         {
+            if (_indices[idx] >= _width)
+            {
+                if (verbose)
+                    fprintf(stderr, "Width (%d) is not equal to column number (%d) in line %d!\n", _width, _indices[idx], i);
+                return false;
+            }
             if (row_min_col >= _indices[idx] && !first)
             {
                 if (verbose)

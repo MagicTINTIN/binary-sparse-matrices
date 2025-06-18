@@ -50,7 +50,7 @@ public:
      */
     BLIL(BCSR matrix);
 
-    // ######### Conversions to dense and string #########
+    // ######### Conversions to other representations #########
     /**
      * @returns a dense matrix
      */
@@ -71,6 +71,11 @@ public:
      * Convert the BLIL matrix in dense form to a printable string
      */
     std::string toDnString() const;
+    /**
+     * Convert the BLIL matrix to a BCSR one
+     */
+    BCSR toBCSR() const;
+
     /**
      * check ordering of the indices
      * TODO: remove ?
