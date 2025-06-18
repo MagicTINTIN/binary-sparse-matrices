@@ -1,0 +1,42 @@
+#pragma once
+#ifndef UTILS_HH
+#define UTILS_HH
+
+#include <vector>
+#include <sys/types.h>
+
+// bool insertByValue(std::vector<u_int32_t> &vec, const u_int32_t &value);
+
+// /**
+//  * @warning no check that begin < end!
+//  */
+// bool insertByValue(std::vector<u_int32_t> &vec, const u_int32_t &begin, const u_int32_t &end, const u_int32_t &value);
+
+template<typename T>
+/**
+ * @warning no check that begin < end!
+ */
+bool insertByValue(std::vector<T> &vec, const size_t &begin, const size_t &end, const T &value)
+{
+    auto it = std::lower_bound(vec.begin() + begin, vec.begin() + end, value);
+
+    // already exists
+    if (it != (vec.begin() + end) && *it == value)
+        return false;
+    
+    vec.insert(it, value);
+    return true;
+}
+
+
+template<typename T>
+bool insertByValue(std::vector<T> &vec, const T &value) {
+    return insertByValue<T>(vec, (size_t)0, (size_t)vec.size(), value);
+}
+
+// template<typename T>
+// bool insertByValue(std::vector<T> &vec, const size_t &begin, const size_t &end, const T &value);
+// template<typename T>
+// bool insertByValue(std::vector<T> &vec, const T &value);
+
+#endif // UTILS_HH

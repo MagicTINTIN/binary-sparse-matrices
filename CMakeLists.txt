@@ -13,6 +13,7 @@ set(SOURCES
     src/csr/bcsr_scipy.cc
     src/lil/blil.cc
     src/lil/blil_conversion.cc
+    src/utils/utils.cc
 )
 
 # Binary
