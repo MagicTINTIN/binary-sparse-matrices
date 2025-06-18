@@ -157,19 +157,42 @@ void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
 }
 
 void BLIL::set(const u_int32_t row, const u_int32_t col)
-{ // TODO:
+{
     if (col >= _width || row >= _height)
     {
         fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
         exit(EXIT_FAILURE);
     }
+
+    for (u_int32_t i = 0; i < _rows[row].size(); i++)
+    {
+        if (col < _rows[row][i])
+        {
+            _rows[row].insert(_rows[row].begin() + i, col);
+            return;
+        }
+        // if the value was already 1, then there is no change
+        else if (col == _rows[row][i])
+            return;
+    }
+
+    _rows[row].emplace_back(col);
 }
 
 void BLIL::reset(const u_int32_t row, const u_int32_t col)
-{ // TODO:
+{
     if (col >= _width || row >= _height)
     {
         fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
         exit(EXIT_FAILURE);
+    }
+
+    for (u_int32_t i = 0; i < _rows[row].size(); i++)
+    {
+        if (col == _rows[row][i])
+        {
+            _rows[row].erase(_rows[row].begin() + i);
+            return;
+        }
     }
 }

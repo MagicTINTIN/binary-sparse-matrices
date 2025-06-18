@@ -507,6 +507,19 @@ int main(int argc, char const *argv[])
         1,0,0,1,
     };
     BLIL lil_test(3,4,test);
+    std::cout << lil_test.toDnString() << "\n";
+
+    lil_test.set(0,1,0);
+    lil_test.set(0,0,0);
+    lil_test.set(1,2,0);
+    lil_test.set(2,0,0);
+    std::cout << lil_test.toDnString() << "\n";
+
+    lil_test.set(0,3,1);
+    lil_test.set(1,0,1);
+    lil_test.set(1,0,1);
+    lil_test.set(2,2,1);
+    std::cout << lil_test.toDnString() << "\n";
     BCSR csr_test(3,4,test);
     std::cout << lil_test << "\n" << csr_test << std::endl;
     std::cout << lil_test.toCondensedString() << std::endl;

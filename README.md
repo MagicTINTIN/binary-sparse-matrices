@@ -17,6 +17,7 @@ Operations imply to have canonical CSR, with **sorted** and **unique** indices (
 - [x] matrix-matrix Hadamard multiplication/and
 - [x] transposition
 - [x] constructor with CSR parameters
+- [x] set/reset value
 ### LIL
 - [x] conversion from/to CSR matrix
 - [x] conversion from/to dense matrix
@@ -26,3 +27,4 @@ Operations imply to have canonical CSR, with **sorted** and **unique** indices (
 - [ ] matrix-matrix multiplication
 - [ ] matrix-vector multiplication
 - [x] constructor with LIL parameters
+- [x] set/reset value

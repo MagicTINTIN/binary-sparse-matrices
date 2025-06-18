@@ -104,7 +104,6 @@ void BCSR::operationOr(const BCSR &b)
                     if (b._indices[b_index_pointer] < _indices[col_index])
                     {
                         _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                        // _nz_number++;
                         carry++;
                         col_index++;
                     }
@@ -114,7 +113,6 @@ void BCSR::operationOr(const BCSR &b)
             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
             {
                 _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                // _nz_number++;
                 carry++;
             }
         }
@@ -354,7 +352,6 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
                     _indices.insert(_indices.begin() + i, col);
                     // _nz_number++;
                     inserted = true;
-                    // TODO://
                     break;
                 }
                 // if the value was already 1, then there is no change
