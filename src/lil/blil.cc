@@ -2,7 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
-
+#include <algorithm>
+#include "../utils/utils.hh"
 #include "blil.hh"
 
 BLIL::BLIL(u_int32_t height, u_int32_t width) : _height(height), _width(width)
@@ -145,7 +146,11 @@ BLIL &BLIL::selfTranspose()
 }
 
 BLIL BLIL::transpose() const
-{ // TODO:
+{
+    BLIL res(_width, _height);
+    for (size_t r = 0; r < _height; r++)
+        for (u_int32_t c : _rows[r])
+            insertByValue<u_int32_t>(res._rows[c], r);
 }
 
 void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)

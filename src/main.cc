@@ -471,6 +471,15 @@ int main(int argc, char const *argv[])
     c_go();
     T1.setAlt(100, 150);
     c_stop("altSet");
+    std::cout << T1alt2;
+    c_go();
+    T1.reset(197, 197);
+    c_stop("reset");
+    c_go();
+    T1.resetAlt(197, 197);
+    c_stop("altReset");
+    std::cout << T1alt2;
+
 
     c_go();
     T1 *T1T;
@@ -488,7 +497,7 @@ int main(int argc, char const *argv[])
     BLIL T1_LIL{T1};
     c_stop("CSR>LIL");
 
-    std::cout << T1_LIL;
+    // std::cout << T1_LIL;
 
     c_go();
     BCSR T1_CSRagain{T1_LIL};

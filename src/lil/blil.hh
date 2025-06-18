@@ -138,11 +138,9 @@ public:
     /**
      * Will transpose the matrix
      * @warning it modifies the current matrix!
-     * @note equivalent to transform it as a CSC
      */
     BLIL &selfTranspose();
     /**
-     * @note equivalent to transform it as a CSC
      * @returns the transposed matrix
      */
     BLIL transpose() const;
