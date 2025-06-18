@@ -55,7 +55,7 @@ bool BLIL::checkOrder(bool verbose) const
             if (col[i] <= col[i - 1])
             {
                 if (verbose)
-                    fprintf(stderr, "Line %ld columns number %ld and %ld are not strictly ordered: %d >= %d!\n", r, i - 1, i,  col[i - 1], col[i]);
+                    fprintf(stderr, "Line %ld columns number %ld and %ld are not strictly ordered: %d >= %d!\n", r, i - 1, i, col[i - 1], col[i]);
                 return false;
             }
         }
@@ -64,34 +64,112 @@ bool BLIL::checkOrder(bool verbose) const
     return true;
 }
 
-void BLIL::operationOr(const BLIL &b) {}
+void BLIL::operationOr(const BLIL &b)
+{ // TODO:
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
+}
 
-BLIL &BLIL::operator|=(const BLIL &b) {}
+BLIL &BLIL::operator|=(const BLIL &b)
+{
+    operationOr(b);
+    return *this;
+}
 
-BLIL &BLIL::operator+=(const BLIL &b) {}
+BLIL &BLIL::operator+=(const BLIL &b)
+{
+    operationOr(b);
+    return *this;
+}
 
-BLIL BLIL::operator|(const BLIL &b) const {}
+BLIL BLIL::operator|(const BLIL &b) const
+{
+    BLIL result(*this);
+    result.operationOr(b);
+    return result;
+}
 
-BLIL BLIL::operator+(const BLIL &b) const {}
+BLIL BLIL::operator+(const BLIL &b) const
+{
+    return operator|(b);
+}
 
-void BLIL::operationAnd(const BLIL &b) {}
+void BLIL::operationAnd(const BLIL &b)
+{ // TODO:
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
+}
 
-BLIL BLIL::operator&(const BLIL &b) const {}
+BLIL BLIL::operator&(const BLIL &b) const
+{
+    BLIL result(*this);
+    result.operationAnd(b);
+    return result;
+}
 
-BLIL &BLIL::operator&=(const BLIL &b) {}
+BLIL &BLIL::operator&=(const BLIL &b)
+{
+    operationAnd(b);
+    return *this;
+}
 
-BLIL BLIL::operationTimesMatrix(const BLIL &b) const {}
+BLIL BLIL::operationTimesMatrix(const BLIL &b) const
+{ // TODO:
+    if (b._height != _width)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
+        exit(EXIT_FAILURE);
+    }
+}
 
-BLIL BLIL::operator*(const BLIL &b) const {}
+BLIL BLIL::operator*(const BLIL &b) const
+{
+    return operationTimesMatrix(b);
+}
 
-BLIL &BLIL::operator*=(const BLIL &b) {}
+BLIL &BLIL::operator*=(const BLIL &b)
+{
+    *this = operationTimesMatrix(b);
+    return *this;
+}
 
-BLIL &BLIL::selfTranspose() {}
+BLIL &BLIL::selfTranspose()
+{
+    return *this = transpose();
+}
 
-BLIL BLIL::transpose() const {}
+BLIL BLIL::transpose() const
+{ // TODO:
+}
 
-void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value) {}
+void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
+{
+    if (value)
+        set(row, col);
+    else
+        reset(row, col);
+}
 
-void BLIL::set(const u_int32_t row, const u_int32_t col) {}
+void BLIL::set(const u_int32_t row, const u_int32_t col)
+{ // TODO:
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+}
 
-void BLIL::reset(const u_int32_t row, const u_int32_t col) {}
+void BLIL::reset(const u_int32_t row, const u_int32_t col)
+{ // TODO:
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+}

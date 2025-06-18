@@ -85,15 +85,6 @@ void BCSR::operationOr(const BCSR &b)
         exit(EXIT_FAILURE);
     }
 
-    // FIXME: (opti?) _index_pointers.size()  -> _height + 1
-    // for (size_t r = 1; r < _index_pointers.size(); r)
-    // {
-    //     for (size_t c = b._index_pointers[r - 1]; c < b._index_pointers[r]; c++)
-    //     {
-    //         set(r - 1, b._indices[c]);
-    //     }
-    // }
-
     // for each row after an insertion, propagate the information with the carry
     u_int32_t carry = 0;
     for (size_t r = 1; r <= _height; r++) //< _index_pointers.size()
@@ -133,60 +124,7 @@ void BCSR::operationOr(const BCSR &b)
 
 BCSR BCSR::operator|(const BCSR &b) const
 {
-
-    if (b._width != _width || b._height != _height)
-    {
-        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        exit(EXIT_FAILURE);
-    }
-
     BCSR result(*this);
-
-    // FIXME: (opti?) _index_pointers.size()  -> _height + 1
-    // for (size_t r = 1; r < _index_pointers.size(); r)
-    // {
-    //     for (size_t c = b._index_pointers[r - 1]; c < b._index_pointers[r]; c++)
-    //     {
-    //         result.set(r - 1, b._indices[c]);
-    //     }
-    // }
-
-    /*
-    u_int32_t carry = 0;
-    for (size_t r = 1; r < result._index_pointers.size(); r++)
-    {
-        // if the line contains a non zero value.
-        if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
-        {
-            u_int32_t col_index = result._index_pointers[r - 1];
-            u_int32_t b_index_pointer = b._index_pointers[r - 1];
-            // for each column check if there is an insertion to do before it
-            for (; col_index < _index_pointers[r] + carry; col_index++)
-            {
-                // add every non zero indice (column) before this column
-                for (; b._indices[b_index_pointer] <= result._indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
-                {
-                    // if the value was already 1, then there is no change for this column
-                    if (b._indices[b_index_pointer] < result._indices[col_index])
-                    {
-                        result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
-                        // result._nz_number++;
-                        carry++;
-                        col_index++;
-                    }
-                }
-            }
-            // for every other non-zero in the line that has not been added
-            for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
-            {
-                result._indices.insert(result._indices.begin() + col_index, b._indices[b_index_pointer]);
-                // result._nz_number++;
-                carry++;
-            }
-        }
-        result._index_pointers[r] += carry;
-    }
-    */
     result.operationOr(b);
     return result;
 }
@@ -346,41 +284,6 @@ BCSR &BCSR::selfTranspose()
     return *this = transpose();
 }
 
-// BCSR BCSR::transpose() const
-// {
-//     BCSR result(_width, _height, _index_pointers[_height]);
-
-//     // count number of values in each column
-//     for (u_int32_t col_idx = 0; col_idx < _index_pointers[_height]; col_idx++)
-//     {
-//         result._index_pointers[_indices[col_idx] + 1]++;
-//     }
-
-//     // calculate cumulative sums
-//     for (u_int32_t c = 1; c <= result._height; c++)
-//         result._index_pointers[c] += result._index_pointers[c - 1];
-
-//     for (u_int32_t row = 0; row < _height; row++)
-//     {
-//         for (u_int32_t col_index = _index_pointers[row]; col_index < _index_pointers[row + 1]; col_index++)
-//         {
-//             // TODO: simplify
-//             u_int32_t col = _indices[col_index];
-//             u_int32_t dest = result._index_pointers[col];
-//             result._indices[dest] = row;
-//             result._index_pointers[col]++;
-//         }
-//     }
-
-//     for (u_int32_t col_idx = result._height; col_idx > 0; col_idx--)
-//     {
-//         result._index_pointers[col_idx] = result._index_pointers[col_idx - 1];
-//     }
-//     result._index_pointers[0] = 0;
-
-//     return result;
-// }
-
 BCSR BCSR::transpose() const
 {
     BCSR result(_width, _height, _index_pointers[_height]);
@@ -405,7 +308,6 @@ BCSR BCSR::transpose() const
     {
         for (u_int32_t col_index = _index_pointers[row]; col_index < _index_pointers[row + 1]; col_index++)
         {
-            // TODO: simplify
             u_int32_t col = _indices[col_index];
             u_int32_t dest = result._index_pointers[col];
             result._indices[dest] = row;

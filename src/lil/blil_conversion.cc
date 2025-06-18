@@ -92,7 +92,6 @@ std::string BLIL::toString() const
     std::sort(nbPerLine.begin(), nbPerLine.end());
     u_int32_t medNbPerLine = nbPerLine[_height / 2];
 
-    // TODO:
     std::ostringstream oss;
     oss << "<" << _height << ";" << _width << "> ("
         << nnz << " ones / "
