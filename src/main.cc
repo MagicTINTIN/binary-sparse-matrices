@@ -491,6 +491,8 @@ int main(int argc, char const *argv[])
     BLIL T1_LIL{T1};
     c_stop("CSR>LIL");
 
+    std::cout << T1_LIL;
+
     c_go();
     BCSR T1_CSRagain{T1_LIL};
     c_stop("LIL>CSR");
@@ -505,7 +507,8 @@ int main(int argc, char const *argv[])
         1,0,0,1,
     };
     BLIL lil_test(3,4,test);
-    std::cout << lil_test.toDnString() << std::endl;
+    BCSR csr_test(3,4,test);
+    std::cout << lil_test << "\n" << csr_test << std::endl;
 
     // std::cout << T1 << "\n" << T1bis << std::endl;
 

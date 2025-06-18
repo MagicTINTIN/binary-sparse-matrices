@@ -36,7 +36,6 @@ BLIL::BLIL(BCSR matrix) : _width(matrix._width), _height(matrix._height)
         }
         _rows[r] = line;
     }
-    
 }
 
 BCSR BLIL::toBCSR() const
@@ -73,30 +72,39 @@ std::vector<u_int8_t> BLIL::toDenseMatrix() const
 
 std::string BLIL::toString() const
 {
-    if (_width == 0 || _height == 0) 
+    if (_width == 0 || _height == 0)
         return "<0;0>";
 
-        // TODO:
+    size_t nnz = 0;
+    float sparsityPerLine = 0;
+    for (size_t i = 0; i < _height; i++)
+    {
+        nnz += _rows[i].size();
+        sparsityPerLine += (float) _rows[i].size() / (float) (_height * _width);
+    }
+
+    // TODO:
     std::ostringstream oss;
-    // oss << "<" << _height << ";" << _width << "> ("
-    //     << _index_pointers[_height] << " ones / "
-    //     << (_width * _height)
-    //     << ", sparsity: "
-    //     << float(100.0 * (_width*_height - _index_pointers[_height]) 
-    //              / (_width*_height))
-    //     << "%)\nIndex Pointers (Rows): [";
+    oss << "<" << _height << ";" << _width << "> ("
+        << nnz << " ones / "
+        << (_width * _height)
+        << ", sparsity: "
+        << float(100.0 * (_width * _height - nnz) / (_width * _height))
+        << "%, sparsity per line: "
+        << 100 * (1 - sparsityPerLine)
+        << "%)\n";
 
-    // for (size_t i = 0; i <= _height; ++i) {
-    //     if (i) oss << "|";
-    //     oss << _index_pointers[i];
-    // }
-
-    // oss << "]\nIndices (Columns): [";
-    // for (size_t i = 0; i < _index_pointers[_height]; ++i) {
-    //     if (i) oss << "|";
-    //     oss << _indices[i];
-    // }
-    // oss << "]";
+    for (size_t r = 0; r < _height; r++)
+    {
+        oss << r << ": [";
+        for (size_t c = 0; c < _rows[r].size(); c++)
+        {
+            if (c)
+                oss << "|";
+            oss << _rows[r][c];
+        }
+        oss << "]\n";
+    }
 
     return oss.str();
 }
@@ -108,24 +116,21 @@ std::string BLIL::toCondensedString() const
 
 std::string BLIL::toCondensedString(char const separator) const
 {
-    if (_width == 0 || _height == 0) 
-        return "(1)[0]\n(1)[0]";
+    if (_height == 0)
+        return "nothing. []";
 
-    // TODO:
     std::ostringstream oss;
-    // oss << "("<< _height + 1<<")[";
-
-    // for (size_t i = 0; i <= _height; ++i) {
-    //     if (i) oss << separator;
-    //     oss << _index_pointers[i];
-    // }
-
-    // oss << "]\n(" << _index_pointers[_height] << ")[";
-    // for (size_t i = 0; i < _index_pointers[_height]; ++i) {
-    //     if (i) oss << separator;
-    //     oss << _indices[i];
-    // }
-    // oss << "]";
+    for (size_t r = 0; r < _height; r++)
+    {
+        oss << r << ": [";
+        for (size_t c = 0; c < _rows[r].size(); c++)
+        {
+            if (c)
+                oss << separator;
+            oss << _rows[r][c];
+        }
+        oss << "]\n";
+    }
 
     return oss.str();
 }
@@ -170,4 +175,3 @@ std::string BLIL::toDnString() const
     ret += "]";
     return ret;
 }
-

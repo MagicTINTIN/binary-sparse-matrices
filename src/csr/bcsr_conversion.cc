@@ -27,11 +27,11 @@ BCSR::BCSR(BLIL matrix) : _width(matrix._width), _height(matrix._height)
     size_t nnz = 0;
     for (size_t i = 0; i < _height; i++)
     {
-        nnz+= matrix._rows[i].size();
+        nnz += matrix._rows[i].size();
     }
     _indices = std::vector<u_int32_t>(nnz);
     _index_pointers = std::vector<u_int32_t>(_height + 1, 0);
-    nnz=0;
+    nnz = 0;
     for (size_t r = 0; r < _height; r++)
     {
         _index_pointers[r] = nnz;
@@ -65,26 +65,37 @@ std::vector<u_int8_t> BCSR::toDenseMatrix() const
 
 std::string BCSR::toString() const
 {
-    if (_width == 0 || _height == 0) 
+    if (_width == 0 || _height == 0)
         return "<0;0>";
+
+    float sparsityPerLine = 0;
+    for (u_int32_t r = 0; r < _height; r++)
+    {
+        sparsityPerLine += (float) (_index_pointers[r + 1] - _index_pointers[r]) / (_height * _width);
+    }
 
     std::ostringstream oss;
     oss << "<" << _height << ";" << _width << "> ("
         << _index_pointers[_height] << " ones / "
         << (_width * _height)
         << ", sparsity: "
-        << float(100.0 * (_width*_height - _index_pointers[_height]) 
-                 / (_width*_height))
+        << float(100.0 * (_width * _height - _index_pointers[_height]) / (_width * _height))
+        << "%, sparsity per line: "
+        << 100*(1 - sparsityPerLine)
         << "%)\nIndex Pointers (Rows): [";
 
-    for (size_t i = 0; i <= _height; ++i) {
-        if (i) oss << "|";
+    for (size_t i = 0; i <= _height; ++i)
+    {
+        if (i)
+            oss << "|";
         oss << _index_pointers[i];
     }
 
     oss << "]\nIndices (Columns): [";
-    for (size_t i = 0; i < _index_pointers[_height]; ++i) {
-        if (i) oss << "|";
+    for (size_t i = 0; i < _index_pointers[_height]; ++i)
+    {
+        if (i)
+            oss << "|";
         oss << _indices[i];
     }
     oss << "]";
@@ -99,20 +110,24 @@ std::string BCSR::toCondensedString() const
 
 std::string BCSR::toCondensedString(char const separator) const
 {
-    if (_width == 0 || _height == 0) 
+    if (_width == 0 || _height == 0)
         return "(1)[0]\n(0)[]";
 
     std::ostringstream oss;
-    oss << "("<< _height + 1<<")[";
+    oss << "(" << _height + 1 << ")[";
 
-    for (size_t i = 0; i <= _height; ++i) {
-        if (i) oss << separator;
+    for (size_t i = 0; i <= _height; ++i)
+    {
+        if (i)
+            oss << separator;
         oss << _index_pointers[i];
     }
 
     oss << "]\n(" << _index_pointers[_height] << ")[";
-    for (size_t i = 0; i < _index_pointers[_height]; ++i) {
-        if (i) oss << separator;
+    for (size_t i = 0; i < _index_pointers[_height]; ++i)
+    {
+        if (i)
+            oss << separator;
         oss << _indices[i];
     }
     oss << "]";
