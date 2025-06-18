@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include <sstream>
 
 #include "../lil/blil.hh"
@@ -68,11 +69,19 @@ std::string BCSR::toString() const
     if (_width == 0 || _height == 0)
         return "<0;0>";
 
-    float sparsityPerLine = 0;
+    std::vector<u_int32_t> nbPerLine(_height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
     for (u_int32_t r = 0; r < _height; r++)
     {
-        sparsityPerLine += (float) (_index_pointers[r + 1] - _index_pointers[r]) / (_height * _width);
+        u_int32_t ones = _index_pointers[r + 1] - _index_pointers[r];
+        nbPerLine[r] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
     }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[_height / 2];
 
     std::ostringstream oss;
     oss << "<" << _height << ";" << _width << "> ("
@@ -80,9 +89,9 @@ std::string BCSR::toString() const
         << (_width * _height)
         << ", sparsity: "
         << float(100.0 * (_width * _height - _index_pointers[_height]) / (_width * _height))
-        << "%, sparsity per line: "
-        << 100*(1 - sparsityPerLine)
-        << "%)\nIndex Pointers (Rows): [";
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\nIndex Pointers (Rows): [";
 
     for (size_t i = 0; i <= _height; ++i)
     {

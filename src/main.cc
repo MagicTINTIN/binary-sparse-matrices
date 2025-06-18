@@ -509,6 +509,7 @@ int main(int argc, char const *argv[])
     BLIL lil_test(3,4,test);
     BCSR csr_test(3,4,test);
     std::cout << lil_test << "\n" << csr_test << std::endl;
+    std::cout << lil_test.toCondensedString() << std::endl;
 
     // std::cout << T1 << "\n" << T1bis << std::endl;
 

@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "../csr/bcsr.hh"
+#include <algorithm>
 
 std::ostream &operator<<(
     std::ostream &stream,
@@ -76,12 +77,20 @@ std::string BLIL::toString() const
         return "<0;0>";
 
     size_t nnz = 0;
-    float sparsityPerLine = 0;
+    std::vector<u_int32_t> nbPerLine(_height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
     for (size_t i = 0; i < _height; i++)
     {
-        nnz += _rows[i].size();
-        sparsityPerLine += (float) _rows[i].size() / (float) (_height * _width);
+        u_int32_t ones = (u_int32_t) _rows[i].size();
+        nnz += ones;
+        nbPerLine[i] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
     }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[_height / 2];
 
     // TODO:
     std::ostringstream oss;
@@ -90,9 +99,9 @@ std::string BLIL::toString() const
         << (_width * _height)
         << ", sparsity: "
         << float(100.0 * (_width * _height - nnz) / (_width * _height))
-        << "%, sparsity per line: "
-        << 100 * (1 - sparsityPerLine)
-        << "%)\n";
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\n";
 
     for (size_t r = 0; r < _height; r++)
     {
@@ -111,7 +120,7 @@ std::string BLIL::toString() const
 
 std::string BLIL::toCondensedString() const
 {
-    return toCondensedString('|');
+    return toCondensedString(',');
 }
 
 std::string BLIL::toCondensedString(char const separator) const
@@ -120,17 +129,22 @@ std::string BLIL::toCondensedString(char const separator) const
         return "nothing. []";
 
     std::ostringstream oss;
+    oss << "{";
     for (size_t r = 0; r < _height; r++)
     {
-        oss << r << ": [";
+        if (r)
+            oss << ",\n {";
+        else
+            oss << "{";
         for (size_t c = 0; c < _rows[r].size(); c++)
         {
             if (c)
                 oss << separator;
             oss << _rows[r][c];
         }
-        oss << "]\n";
+        oss << "}";
     }
+    oss << "}";
 
     return oss.str();
 }
