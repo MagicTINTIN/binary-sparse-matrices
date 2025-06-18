@@ -1,9 +1,11 @@
 #include "bcsr.hh"
+#include "bcsr.hh"
 
 #include <sys/types.h>
 #include <vector>
 #include <iostream>
 #include <string>
+#include "blil.hh"
 
 bool BCSR::checkOrder(bool verbose) const
 {
@@ -32,6 +34,7 @@ bool BCSR::checkOrder(bool verbose) const
         // return false;
     }
 
+    // TODO: check width (a row can't have more than _width elements)
     for (int i = 0; i < _height; ++i)
     {
         u_int8_t row_min_col = 0;
