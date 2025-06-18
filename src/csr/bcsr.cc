@@ -1,6 +1,5 @@
 #include "bcsr.hh"
-#include "bcsr.hh"
-
+#include "../utils/utils.hh"
 #include <sys/types.h>
 #include <vector>
 #include <iostream>
@@ -369,6 +368,21 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
     }
 }
 
+void BCSR::setAlt(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+
+    if (!insertByValue(_indices, _index_pointers[row], _index_pointers[row + 1], col))
+    return;
+    // for each row after the insertion, propagate the information
+    for (size_t r = row + 1; r <= _height; r++)
+        _index_pointers[r]++;
+}
+
 void BCSR::reset(const u_int32_t row, const u_int32_t col)
 {
     if (col >= _width || row >= _height)
@@ -379,7 +393,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
 
     bool removed = false;
     // for each row after the removal, propagate the information
-    for (size_t r = row + 1; r <= _height; r++) //< _index_pointers.size()
+    for (size_t r = row + 1; r <= _height; r++)
     {
         if (!removed)
         {

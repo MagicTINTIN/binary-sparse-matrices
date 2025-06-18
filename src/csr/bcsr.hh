@@ -182,6 +182,7 @@ public:
      * @warning this can be a costly operation
      */
     void set(const u_int32_t row, const u_int32_t col);
+    void setAlt(const u_int32_t row, const u_int32_t col);
     /**
      * Set the value at (row,col) to 0 in the matrix
      * @param row of the value
