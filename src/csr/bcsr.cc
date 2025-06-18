@@ -418,6 +418,23 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
+void BCSR::resetAlt(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+
+    if (!removeByValue(_indices, _index_pointers[row], _index_pointers[row + 1], col))
+        return;
+    // for each row after the removal, propagate the information
+    for (size_t r = row + 1; r <= _height; r++)
+    {
+        _index_pointers[r]--;
+    }
+}
+
 BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);

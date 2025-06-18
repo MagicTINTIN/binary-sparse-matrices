@@ -190,6 +190,7 @@ public:
      * @warning this can be a costly operation
      */
     void reset(const u_int32_t row, const u_int32_t col);
+    void resetAlt(const u_int32_t row, const u_int32_t col);
 
     // Not needed for the moment
     // ~BCSR();
