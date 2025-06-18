@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <sys/types.h>
+#include <algorithm>
 
 // bool insertByValue(std::vector<u_int32_t> &vec, const u_int32_t &value);
 
@@ -28,10 +29,33 @@ bool insertByValue(std::vector<T> &vec, const size_t &begin, const size_t &end, 
     return true;
 }
 
-
 template<typename T>
 bool insertByValue(std::vector<T> &vec, const T &value) {
-    return insertByValue<T>(vec, (size_t)0, (size_t)vec.size(), value);
+    return insertByValue(vec, 0, vec.size(), value);
+}
+
+
+template<typename T>
+bool removeByValue(std::vector<T> &vec,
+                   size_t begin,
+                   size_t end,
+                   const T &value)
+{
+    // locate the first element >= value
+    auto it = std::lower_bound(vec.begin() + begin, vec.begin() + end, value);
+
+    // if we are at end or *it != value, nothing to erase
+    if (it == vec.begin() + end || *it != value)
+        return false;
+
+    vec.erase(it);
+    return true;
+}
+
+template<typename T>
+bool removeByValue(std::vector<T> &vec, const T &value)
+{
+    return removeByValue(vec, 0, vec.size(), value);
 }
 
 // template<typename T>
