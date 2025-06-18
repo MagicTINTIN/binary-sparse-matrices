@@ -5,8 +5,8 @@
 #include <sys/types.h>
 #include <vector>
 #include <string>
-#include "../lil/blil.hh"
-
+// #include "../lil/blil.hh"
+class BLIL;
 class BCSR
 {
 private:
@@ -187,6 +187,8 @@ public:
 
     // Not needed for the moment
     // ~BCSR();
+
+    friend class BLIL;
 };
 
 std::ostream &operator<<(std::ostream &stream, BCSR &matrix);

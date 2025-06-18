@@ -5,7 +5,8 @@
 #include <sys/types.h>
 #include <vector>
 #include <string>
-#include "../csr/bcsr.hh"
+// #include "../csr/bcsr.hh"
+class BCSR;
 
 class BLIL
 {
@@ -179,6 +180,8 @@ public:
 
     // Not needed for the moment
     // ~BLIL();
+
+    friend class BCSR;
 };
 
 std::ostream &operator<<(std::ostream &stream, BLIL &matrix);
