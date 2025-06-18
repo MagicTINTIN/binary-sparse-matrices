@@ -46,15 +46,26 @@ BCSR BLIL::toBCSR() const
 
 void BLIL::insertDn2BLIL(u_int8_t values[])
 {
+    for (u_int32_t row = 0; row < _height; ++row)
+    {
+        for (u_int32_t col = 0; col < _width; ++col)
+        {
+            if (values[row * _width + col])
+            {
+                _rows[row].emplace_back(col);
+            }
+        }
+    }
 }
 
 std::vector<u_int8_t> BLIL::toDenseMatrix() const
 {
     std::vector<u_int8_t> mat(_width * _height);
 
-    for (int i = 0; i < _height; ++i)
+    for (int r = 0; r < _height; ++r)
     {
-        // TODO:
+        for (u_int32_t c : _rows[r])
+            mat[r * _width + c] = 1;
     }
 
     return mat;

@@ -499,6 +499,14 @@ int main(int argc, char const *argv[])
     BCSR T1bis{BLIL(T1)};
     c_stop("CSR>LIL>CSR");
 
+    uint8_t test[3*4] = {
+        1,0,1,0,
+        0,0,1,0,
+        1,0,0,1,
+    };
+    BLIL lil_test(3,4,test);
+    std::cout << lil_test.toDnString() << std::endl;
+
     // std::cout << T1 << "\n" << T1bis << std::endl;
 
     return 0;
