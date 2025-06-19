@@ -436,14 +436,19 @@ void csr_benchmark()
     //             << scipy_tostr(400, 12048, T2R_p_v, T2R_j_v) << "\n";
 }
 
-int commonDoSomething()
+int commonDoSomething(int value)
 {
     std::string t = "";
-    for (size_t i = 0; i < 10000; i++, t += "a")
+    for (size_t i = 0; i < 1000 * value; i++, t += "a")
     {
         std::cerr << t << std::endl;
     }
     return t.size();
+}
+
+int commonDoSomething()
+{
+    return commonDoSomething(100);
 }
 
 void lilT(BLIL &T1_LIL, BCSR &T1)
@@ -611,6 +616,7 @@ int main(int argc, char const *argv[])
     c_go();
     BCSR CT1AT(CT1A.transpose());
     c_stop("CSR_T");
+    BLIL LT1AT(CT1AT);
 
     // c_go();
     // std::vector<u_int32_t> T1T_p(251, 0);
@@ -656,13 +662,92 @@ int main(int argc, char const *argv[])
 
     // // // TIMES TESTS
 
-    commonDoSomething();
-    commonDoSomething();
-    commonDoSomething();
-    commonDoSomething();
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
     c_go();
     CT1A *CT1AT;
-    c_stop("CN*");
+    c_stop("C*");
+
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    LT1A *LT1AT;
+    c_stop("L*");
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    BCSR(BLIL(LT1A) * BLIL(LT1AT));
+    c_stop("CLC*");
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    CT1A *CT1AT;
+    c_stop("C*");
+
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    LT1A *LT1AT;
+    c_stop("L*");
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    BCSR(BLIL(LT1A) * BLIL(LT1AT));
+    c_stop("CLC*");
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    CT1A *CT1AT;
+    c_stop("C*");
+
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    LT1A *LT1AT;
+    c_stop("L*");
+
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    commonDoSomething(1000);
+    c_go();
+    BCSR(BLIL(LT1A) * BLIL(LT1AT));
+    c_stop("CLC*");
+
+    std::cout << "EQ L*/C*: " << ((CT1A * CT1AT) == BCSR(LT1A * LT1AT) ? "Same" : "Diff") << std::endl;
+
 
     // c_go();
     // CT1A *CT1AT;
