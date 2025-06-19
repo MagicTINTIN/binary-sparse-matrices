@@ -84,53 +84,23 @@ void BCSR::operationOr(const BCSR &b)
         fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
         exit(EXIT_FAILURE);
     }
-
-    // for each row after an insertion, propagate the information with the carry
-    u_int32_t carry = 0;
-    for (size_t r = 1; r <= _height; r++) //< _index_pointers.size()
-    {
-        // if the line contains a non zero value.
-        if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
-        {
-            u_int32_t col_index = _index_pointers[r - 1];
-            u_int32_t b_index_pointer = b._index_pointers[r - 1];
-            // for each column check if there is an insertion to do before it
-            for (; col_index < _index_pointers[r] + carry; col_index++)
-            {
-                // add every non zero indice (column) before this column
-                for (; b._indices[b_index_pointer] <= _indices[col_index] && b_index_pointer < b._index_pointers[r]; b_index_pointer++)
-                {
-                    // if the value was already 1, then there is no change for this column
-                    if (b._indices[b_index_pointer] < _indices[col_index])
-                    {
-                        _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                        carry++;
-                        col_index++;
-                    }
-                }
-            }
-            // for every other non-zero in the line that has not been added
-            for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
-            {
-                _indices.insert(_indices.begin() + col_index, b._indices[b_index_pointer]);
-                carry++;
-            }
-        }
-        _index_pointers[r] += carry;
-    }
+    
+    *this = BCSR(BLIL(*this) | BLIL(b));
 }
 
 BCSR BCSR::operator|(const BCSR &b) const
 {
-    BCSR result(*this);
-    result.operationOr(b);
-    return result;
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
+    return BCSR(BLIL(*this) | BLIL(b));
 }
 
 BCSR BCSR::operator+(const BCSR &b) const
 {
-    return BCSR(BLIL(*this) | BLIL(b));
-    // return operator|(b);
+    return operator|(b);
 }
 
 void BCSR::operationAnd(const BCSR &b)
