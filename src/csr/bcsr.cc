@@ -140,11 +140,13 @@ void BCSR::operationAnd(const BCSR &b)
                 }
             }
             // for every other 1 -> they are now 0
-            for (size_t idx_ptr = col_index; idx_ptr < _index_pointers[r] - carry;)
-            {
-                _indices.erase(_indices.begin() + idx_ptr);
-                carry++;
-            }
+            _indices.erase(_indices.begin() + col_index, _indices.begin() + _index_pointers[r] - carry);
+            carry += _index_pointers[r] - carry - col_index;
+            // for (size_t idx_ptr = col_index; idx_ptr < _index_pointers[r] - carry;)
+            // {
+            //     _indices.erase(_indices.begin() + idx_ptr);
+            //     carry++;
+            // }
         }
         // if we still have non-zeros left on this line, then remove all of them
         else // if (_index_pointers[r] - _index_pointers[r - 1] > 0) non necessary now

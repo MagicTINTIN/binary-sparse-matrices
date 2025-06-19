@@ -618,23 +618,43 @@ int main(int argc, char const *argv[])
     // my_scipy_tocsc(450, 250, T1A_p_v, T1A_j_v, T1T_p, T1T_j);
     // c_stop("sp CSR_T");
 
-    c_go();
-    BCSR resOr(CT1A | CT1B);
-    c_stop("CSR|");
+    // // // OR TESTS
 
-    c_go();
-    BCSR resPlus(CT1A + CT1B);
-    c_stop("CSR+");
+    // c_go();
+    // BCSR resOr(CT1A | CT1B);
+    // c_stop("CSR|");
 
-    c_go();
-    LT1A | LT1B;
-    c_stop("LIL|");
+    // c_go();
+    // BCSR resPlus(CT1A + CT1B);
+    // c_stop("CSR+");
 
-    c_go();
-    BCSR resOrLCL(BLIL(CT1A) | BLIL(CT1B));
-    c_stop("C>LIL|>C");
+    // c_go();
+    // LT1A | LT1B;
+    // c_stop("LIL|");
+
+    // c_go();
+    // BCSR resOrLCL(BLIL(CT1A) | BLIL(CT1B));
+    // c_stop("C>LIL|>C");
 
     // std::cout << "Pure CSR|:\n"<< resOr << "\nCSR > LIL| > CSR:\n" << resOrLCL << "\n";
+
+
+
+    // // // AND TESTS
+
+    c_go();
+    BCSR resAnd(CT1A & CT1B);
+    c_stop("CSR&");
+
+    c_go();
+    LT1A & LT1B;
+    c_stop("LIL&");
+
+    c_go();
+    BCSR resAndLCL(BLIL(CT1A) & BLIL(CT1B));
+    c_stop("C>LIL&>C");
+
+    std::cout << "Pure CSR&:\n"<< resAnd << "\nCSR > LIL& > CSR:\n" << resAndLCL << "\n";
 
     // BCSR T1alt1(T1);
     // BCSR T1alt2(T1);

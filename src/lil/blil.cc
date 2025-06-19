@@ -88,9 +88,13 @@ void BLIL::operationOr(const BLIL &b)
                 Acol_idx++;
                 A_col_nb++;
                 Bcol_idx++;
-            } else if (b._rows[r][Bcol_idx] > _rows[r][Acol_idx]) {
+            }
+            else if (b._rows[r][Bcol_idx] > _rows[r][Acol_idx])
+            {
                 Acol_idx++;
-            } else {
+            }
+            else
+            {
                 Acol_idx++;
                 Bcol_idx++;
             }
@@ -100,7 +104,6 @@ void BLIL::operationOr(const BLIL &b)
             _rows[r].emplace_back(b._rows[r][Bcol_idx]);
         }
     }
-    
 }
 
 BLIL &BLIL::operator|=(const BLIL &b)
@@ -128,11 +131,38 @@ BLIL BLIL::operator+(const BLIL &b) const
 }
 
 void BLIL::operationAnd(const BLIL &b)
-{ // TODO:
+{
     if (b._width != _width || b._height != _height)
     {
         fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
         exit(EXIT_FAILURE);
+    }
+
+    for (size_t r = 0; r < _height; r++)
+    {
+        size_t Acol_idx = 0;
+        size_t Bcol_idx = 0;
+        size_t A_col_nb = _rows[r].size();
+        size_t B_col_nb = b._rows[r].size();
+        while (Acol_idx < A_col_nb && Bcol_idx < B_col_nb)
+        {
+            if (b._rows[r][Bcol_idx] < _rows[r][Acol_idx])
+            {
+                Bcol_idx++;
+            }
+            else if (b._rows[r][Bcol_idx] > _rows[r][Acol_idx])
+            {
+                _rows[r].erase(_rows[r].begin() + Acol_idx);
+                A_col_nb--;
+            }
+            else
+            {
+                Acol_idx++;
+                // Bcol_idx++;
+            }
+        }
+
+        _rows[r].erase(_rows[r].begin() + Acol_idx, _rows[r].end());
     }
 }
 
