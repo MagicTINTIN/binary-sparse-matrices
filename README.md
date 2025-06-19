@@ -21,10 +21,10 @@ Operations imply to have canonical CSR, with **sorted** and **unique** indices (
 ### LIL
 - [x] conversion from/to CSR matrix
 - [x] conversion from/to dense matrix
-- [ ] transposition
-- [ ] matrix addition/or
-- [ ] matrix-matrix Hadamard multiplication/and
-- [ ] matrix-matrix multiplication
+- [x] transposition
+- [x] matrix addition/or
+- [x] matrix-matrix Hadamard multiplication/and
+- [x] matrix-matrix multiplication
 - [ ] matrix-vector multiplication
 - [x] constructor with LIL parameters
 - [x] set/reset value

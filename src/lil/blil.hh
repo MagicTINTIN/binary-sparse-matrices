@@ -101,6 +101,7 @@ public:
      * @note equivalent to operation+= and operation|=
      */
     void operationOr(const BLIL &b);
+    void operationOr2(const BLIL &b);
     /**
      * @note equivalent to operationOr method and operation+=
      */
