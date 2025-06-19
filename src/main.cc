@@ -373,7 +373,7 @@ void csr_benchmark()
     u_int32_t T2R_p[401] = {0};
     u_int32_t T2R_j[13000] = {0};
     scipy_csr_matmat_binary(400, 400, T2A_p, T2A_j, T2B_p, T2B_j, T2R_p, T2R_j);
-    scipy_canonicalize(400, T2R_p, T2R_j);
+    bcsr_canonicalize(400, T2R_p, T2R_j);
     double m1 = c_stop("Scipy");
 
     // c_go();
@@ -381,7 +381,7 @@ void csr_benchmark()
     // std::vector<u_int32_t> T2R_j_v(13000);
 
     // scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R_p_v, T2R_j_v);
-    // scipy_canonicalize(400, T2R_p_v, T2R_j_v);
+    // bcsr_canonicalize(400, T2R_p_v, T2R_j_v);
     // double m2 = c_stop("Scipy vecs");
 
     // c_go();
@@ -389,7 +389,7 @@ void csr_benchmark()
     // std::vector<u_int32_t> T2R2_j_v(13000);
 
     // my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R2_p_v, T2R2_j_v);
-    // scipy_canonicalize(400, T2R2_p_v, T2R2_j_v);
+    // bcsr_canonicalize(400, T2R2_p_v, T2R2_j_v);
     // double m3 = c_stop("My bScipy");
 
     // c_go();
@@ -397,7 +397,7 @@ void csr_benchmark()
     // std::vector<u_int32_t> T2R3_j_v(13000);
 
     // my_scipy_csr_matmat_binary(400, 400, T2A_p_v, T2A_j_v, T2B_p_v, T2B_j_v, T2R3_p_v, T2R3_j_v);
-    // scipy_canonicalize(400, T2R3_p_v, T2R3_j_v);
+    // bcsr_canonicalize(400, T2R3_p_v, T2R3_j_v);
     // double m4 = c_stop("My bScipy2");
 
     // c_go();
@@ -550,7 +550,7 @@ void lilT2(BCSR &T1, std::vector<uint32_t> &T1A_p_v, std::vector<uint32_t> &T1A_
     std::vector<u_int32_t> T2R3_p_v(451);
     std::vector<u_int32_t> T2R3_j_v(187000);
     my_scipy_csr_matmat_binary(450, 450, T1A_p_v, T1A_j_v, T1T_p, T1T_j, T2R3_p_v, T2R3_j_v);
-    scipy_canonicalize(450, T2R3_p_v, T2R3_j_v);
+    bcsr_canonicalize(450, T2R3_p_v, T2R3_j_v);
     c_stop("sp mult");
 
     c_go();
@@ -663,16 +663,22 @@ int main(int argc, char const *argv[])
     c_go();
     CT1A *CT1AT;
     c_stop("CN*");
-    commonDoSomething();
-    commonDoSomething();
-    commonDoSomething();
-    commonDoSomething();
-    c_go();
-    CT1A.operationTimesMatrix2(CT1AT);
-    c_stop("CMOD*");
-    // std::cout << "NORMAL:\n"
-    //           << CT1A * CT1AT << "\nMODIFIED:\n"
-    //           << CT1A.operationTimesMatrix2(CT1AT) << "\n";
+
+    // c_go();
+    // CT1A *CT1AT;
+    // c_stop("CN*");
+    // commonDoSomething();
+    // commonDoSomething();
+    // commonDoSomething();
+    // commonDoSomething();
+    // c_go();
+    // CT1A.operationTimesMatrix2(CT1AT);
+    // c_stop("CMOD*");
+    // // std::cout << "NORMAL:\n"
+    // //           << CT1A * CT1AT << "\nMODIFIED:\n"
+    // //           << CT1A.operationTimesMatrix2(CT1AT) << "\n";
+
+    // std::cout << "EQ: " << ((CT1A * CT1AT) == CT1A.operationTimesMatrix2(CT1AT) ? "Same" : "Diff") << std::endl;
 
     // BCSR T1alt1(T1);
     // BCSR T1alt2(T1);
