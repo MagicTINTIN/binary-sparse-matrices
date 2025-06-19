@@ -157,31 +157,7 @@ BLIL BLIL::transpose_withoutConversion() const
 
 BLIL BLIL::transpose() const
 {
-    BLIL res(_width, _height);
-    for (size_t r = 0; r < _height; r++)
-        for (u_int32_t c : _rows[r])
-            insertByValue<u_int32_t>(res._rows[c], r);
-    return res;
-}
-
-BLIL BLIL::transpose2() const
-{
     return BLIL(BCSR(*this).transpose());
-}
-
-BLIL BLIL::transpose3() const
-{
-    BCSR t1(*this);
-    BLIL t2 (t1.transpose());
-    return t2;
-}
-
-BLIL BLIL::transpose4() const
-{
-    BCSR t1(*this);
-    BCSR t1t(t1.transpose());
-    BLIL t2 (t1t);
-    return t2;
 }
 
 void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)

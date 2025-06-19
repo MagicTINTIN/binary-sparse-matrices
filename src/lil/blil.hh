@@ -151,12 +151,6 @@ public:
      */
     BLIL transpose_withoutConversion() const;
 
-    BLIL transpose2() const;
-
-    BLIL transpose3() const;
-
-    BLIL transpose4() const;
-
     // ######### SET RESET VALUE #########
     /**
      * Set a value in the matrix

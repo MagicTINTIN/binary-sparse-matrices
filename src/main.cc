@@ -446,6 +446,107 @@ int commonDoSomething()
     return t.size();
 }
 
+void lilT(BLIL &T1_LIL, BCSR &T1)
+{
+
+    c_go();
+    T1.set(100, 150);
+    c_stop("csr set");
+
+    c_go();
+    T1_LIL.set(100, 150);
+    c_stop("lil set");
+
+    // c_go();
+    // T1.transpose();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("csr T");
+
+    c_go();
+    T1_LIL.transpose();
+    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    c_stop("lil T");
+
+    commonDoSomething();
+    
+    c_go();
+    T1_LIL.toBCSR().transpose().toBLIL();
+    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    c_stop("ll>cT>ll:()");
+    
+    BLIL res_lil_t{BCSR{T1_LIL}.transpose()};
+    commonDoSomething();
+
+    c_go();
+    BLIL res_lil(BCSR(T1_LIL).transpose());
+    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    c_stop(":(ll>cT>ll)");
+
+    commonDoSomething();
+
+    // c_go();
+    // T1_LIL.transpose3();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("lil csrT-");
+
+    // commonDoSomething();
+
+    // c_go();
+    // T1_LIL.transpose4();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("lil csrT--");
+
+    // commonDoSomething();
+
+    c_go();
+    BLIL res_lil2{BCSR{T1_LIL}.transpose()};
+    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    c_stop(":{ll>cT>ll}");
+
+    commonDoSomething();
+
+    // c_go();
+    // T1_LIL.transpose2();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("lil csrT");
+
+    // commonDoSomething();
+
+    // c_go();
+    // T1_LIL.transpose3();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("lil csrT-");
+
+    // commonDoSomething();
+
+    
+    // c_go();
+    // T1_LIL.transpose2();
+    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    // c_stop("lil csrT");
+
+    // commonDoSomething();
+    
+    
+    
+    
+    c_go();
+    BLIL res_lil3(BCSR(T1_LIL).transpose());
+    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
+    c_stop(":(ll>cT>ll)");
+
+    // c_go();
+    // BCSR T1_CSRagain{T1_LIL};
+    // c_stop("LIL>CSR");
+    c_go();
+    BLIL T1_LILbis{BCSR(T1_LIL)};
+    c_stop("LIL>CSR>LIL");
+
+    c_go();
+    BCSR T1bis{BLIL(T1)};
+    c_stop("CSR>LIL>CSR");
+}
+
 int main(int argc, char const *argv[])
 {
     std::cout << "Starting...\n";
@@ -512,102 +613,6 @@ int main(int argc, char const *argv[])
     // std::cout << T1_LIL.transpose();
 
 
-    c_go();
-    T1.set(100, 150);
-    c_stop("csr set");
-
-    c_go();
-    T1_LIL.set(100, 150);
-    c_stop("lil set");
-
-    // c_go();
-    // T1.transpose();
-    // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    // c_stop("csr T");
-
-    c_go();
-    T1_LIL.transpose();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil T");
-
-    commonDoSomething();
-    
-    c_go();
-    T1_LIL.toBCSR().transpose().toBLIL();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("ll>cT>ll:()");
-    
-    BLIL res_lil_t{BCSR{T1_LIL}.transpose()};
-    commonDoSomething();
-
-    c_go();
-    BLIL res_lil(BCSR(T1_LIL).transpose());
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop(":(ll>cT>ll)");
-
-    commonDoSomething();
-
-    c_go();
-    T1_LIL.transpose3();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil csrT-");
-
-    commonDoSomething();
-
-    c_go();
-    T1_LIL.transpose4();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil csrT--");
-
-    commonDoSomething();
-
-    c_go();
-    BLIL res_lil2{BCSR{T1_LIL}.transpose()};
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop(":{ll>cT>ll}");
-
-    commonDoSomething();
-
-    c_go();
-    T1_LIL.transpose2();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil csrT");
-
-    commonDoSomething();
-
-    c_go();
-    T1_LIL.transpose3();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil csrT-");
-
-    commonDoSomething();
-
-    
-    c_go();
-    T1_LIL.transpose2();
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop("lil csrT");
-
-    commonDoSomething();
-    
-    
-    
-    
-    c_go();
-    BLIL res_lil3(BCSR(T1_LIL).transpose());
-    // std::cout << (T1 * T1T).toCondensedString() << std::endl;
-    c_stop(":(ll>cT>ll)");
-
-    // c_go();
-    // BCSR T1_CSRagain{T1_LIL};
-    // c_stop("LIL>CSR");
-    c_go();
-    BLIL T1_LILbis{BCSR(T1_LIL)};
-    c_stop("LIL>CSR>LIL");
-
-    c_go();
-    BCSR T1bis{BLIL(T1)};
-    c_stop("CSR>LIL>CSR");
 
     uint8_t test[3 * 4] = {
         1, 0, 1, 0,
