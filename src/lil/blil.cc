@@ -169,19 +169,7 @@ void BLIL::set(const u_int32_t row, const u_int32_t col)
         exit(EXIT_FAILURE);
     }
 
-    for (u_int32_t i = 0; i < _rows[row].size(); i++)
-    {
-        if (col < _rows[row][i])
-        {
-            _rows[row].insert(_rows[row].begin() + i, col);
-            return;
-        }
-        // if the value was already 1, then there is no change
-        else if (col == _rows[row][i])
-            return;
-    }
-
-    _rows[row].emplace_back(col);
+    insertByValue(_rows[row], col);
 }
 
 void BLIL::reset(const u_int32_t row, const u_int32_t col)
@@ -192,12 +180,5 @@ void BLIL::reset(const u_int32_t row, const u_int32_t col)
         exit(EXIT_FAILURE);
     }
 
-    for (u_int32_t i = 0; i < _rows[row].size(); i++)
-    {
-        if (col == _rows[row][i])
-        {
-            _rows[row].erase(_rows[row].begin() + i);
-            return;
-        }
-    }
+    removeByValue(_rows[row], col);
 }
