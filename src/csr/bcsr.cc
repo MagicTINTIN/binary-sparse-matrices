@@ -1,5 +1,6 @@
 #include "bcsr.hh"
 #include "../utils/utils.hh"
+#include "../lil/blil.hh"
 #include <sys/types.h>
 #include <vector>
 #include <iostream>
@@ -128,7 +129,8 @@ BCSR BCSR::operator|(const BCSR &b) const
 
 BCSR BCSR::operator+(const BCSR &b) const
 {
-    return operator|(b);
+    return BCSR(BLIL(*this) | BLIL(b));
+    // return operator|(b);
 }
 
 void BCSR::operationAnd(const BCSR &b)
