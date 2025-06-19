@@ -6,6 +6,26 @@
 #include <iostream>
 #include <string>
 
+void bcsr_canonicalize(const u_int32_t n_row,
+                        u_int32_t Ap[],
+                        u_int32_t Aj[])
+{
+    for (size_t r = 0; r < n_row; r++)
+    {
+        std::sort(Aj + Ap[r], Aj + Ap[r + 1]);
+    }
+}
+
+void bcsr_canonicalize(const u_int32_t n_row,
+                        std::vector<u_int32_t> &Ap,
+                        std::vector<u_int32_t> &Aj)
+{
+    for (size_t r = 0; r < n_row; r++)
+    {
+        std::sort(Aj.begin() + Ap[r], Aj.begin() + Ap[r + 1]);
+    }
+}
+
 bool BCSR::checkOrder(bool verbose) const
 {
     if (_indices.size() != _index_pointers[_index_pointers.size() - 1])
@@ -190,7 +210,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
         // Cp[i + 1] = nnz;
     }
     res._index_pointers[_height] = nnz;
-    scipy_canonicalize(_height, res._index_pointers, res._indices);
+    bcsr_canonicalize(_height, res._index_pointers, res._indices);
     return res;
 }
 
@@ -241,9 +261,9 @@ BCSR BCSR::operationTimesMatrix2(const BCSR &b) const
 
         for (u_int32_t jj = 0; jj < length; jj++)
         {
-            // res._indices.emplace_back(head);
+            res._indices.emplace_back(head);
             u_int32_t h = res._index_pointers[i];
-            insertByValue(res._indices, h, head);
+            // insertByValue(res._indices, h, head);
             // Cj[nnz] = head;
             nnz++;
             u_int32_t temp = head;
@@ -251,11 +271,11 @@ BCSR BCSR::operationTimesMatrix2(const BCSR &b) const
 
             next[temp] = -1; // clear arrays
         }
-
+        std::sort(res._indices.begin() + res._index_pointers[i], res._indices.begin() + nnz);
         // Cp[i + 1] = nnz;
     }
     res._index_pointers[_height] = nnz;
-    // scipy_canonicalize(_height, res._index_pointers, res._indices);
+    // bcsr_canonicalize(_height, res._index_pointers, res._indices);
     return res;
 }
 

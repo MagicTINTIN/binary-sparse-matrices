@@ -288,11 +288,11 @@ void my_scipy_tocsc(const u_int32_t n_row,
                                                //  char Bx[]
 );
 
-void scipy_canonicalize(const u_int32_t n_row,
+void bcsr_canonicalize(const u_int32_t n_row,
                         u_int32_t Ap[],
                         u_int32_t Aj[]);
 
-void scipy_canonicalize(const u_int32_t n_row,
+void bcsr_canonicalize(const u_int32_t n_row,
                         std::vector<u_int32_t> &Ap,
                         std::vector<u_int32_t> &Aj);
 
