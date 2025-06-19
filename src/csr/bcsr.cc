@@ -111,62 +111,18 @@ void BCSR::operationAnd(const BCSR &b)
         exit(EXIT_FAILURE);
     }
 
-    // for each row after an removal, propagate the information with the carry
-    u_int32_t carry = 0;
-    for (size_t r = 1; r <= _height; r++)
-    {
-        if (_index_pointers[r] - _index_pointers[r - 1] == 0)
-        {
-        }
-        // if the line pf b contains a non zero value.
-        else if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
-        {
-            u_int32_t col_index = _index_pointers[r - 1];
-            u_int32_t b_index_pointer = b._index_pointers[r - 1];
-            // for each column of b
-            for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
-            {
-                // cehck if the current matrix has non-zero that has the same columns
-                for (; _indices[col_index] <= b._indices[b_index_pointer] && col_index < _index_pointers[r] - carry; col_index++)
-                {
-                    // if the value of a previous column is a 1, we need to delete it
-                    if (_indices[col_index] < b._indices[b_index_pointer])
-                    {
-                        _indices.erase(_indices.begin() + col_index);
-                        col_index--;
-                        carry++;
-                    }
-                    // else we just continue looking in the line for the other columns of b
-                }
-            }
-            // for every other 1 -> they are now 0
-            _indices.erase(_indices.begin() + col_index, _indices.begin() + _index_pointers[r] - carry);
-            carry += _index_pointers[r] - carry - col_index;
-            // for (size_t idx_ptr = col_index; idx_ptr < _index_pointers[r] - carry;)
-            // {
-            //     _indices.erase(_indices.begin() + idx_ptr);
-            //     carry++;
-            // }
-        }
-        // if we still have non-zeros left on this line, then remove all of them
-        else // if (_index_pointers[r] - _index_pointers[r - 1] > 0) non necessary now
-        {
-            for (size_t idx_ptr = _index_pointers[r - 1]; idx_ptr < _index_pointers[r] - carry; idx_ptr++)
-            {
-                _indices.erase(_indices.begin() + idx_ptr);
-                idx_ptr--;
-                carry++;
-            }
-        }
-        _index_pointers[r] -= carry;
-    }
+    *this = BCSR(BLIL(*this) | BLIL(b));
 }
 
 BCSR BCSR::operator&(const BCSR &b) const
 {
-    BCSR result(*this);
-    result.operationAnd(b);
-    return result;
+    if (b._width != _width || b._height != _height)
+    {
+        fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        exit(EXIT_FAILURE);
+    }
+
+    return BCSR(BLIL(*this) & BLIL(b));
 }
 
 BCSR &BCSR::operator&=(const BCSR &b)
