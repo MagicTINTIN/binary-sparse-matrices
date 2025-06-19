@@ -187,12 +187,52 @@ BLIL &BLIL::operator&=(const BLIL &b)
 }
 
 BLIL BLIL::operationTimesMatrix(const BLIL &b) const
-{ // TODO:
+{
     if (b._height != _width)
     {
         fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
         exit(EXIT_FAILURE);
     }
+
+    BLIL res(_height, b._width);
+
+    std::vector<u_int32_t> next(b._width, -1);
+
+    for (u_int32_t i = 0; i < _height; i++)
+    {
+        u_int32_t head = -2;
+        u_int32_t length = 0;
+
+        for (u_int32_t j : _rows[i])
+        {
+
+            for (u_int32_t k : b._rows[j])
+            {
+                if (next[k] == -1)
+                {
+                    next[k] = head;
+                    head = k;
+                    length++;
+                }
+            }
+        }
+
+        for (u_int32_t jj = 0; jj < length; jj++)
+        {
+            res._rows[i].emplace_back(head);
+
+            // auto it = std::lower_bound(res._rows[i].begin(), res._rows[i].end(), head);
+            // res._rows[i].insert(it, head);
+
+            // insertByValue(res._rows[i], head);
+            u_int32_t temp = head;
+            head = next[head];
+
+            next[temp] = -1; // clear arrays
+        }
+        std::sort(res._rows[i].begin(), res._rows[i].end()); // emplacing back and then sorting is quicker than inserting !
+    }
+    return res;
 }
 
 BLIL BLIL::operator*(const BLIL &b) const
