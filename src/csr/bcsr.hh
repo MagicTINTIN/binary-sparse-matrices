@@ -109,6 +109,11 @@ public:
      */
     bool checkOrder(bool verbose) const;
 
+    /**
+     * Check if 2 matrices are the same
+     */
+    bool operator==(const BCSR &b);
+
     // ######### OR operation with matrices #########
     /**
      * @note equivalent to operation+= and operation|=

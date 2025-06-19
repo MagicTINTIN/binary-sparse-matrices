@@ -7,8 +7,8 @@
 #include <string>
 
 void bcsr_canonicalize(const u_int32_t n_row,
-                        u_int32_t Ap[],
-                        u_int32_t Aj[])
+                       u_int32_t Ap[],
+                       u_int32_t Aj[])
 {
     for (size_t r = 0; r < n_row; r++)
     {
@@ -17,8 +17,8 @@ void bcsr_canonicalize(const u_int32_t n_row,
 }
 
 void bcsr_canonicalize(const u_int32_t n_row,
-                        std::vector<u_int32_t> &Ap,
-                        std::vector<u_int32_t> &Aj)
+                       std::vector<u_int32_t> &Ap,
+                       std::vector<u_int32_t> &Aj)
 {
     for (size_t r = 0; r < n_row; r++)
     {
@@ -77,6 +77,14 @@ bool BCSR::checkOrder(bool verbose) const
     }
 
     return true;
+}
+
+bool BCSR::operator==(const BCSR &b)
+{
+    return _height == b._height &&
+           _width == b._width &&
+           _index_pointers == b._index_pointers &&
+           _indices == b._indices;
 }
 
 bool BCSR::checkOrder() const
@@ -159,7 +167,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
         exit(EXIT_FAILURE);
     }
 
-    BCSR res(_height,b._width);
+    BCSR res(_height, b._width);
 
     std::vector<u_int32_t> next(b._width, -1);
 
@@ -222,7 +230,7 @@ BCSR BCSR::operationTimesMatrix2(const BCSR &b) const
         exit(EXIT_FAILURE);
     }
 
-    BCSR res(_height,b._width);
+    BCSR res(_height, b._width);
 
     std::vector<u_int32_t> next(b._width, -1);
 
@@ -283,7 +291,6 @@ BCSR BCSR::operator*(const BCSR &b) const
 {
     return operationTimesMatrix(b);
 }
-
 
 BCSR &BCSR::operator*=(const BCSR &b)
 {
@@ -354,7 +361,7 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
     }
 
     if (!insertByValue(_indices, _index_pointers[row], _index_pointers[row + 1], col))
-    return;
+        return;
     // for each row after the insertion, propagate the information
     for (size_t r = row + 1; r <= _height; r++)
         _index_pointers[r]++;

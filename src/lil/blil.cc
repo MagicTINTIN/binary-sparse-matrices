@@ -66,6 +66,13 @@ bool BLIL::checkOrder(bool verbose) const
     return true;
 }
 
+bool BLIL::operator==(const BLIL &b)
+{
+    return _height == b._height &&
+           _width == b._width &&
+           _rows == b._rows;
+}
+
 void BLIL::operationOr(const BLIL &b)
 {
     if (b._width != _width || b._height != _height)
