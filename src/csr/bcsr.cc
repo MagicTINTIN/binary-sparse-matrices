@@ -140,7 +140,7 @@ void BCSR::operationAnd(const BCSR &b)
                 }
             }
             // for every other 1 -> they are now 0
-            for (size_t idx_ptr = col_index; idx_ptr < _index_pointers[r] - carry; idx_ptr++)
+            for (size_t idx_ptr = col_index; idx_ptr < _index_pointers[r] - carry;)
             {
                 _indices.erase(_indices.begin() + idx_ptr);
                 carry++;
