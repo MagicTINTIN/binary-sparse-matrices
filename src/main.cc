@@ -638,23 +638,41 @@ int main(int argc, char const *argv[])
 
     // std::cout << "Pure CSR|:\n"<< resOr << "\nCSR > LIL| > CSR:\n" << resOrLCL << "\n";
 
-
-
     // // // AND TESTS
 
-    c_go();
-    BCSR resAnd(CT1A & CT1B);
-    c_stop("CSR&");
+    // c_go();
+    // BCSR resAnd(CT1A & CT1B);
+    // c_stop("CSR&");
 
-    c_go();
-    LT1A & LT1B;
-    c_stop("LIL&");
+    // c_go();
+    // LT1A & LT1B;
+    // c_stop("LIL&");
 
-    c_go();
-    BCSR resAndLCL(BLIL(CT1A) & BLIL(CT1B));
-    c_stop("C>LIL&>C");
+    // c_go();
+    // BCSR resAndLCL(BLIL(CT1A) & BLIL(CT1B));
+    // c_stop("C>LIL&>C");
 
-    std::cout << "Pure CSR&:\n"<< resAnd << "\nCSR > LIL& > CSR:\n" << resAndLCL << "\n";
+    // std::cout << "Pure CSR&:\n"<< resAnd << "\nCSR > LIL& > CSR:\n" << resAndLCL << "\n";
+
+    // // // TIMES TESTS
+
+    commonDoSomething();
+    commonDoSomething();
+    commonDoSomething();
+    commonDoSomething();
+    c_go();
+    CT1A *CT1AT;
+    c_stop("CN*");
+    commonDoSomething();
+    commonDoSomething();
+    commonDoSomething();
+    commonDoSomething();
+    c_go();
+    CT1A.operationTimesMatrix2(CT1AT);
+    c_stop("CMOD*");
+    // std::cout << "NORMAL:\n"
+    //           << CT1A * CT1AT << "\nMODIFIED:\n"
+    //           << CT1A.operationTimesMatrix2(CT1AT) << "\n";
 
     // BCSR T1alt1(T1);
     // BCSR T1alt2(T1);

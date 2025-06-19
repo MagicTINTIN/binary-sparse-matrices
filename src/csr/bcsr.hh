@@ -144,6 +144,7 @@ public:
      * @note not fully implemented, only for square matrices
      */
     BCSR operationTimesMatrix(const BCSR &b) const;
+    BCSR operationTimesMatrix2(const BCSR &b) const;
     /**
      * @note not fully implemented, only for square matrices
      */

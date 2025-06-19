@@ -30,6 +30,11 @@ bool insertByValue(std::vector<T> &vec, const size_t &begin, const size_t &end, 
 }
 
 template<typename T>
+bool insertByValue(std::vector<T> &vec, const size_t &begin, const T &value) {
+    return insertByValue(vec, begin, vec.size(), value);
+}
+
+template<typename T>
 bool insertByValue(std::vector<T> &vec, const T &value) {
     return insertByValue(vec, 0, vec.size(), value);
 }
