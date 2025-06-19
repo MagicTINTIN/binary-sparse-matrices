@@ -144,6 +144,18 @@ public:
      * @returns the transposed matrix
      */
     BLIL transpose() const;
+    /**
+     * transposition without LIL > CSR.transpose() > LIL conversions
+     * @returns the transposed matrix
+     * @warning SLOWER than transpose() method
+     */
+    BLIL transpose_withoutConversion() const;
+
+    BLIL transpose2() const;
+
+    BLIL transpose3() const;
+
+    BLIL transpose4() const;
 
     // ######### SET RESET VALUE #########
     /**
