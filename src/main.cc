@@ -436,7 +436,7 @@ void csr_benchmark()
     //             << scipy_tostr(400, 12048, T2R_p_v, T2R_j_v) << "\n";
 }
 
-int commonDoSomething(int value)
+int cmonDoSomething(int value)
 {
     std::string t = "";
     for (size_t i = 0; i < 1000 * value; i++, t += "a")
@@ -446,9 +446,9 @@ int commonDoSomething(int value)
     return t.size();
 }
 
-int commonDoSomething()
+int cmonDoSomething()
 {
-    return commonDoSomething(100);
+    return cmonDoSomething(100);
 }
 
 void lilT(BLIL &T1_LIL, BCSR &T1)
@@ -472,7 +472,7 @@ void lilT(BLIL &T1_LIL, BCSR &T1)
     // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     c_stop("lil T");
 
-    commonDoSomething();
+    cmonDoSomething();
 
     c_go();
     T1_LIL.toBCSR().transpose().toBLIL();
@@ -480,56 +480,56 @@ void lilT(BLIL &T1_LIL, BCSR &T1)
     c_stop("ll>cT>ll:()");
 
     BLIL res_lil_t{BCSR{T1_LIL}.transpose()};
-    commonDoSomething();
+    cmonDoSomething();
 
     c_go();
     BLIL res_lil(BCSR(T1_LIL).transpose());
     // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     c_stop(":(ll>cT>ll)");
 
-    commonDoSomething();
+    cmonDoSomething();
 
     // c_go();
     // T1_LIL.transpose3();
     // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     // c_stop("lil csrT-");
 
-    // commonDoSomething();
+    // cmonDoSomething();
 
     // c_go();
     // T1_LIL.transpose4();
     // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     // c_stop("lil csrT--");
 
-    // commonDoSomething();
+    // cmonDoSomething();
 
     c_go();
     BLIL res_lil2{BCSR{T1_LIL}.transpose()};
     // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     c_stop(":{ll>cT>ll}");
 
-    commonDoSomething();
+    cmonDoSomething();
 
     // c_go();
     // T1_LIL.transpose2();
     // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     // c_stop("lil csrT");
 
-    // commonDoSomething();
+    // cmonDoSomething();
 
     // c_go();
     // T1_LIL.transpose3();
     // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     // c_stop("lil csrT-");
 
-    // commonDoSomething();
+    // cmonDoSomething();
 
     // c_go();
     // T1_LIL.transpose2();
     // // std::cout << (T1 * T1T).toCondensedString() << std::endl;
     // c_stop("lil csrT");
 
-    // commonDoSomething();
+    // cmonDoSomething();
 
     c_go();
     BLIL res_lil3(BCSR(T1_LIL).transpose());
@@ -662,86 +662,86 @@ int main(int argc, char const *argv[])
 
     // // // TIMES TESTS
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     CT1A *CT1AT;
     c_stop("C*");
 
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     LT1A *LT1AT;
     c_stop("L*");
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     BCSR(BLIL(LT1A) * BLIL(LT1AT));
     c_stop("CLC*");
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     CT1A *CT1AT;
     c_stop("C*");
 
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     LT1A *LT1AT;
     c_stop("L*");
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     BCSR(BLIL(LT1A) * BLIL(LT1AT));
     c_stop("CLC*");
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     CT1A *CT1AT;
     c_stop("C*");
 
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     LT1A *LT1AT;
     c_stop("L*");
 
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
-    commonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
+    cmonDoSomething(1000);
     c_go();
     BCSR(BLIL(LT1A) * BLIL(LT1AT));
     c_stop("CLC*");
@@ -752,10 +752,10 @@ int main(int argc, char const *argv[])
     // c_go();
     // CT1A *CT1AT;
     // c_stop("CN*");
-    // commonDoSomething();
-    // commonDoSomething();
-    // commonDoSomething();
-    // commonDoSomething();
+    // cmonDoSomething();
+    // cmonDoSomething();
+    // cmonDoSomething();
+    // cmonDoSomething();
     // c_go();
     // CT1A.operationTimesMatrix2(CT1AT);
     // c_stop("CMOD*");
