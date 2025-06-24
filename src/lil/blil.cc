@@ -341,3 +341,20 @@ void BLIL::reset(const u_int32_t row, const u_int32_t col)
 
     removeByValue(_rows[row], col);
 }
+
+void BLIL::addDimension()
+{
+    addRow();
+    addColumn();
+}
+
+void BLIL::addColumn()
+{
+    _width++;
+}
+
+void BLIL::addRow()
+{
+    _rows.emplace_back();
+    _height++;
+}

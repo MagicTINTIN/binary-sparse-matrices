@@ -82,14 +82,14 @@ public:
 
     /**
      * check ordering of the indices
-     * TODO: remove ?
+     * CHECK: remove ?
      * @note useless in prod
      */
     bool checkOrder() const;
     /**
      * check ordering of the indices
      * @param verbose to print what are the representation issues
-     * TODO: remove ?
+     * CHECK: remove ?
      * @note useless in prod
      */
     bool checkOrder(bool verbose) const;
@@ -182,6 +182,21 @@ public:
      * @param col of the value
      */
     void reset(const u_int32_t row, const u_int32_t col);
+
+    /**
+     * Add an empty row and column to the end of the matrix
+     */
+    void addDimension();
+
+    /**
+     * Add an empty column to the end of the matrix
+     */
+    void addColumn();
+
+    /**
+     * Add an empty row to the end of the matrix
+     */
+    void addRow();
 
     // Not needed for the moment
     // ~BLIL();

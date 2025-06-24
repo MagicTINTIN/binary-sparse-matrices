@@ -320,6 +320,23 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
+void BLIL::addDimension()
+{
+    addRow();
+    addColumn();
+}
+
+void BCSR::addColumn()
+{
+    _width++;
+}
+
+void BCSR::addRow()
+{
+    _index_pointers.emplace_back(_index_pointers[_height]);
+    _height++;
+}
+
 BCSR::BCSR(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _index_pointers = std::vector<u_int32_t>(height + 1, 0);
