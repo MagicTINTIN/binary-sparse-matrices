@@ -17,6 +17,10 @@ for arg in "$@"; do
         folder="debug"
     elif [ "$arg" = "--fastcomile" ]; then
         makearg+=" -j8 "
+    elif [ "$arg" = "--tools" ]; then
+        g++ csr_matrix_generator.cc -O3 -o csr_matrix_generator.out
+        echo "$(tput setaf 2)$(tput bold)Tools successfully compiled. Execute with ./csr_matrix_generator.out$(tput sgr0)"
+        exit
     elif [ "$arg" = "--reset" ]; then
         rm -rf build/*
         rm -rf debug/*
