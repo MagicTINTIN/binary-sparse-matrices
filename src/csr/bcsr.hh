@@ -91,6 +91,10 @@ public:
      */
     std::string toCondensedString(char const separator) const;
     /**
+     * Get information about the matrix
+     */
+    std::string info() const;
+    /**
      * Convert the BCSR matrix in dense form to a printable string
      */
     std::string toDnString() const;
@@ -341,4 +345,11 @@ std::string scipy_tostr(const u_int32_t n_row,
                         const std::vector<u_int32_t> &Mj,
                         const char separator);
 
+std::string scipy_info(const u_int32_t width,
+                       const u_int32_t height,
+                       const std::vector<u_int32_t> &Mp);
+
+std::string scipy_info(const u_int32_t width,
+                       const u_int32_t height,
+                       const u_int32_t Mp[]);
 #endif // BCSR_HH

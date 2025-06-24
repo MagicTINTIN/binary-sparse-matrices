@@ -72,6 +72,10 @@ public:
      */
     std::string toCondensedString(char const separator) const;
     /**
+     * Get information about the matrix
+     */
+    std::string info() const;
+    /**
      * Convert the BLIL matrix in dense form to a printable string
      */
     std::string toDnString() const;

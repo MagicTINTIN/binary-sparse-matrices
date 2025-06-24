@@ -117,6 +117,38 @@ std::string BCSR::toCondensedString() const
     return toCondensedString('|');
 }
 
+std::string BCSR::info() const
+{
+    std::ostringstream oss;
+    if (_width == 0 || _height == 0)
+        return "<0;0>";
+
+    std::vector<u_int32_t> nbPerLine(_height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
+    for (u_int32_t r = 0; r < _height; r++)
+    {
+        u_int32_t ones = _index_pointers[r + 1] - _index_pointers[r];
+        nbPerLine[r] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
+    }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[_height / 2];
+
+    oss << "<" << _height << ";" << _width << "> ("
+        << _index_pointers[_height] << " ones / "
+        << (_width * _height)
+        << ", sparsity: "
+        << float(100.0 * (_width * _height - _index_pointers[_height]) / (_width * _height))
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\nIndex Pointers (Rows) size: " << _height + 1 << "\n"
+        << "Indices (Columns) size: " << _index_pointers[_height];
+    return oss.str();
+}
+
 std::string BCSR::toCondensedString(char const separator) const
 {
     if (_width == 0 || _height == 0)

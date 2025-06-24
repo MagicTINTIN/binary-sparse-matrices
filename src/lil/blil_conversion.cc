@@ -117,6 +117,40 @@ std::string BLIL::toString() const
     return oss.str();
 }
 
+
+std::string BLIL::info() const
+{
+    if (_width == 0 || _height == 0)
+        return "<0;0>";
+
+    size_t nnz = 0;
+    std::vector<u_int32_t> nbPerLine(_height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
+    for (size_t i = 0; i < _height; i++)
+    {
+        u_int32_t ones = (u_int32_t) _rows[i].size();
+        nnz += ones;
+        nbPerLine[i] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
+    }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[_height / 2];
+
+    std::ostringstream oss;
+    oss << "<" << _height << ";" << _width << "> ("
+        << nnz << " ones / "
+        << (_width * _height)
+        << ", sparsity: "
+        << float(100.0 * (_width * _height - nnz) / (_width * _height))
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\n";
+    return oss.str();
+}
+
 std::string BLIL::toCondensedString() const
 {
     return toCondensedString(',');

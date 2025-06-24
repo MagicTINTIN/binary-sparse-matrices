@@ -651,6 +651,74 @@ std::string scipy_tostr(const u_int32_t n_row,
     return oss.str();
 }
 
+std::string scipy_info(const u_int32_t width,
+                        const u_int32_t height,
+                        const std::vector<u_int32_t> &Mp)
+{
+    std::ostringstream oss;
+    if (width == 0 || height == 0)
+        return "<0;0>";
+
+    std::vector<u_int32_t> nbPerLine(height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
+    for (u_int32_t r = 0; r < height; r++)
+    {
+        u_int32_t ones = Mp[r + 1] - Mp[r];
+        nbPerLine[r] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
+    }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[height / 2];
+
+    oss << "<" << height << ";" << width << "> ("
+        << Mp[height] << " ones / "
+        << (width * height)
+        << ", sparsity: "
+        << float(100.0 * (width * height - Mp[height]) / (width * height))
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\nIndex Pointers (Rows) size: " << height + 1 << "\n"
+        << "Indices (Columns) size: " << Mp[height];
+    return oss.str();
+}
+
+std::string scipy_info(const u_int32_t width,
+                        const u_int32_t height,
+                        const u_int32_t Mp[])
+{
+    std::ostringstream oss;
+    if (width == 0 || height == 0)
+        return "<0;0>";
+
+    std::vector<u_int32_t> nbPerLine(height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
+    for (u_int32_t r = 0; r < height; r++)
+    {
+        u_int32_t ones = Mp[r + 1] - Mp[r];
+        nbPerLine[r] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
+    }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[height / 2];
+
+    oss << "<" << height << ";" << width << "> ("
+        << Mp[height] << " ones / "
+        << (width * height)
+        << ", sparsity: "
+        << float(100.0 * (width * height - Mp[height]) / (width * height))
+        << "%, ones per line: min="
+        << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
+        << ")\nIndex Pointers (Rows) size: " << height + 1 << "\n"
+        << "Indices (Columns) size: " << Mp[height];
+    return oss.str();
+}
+
 std::string scipy_tostr(const u_int32_t n_row,
                         const u_int32_t n_nz,
                         const std::vector<u_int32_t> &Mp,
