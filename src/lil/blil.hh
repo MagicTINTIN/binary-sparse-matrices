@@ -22,6 +22,10 @@ private:
     void insertDn2BLIL(u_int8_t values[]);
 public:
     /**
+     * Initialise a <0;0> matrix
+     */
+    BLIL();
+    /**
      * Initialise a 0-filled BLIL matrix
      * @param height the matrix height/rows
      * @param width the matrix width/columns

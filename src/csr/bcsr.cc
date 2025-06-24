@@ -356,6 +356,12 @@ BCSR::BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number) : _height(hei
     // _index_pointers = std::vector<u_int32_t>(height + 1);
     // _indices = std::vector<u_int32_t>(nz_number);
 }
+
+BCSR::BCSR() : _height(0), _width(0)
+{
+    _index_pointers = std::vector<u_int32_t>(1,0);
+    _indices = std::vector<u_int32_t>(0);
+}
 // CSR::~CSR()
 // {
 // }

@@ -7,6 +7,13 @@
 #include "blil.hh"
 #include "../csr/bcsr.hh"
 
+
+BLIL::BLIL() : _height(0), _width(0)
+{
+    _rows = std::vector<std::vector<u_int32_t>>(0);
+}
+
+
 BLIL::BLIL(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
     _rows = std::vector<std::vector<u_int32_t>>(_height);

@@ -23,6 +23,10 @@ private:
 
 public:
     /**
+     * Initialise a <0;0> matrix
+     */
+    BCSR();
+    /**
      * Initialise a 0-filled BCSR matrix
      * @param height the matrix height/rows
      * @param width the matrix width/columns
