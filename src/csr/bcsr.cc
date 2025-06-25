@@ -320,7 +320,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
-void BLIL::addDimension()
+void BCSR::addDimension()
 {
     addRow();
     addColumn();
