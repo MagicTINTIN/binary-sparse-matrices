@@ -11,9 +11,11 @@
 #include <algorithm>
 
 #define NORMAL "\e[0m"
+#define BOLD "\e[1m"
 #define BLACK_NORMAL_COLOR "\e[30m"
 #define WHITE_NORMAL_BACKGROUND "\e[47m"
 #define WHITE_DESAT_BACKGROUND "\e[107m"
+#define BLACK_DESAT_BACKGROUND "\e[100m"
 
 std::ostream &operator<<(
     std::ostream &stream,
@@ -250,8 +252,14 @@ void addRightNumber(std::ostringstream &oss, const u_int32_t &number, const u_in
 
 std::string BLIL::toSpreadsheet() const
 {
+    std::vector<std::string> d(_height);
+    return toSpreadsheet(d);
+}
+
+std::string BLIL::toSpreadsheet(std::vector<std::string> linesDescription) const
+{
     std::vector<u_int8_t> m = toDenseMatrix();
-    return spreadsheetPrinter(m, _height, _width);
+    return spreadsheetPrinter(m, _height, _width, linesDescription);
 }
 
 std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width)
@@ -281,8 +289,11 @@ std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int3
     return ret + "]";
 }
 
-std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width)
+std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width, std::vector<std::string> linesDescription)
 {
+    if (linesDescription.size() != height)
+        return "ERROR: height != linesDescription";
+
     u_int8_t h_indicesSize = 1;
     for (u_int32_t i = height; i >= 10; i /= 10)
         h_indicesSize++;
@@ -316,11 +327,16 @@ std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int3
     for (size_t i = 0; i < width; i++)
     {
         oss << "┃";
+        if (i % 2)
+            oss << BOLD;
         addNumber(oss, i, w_indicesSize);
+        if (i % 2)
+            oss << NORMAL;
     }
 
     for (size_t line = 0; line < height; line++)
     {
+        std::string currentLineBG = line % 2 ? NORMAL : BLACK_DESAT_BACKGROUND;
         oss << "\n";
         addNChars(oss, "━", h_indicesSize);
         if (line == 0)
@@ -335,7 +351,8 @@ std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int3
             addNChars(oss, "─", w_indicesSize);
             addNChars(oss, "┼" + nTimesString("─", w_indicesSize), width - 1);
         }
-        oss << "\n";
+        oss << "\n"
+            << currentLineBG;
         addRightNumber(oss, line, h_indicesSize);
 
         for (size_t col = 0; col < width; col++)
@@ -346,11 +363,16 @@ std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int3
                 oss << "│";
             if (m[line * width + col])
                 oss << WHITE_DESAT_BACKGROUND << BLACK_NORMAL_COLOR;
+            if (col % 2)
+                oss << BOLD;
             addNumber(oss, m[line * width + col], w_indicesSize);
 
-            if (m[line * width + col])
-                oss << NORMAL;
+            oss << NORMAL << currentLineBG;
         }
+
+        if (linesDescription[line].size())
+            oss << " -> " << linesDescription[line];
+        oss << NORMAL;
     }
     return oss.str();
 }

@@ -197,8 +197,14 @@ std::string BCSR::toDnString() const
 
 std::string BCSR::toSpreadsheet() const
 {
+    std::vector<std::string> d(_height);
+    return toSpreadsheet(d);
+}
+
+std::string BCSR::toSpreadsheet(std::vector<std::string> linesDescription) const
+{
     std::vector<u_int8_t> m = toDenseMatrix();
-    return spreadsheetPrinter(m, _height, _width);
+    return spreadsheetPrinter(m, _height, _width, linesDescription);
 }
 
 void BCSR::insertDn2BCSR(u_int8_t values[])

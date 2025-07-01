@@ -9,7 +9,7 @@
 class BLIL;
 
 std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
-std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
+std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width, std::vector<std::string> linesDescription);
 
 class BCSR
 {
@@ -103,9 +103,14 @@ public:
      */
     std::string toDnString() const;
     /**
-     * Convert the BLIL matrix in dense form to a printable string with indices
+     * Convert the BCSR matrix in dense form to a printable string with indices
      */
     std::string toSpreadsheet() const;
+    /**
+     * Convert the BCSR matrix in dense form to a printable string with indices
+     * @param linesDescription a vector of string with a string per line
+     */
+    std::string toSpreadsheet(std::vector<std::string> linesDescription) const;
     /**
      * Convert the BCSR matrix to a BLIL one
      */
