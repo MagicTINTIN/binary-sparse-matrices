@@ -195,6 +195,12 @@ std::string BCSR::toDnString() const
     return denseMatrixPrinter(m,_height,_width);
 }
 
+std::string BCSR::toSpreadsheet() const
+{
+    std::vector<u_int8_t> m = toDenseMatrix();
+    return spreadsheetPrinter(m, _height, _width);
+}
+
 void BCSR::insertDn2BCSR(u_int8_t values[])
 {
     _index_pointers[0] = 0;

@@ -10,6 +10,11 @@
 #include "../csr/bcsr.hh"
 #include <algorithm>
 
+#define NORMAL "\e[0m"
+#define BLACK_NORMAL_COLOR "\e[30m"
+#define WHITE_NORMAL_BACKGROUND "\e[47m"
+#define WHITE_DESAT_BACKGROUND "\e[107m"
+
 std::ostream &operator<<(
     std::ostream &stream,
     const BLIL &matrix)
@@ -82,7 +87,7 @@ std::string BLIL::toString() const
     u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
     for (size_t i = 0; i < _height; i++)
     {
-        u_int32_t ones = (u_int32_t) _rows[i].size();
+        u_int32_t ones = (u_int32_t)_rows[i].size();
         nnz += ones;
         nbPerLine[i] = ones;
         if (ones < minNbPerLine)
@@ -118,7 +123,6 @@ std::string BLIL::toString() const
     return oss.str();
 }
 
-
 std::string BLIL::info() const
 {
     if (_width == 0 || _height == 0)
@@ -129,7 +133,7 @@ std::string BLIL::info() const
     u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
     for (size_t i = 0; i < _height; i++)
     {
-        u_int32_t ones = (u_int32_t) _rows[i].size();
+        u_int32_t ones = (u_int32_t)_rows[i].size();
         nnz += ones;
         nbPerLine[i] = ones;
         if (ones < minNbPerLine)
@@ -198,35 +202,48 @@ std::string BLIL::toDnString() const
     }
 
     std::vector<u_int8_t> m = toDenseMatrix();
-    
-    return denseMatrixPrinter(m,_height,_width);
+
+    return denseMatrixPrinter(m, _height, _width);
 }
 
-std::string centerString(u_int8_t width, const std::string& str) {
+std::string centerString(u_int8_t width, const std::string &str)
+{
     u_int8_t len = str.length();
-    if(width < len) { return str; }
+    if (width < len)
+    {
+        return str;
+    }
 
     u_int8_t diff = width - len;
-    u_int8_t pad1 = diff/2;
+    u_int8_t pad1 = diff / 2;
     u_int8_t pad2 = diff - pad1;
     return std::string(pad1, ' ') + str + std::string(pad2, ' ');
 }
 
-
-void addNChars(std::ostringstream &oss, const std::string & str, const u_int32_t times)
+void addNChars(std::ostringstream &oss, const std::string &str, const u_int32_t times)
 {
     for (size_t i = 0; i < times; i++)
     {
         oss << str;
-    } 
+    }
 }
 
-void addNumber(std::ostringstream &oss, const u_int32_t & number, const u_int8_t size)
+std::string nTimesString(const std::string &str, const u_int32_t times)
+{
+    std::ostringstream oss;
+    for (size_t i = 0; i < times; i++)
+    {
+        oss << str;
+    }
+    return oss.str();
+}
+
+void addNumber(std::ostringstream &oss, const u_int32_t &number, const u_int8_t size)
 {
     oss << centerString(size, std::to_string(number));
 }
 
-void addRightNumber(std::ostringstream &oss, const u_int32_t & number, const u_int8_t size)
+void addRightNumber(std::ostringstream &oss, const u_int32_t &number, const u_int8_t size)
 {
     oss << std::setw(size) << number;
 }
@@ -237,7 +254,8 @@ std::string BLIL::toSpreadsheet() const
     return spreadsheetPrinter(m, _height, _width);
 }
 
-std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width) {
+std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width)
+{
     std::string ret("[");
     for (size_t line = 0; line < height; line++)
     {
@@ -260,9 +278,79 @@ std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int3
         }
         ret += "]";
     }
-    ret += "]";
+    return ret + "]";
 }
 
-std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width) {
-    
+std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width)
+{
+    u_int8_t h_indicesSize = 1;
+    for (u_int32_t i = height; i >= 10; i /= 10)
+        h_indicesSize++;
+    u_int8_t w_indicesSize = 1;
+    for (u_int32_t i = width; i >= 10; i /= 10)
+        w_indicesSize++;
+
+    std::ostringstream oss;
+    addNChars(oss, " ", h_indicesSize);
+    if (height == 0)
+    {
+        for (size_t i = 0; i < width; i++)
+        {
+            oss << "┃";
+            addNumber(oss, i, w_indicesSize);
+        }
+        return oss.str();
+    }
+    if (width == 0)
+    {
+        for (size_t i = 0; i < height; i++)
+        {
+            oss << "\n";
+            addNChars(oss, "━", h_indicesSize);
+            oss << "\n";
+            addRightNumber(oss, i, h_indicesSize);
+        }
+        return oss.str();
+    }
+
+    for (size_t i = 0; i < width; i++)
+    {
+        oss << "┃";
+        addNumber(oss, i, w_indicesSize);
+    }
+
+    for (size_t line = 0; line < height; line++)
+    {
+        oss << "\n";
+        addNChars(oss, "━", h_indicesSize);
+        if (line == 0)
+        {
+            oss << "╋";
+            addNChars(oss, "━", w_indicesSize);
+            addNChars(oss, "╇" + nTimesString("━", w_indicesSize), width - 1);
+        }
+        else
+        {
+            oss << "╉";
+            addNChars(oss, "─", w_indicesSize);
+            addNChars(oss, "┼" + nTimesString("─", w_indicesSize), width - 1);
+        }
+        oss << "\n";
+        addRightNumber(oss, line, h_indicesSize);
+
+        for (size_t col = 0; col < width; col++)
+        {
+            if (col == 0)
+                oss << "┃";
+            else
+                oss << "│";
+            if (m[line * width + col])
+                oss << WHITE_DESAT_BACKGROUND << BLACK_NORMAL_COLOR;
+            addNumber(oss, m[line * width + col], w_indicesSize);
+
+            if (m[line * width + col])
+                oss << NORMAL;
+        }
+    }
+    return oss.str();
 }

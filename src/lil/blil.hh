@@ -9,6 +9,7 @@
 class BCSR;
 
 std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
+std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
 
 class BLIL
 {
