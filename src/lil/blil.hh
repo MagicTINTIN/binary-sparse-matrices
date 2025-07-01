@@ -8,6 +8,8 @@
 // #include "../csr/bcsr.hh"
 class BCSR;
 
+std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
+
 class BLIL
 {
 private:
@@ -79,6 +81,10 @@ public:
      * Convert the BLIL matrix in dense form to a printable string
      */
     std::string toDnString() const;
+    /**
+     * Convert the BLIL matrix in dense form to a printable string with indices
+     */
+    std::string toSpreadsheet() const;
     /**
      * Convert the BLIL matrix to a BCSR one
      */

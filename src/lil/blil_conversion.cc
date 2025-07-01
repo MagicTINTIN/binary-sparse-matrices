@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <sstream>
 
@@ -196,9 +197,49 @@ std::string BLIL::toDnString() const
         return ret + "]";
     }
 
-    std::string ret("[");
     std::vector<u_int8_t> m = toDenseMatrix();
-    for (size_t line = 0; line < _height; line++)
+    
+    return denseMatrixPrinter(m,_height,_width);
+}
+
+std::string centerString(u_int8_t width, const std::string& str) {
+    u_int8_t len = str.length();
+    if(width < len) { return str; }
+
+    u_int8_t diff = width - len;
+    u_int8_t pad1 = diff/2;
+    u_int8_t pad2 = diff - pad1;
+    return std::string(pad1, ' ') + str + std::string(pad2, ' ');
+}
+
+
+void addNChars(std::ostringstream &oss, const std::string & str, const u_int32_t times)
+{
+    for (size_t i = 0; i < times; i++)
+    {
+        oss << str;
+    } 
+}
+
+void addNumber(std::ostringstream &oss, const u_int32_t & number, const u_int8_t size)
+{
+    oss << centerString(size, std::to_string(number));
+}
+
+void addRightNumber(std::ostringstream &oss, const u_int32_t & number, const u_int8_t size)
+{
+    oss << std::setw(size) << number;
+}
+
+std::string BLIL::toSpreadsheet() const
+{
+    std::vector<u_int8_t> m = toDenseMatrix();
+    return spreadsheetPrinter(m, _height, _width);
+}
+
+std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width) {
+    std::string ret("[");
+    for (size_t line = 0; line < height; line++)
     {
         if (line == 0)
         {
@@ -206,19 +247,22 @@ std::string BLIL::toDnString() const
         }
         else
             ret += ",\n [";
-        for (size_t col = 0; col < _width; col++)
+        for (size_t col = 0; col < width; col++)
         {
             if (col == 0)
             {
-                ret += std::to_string(m[line * _width + col]);
+                ret += std::to_string(m[line * width + col]);
             }
             else
             {
-                ret += "," + std::to_string(m[line * _width + col]);
+                ret += "," + std::to_string(m[line * width + col]);
             }
         }
         ret += "]";
     }
     ret += "]";
-    return ret;
+}
+
+std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width) {
+    
 }

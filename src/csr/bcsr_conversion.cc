@@ -190,31 +190,9 @@ std::string BCSR::toDnString() const
         return ret + "]";
     }
 
-    std::string ret("[");
     std::vector<u_int8_t> m = toDenseMatrix();
-    for (size_t line = 0; line < _height; line++)
-    {
-        if (line == 0)
-        {
-            ret += "[";
-        }
-        else
-            ret += ",\n [";
-        for (size_t col = 0; col < _width; col++)
-        {
-            if (col == 0)
-            {
-                ret += std::to_string(m[line * _width + col]);
-            }
-            else
-            {
-                ret += "," + std::to_string(m[line * _width + col]);
-            }
-        }
-        ret += "]";
-    }
-    ret += "]";
-    return ret;
+    
+    return denseMatrixPrinter(m,_height,_width);
 }
 
 void BCSR::insertDn2BCSR(u_int8_t values[])
