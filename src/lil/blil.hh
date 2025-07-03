@@ -215,10 +215,23 @@ public:
     void addRow();
 
     /**
-     * Add a row with a non zero value at nonzero_column and column to the end of the matrix
+     * Add a row with a non zero value and column to the end of the matrix
      * @param nonzero_column the column of the row's non-zero value
      */
-    void addDimension(u_int32_t nonzero_column);
+    void addDimensionNZC(u_int32_t nonzero_column);
+
+    /**
+     * Add an empty row and column with a non zero value to the end of the matrix
+     * @param nonzero_row the row at which we emplace a new non-zero value at the new column
+     */
+    void addDimensionNZR(u_int32_t nonzero_row);
+
+    /**
+     * Add a row with a non zero value and column with a non zero value to the end of the matrix
+     * @param nonzero_column the column of the row's non-zero value
+     * @param nonzero_row the row at which we emplace a new non-zero value at the new column
+     */
+    void addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row);
     
     // Not needed for the moment
     // ~BLIL();
