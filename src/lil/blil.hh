@@ -214,6 +214,12 @@ public:
      */
     void addRow();
 
+    /**
+     * Add a row with a non zero value at nonzero_column and column to the end of the matrix
+     * @param nonzero_column the column of the row's non-zero value
+     */
+    void addDimension(u_int32_t nonzero_column);
+    
     // Not needed for the moment
     // ~BLIL();
 

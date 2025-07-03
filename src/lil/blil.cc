@@ -358,3 +358,9 @@ void BLIL::addRow()
     _rows.emplace_back();
     _height++;
 }
+
+void BLIL::addDimension(u_int32_t nonzero_column)
+{
+    addDimension();
+    _rows[_height - 1].emplace_back(nonzero_column);
+}
