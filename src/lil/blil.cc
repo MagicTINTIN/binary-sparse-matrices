@@ -374,6 +374,8 @@ void BLIL::addDimensionNZR(u_int32_t nonzero_row)
 void BLIL::addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row)
 {
     addDimension();
+
     _rows[_height - 1].emplace_back(nonzero_column);
-    _rows[nonzero_row].emplace_back(_width - 1);
+    if (nonzero_row < _height - 1)
+        _rows[nonzero_row].emplace_back(_width - 1);
 }
