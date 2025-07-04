@@ -125,7 +125,7 @@ std::string BLIL::toString() const
     return oss.str();
 }
 
-std::string BLIL::info() const
+std::string BLIL::info(bool excludeFullLineStat) const
 {
     if (_width == 0 || _height == 0)
         return "<0;0>";
@@ -140,7 +140,7 @@ std::string BLIL::info() const
         nbPerLine[i] = ones;
         if (ones < minNbPerLine)
             minNbPerLine = ones;
-        if (ones > maxNbPerLine)
+        if (ones > maxNbPerLine && !(excludeFullLineStat && ones == _width))
             maxNbPerLine = ones;
     }
     std::sort(nbPerLine.begin(), nbPerLine.end());
@@ -156,6 +156,11 @@ std::string BLIL::info() const
         << minNbPerLine << ", med=" << medNbPerLine << ", max=" << maxNbPerLine
         << ")\n";
     return oss.str();
+}
+
+std::string BLIL::info() const
+{
+    return info(false);
 }
 
 std::string BLIL::toCondensedString() const

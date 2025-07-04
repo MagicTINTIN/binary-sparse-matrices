@@ -74,6 +74,16 @@ public:
      * Convert the BLIL matrix to a printable condensed string
      */
     std::string toCondensedString(char const separator) const;
+    // /**
+    //  * Get information about the matrix
+    //  * @param excludeMaxNZAbove to hide from stats some high values
+    //  */
+    // std::string info(u_int32_t excludeMaxNZAbove) const;
+     /**
+     * Get information about the matrix
+     * @param excludeFullLineStat to exclude full line from median statistics
+     */
+    std::string info(bool excludeFullLineStat) const;
     /**
      * Get information about the matrix
      */
