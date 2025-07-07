@@ -320,7 +320,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     }
 }
 
-bool BCSR::get(const u_int32_t row, const u_int32_t col)
+bool BCSR::get(const u_int32_t row, const u_int32_t col) const
 {
     if (col >= _width || row >= _height)
     {

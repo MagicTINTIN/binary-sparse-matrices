@@ -342,7 +342,7 @@ void BLIL::reset(const u_int32_t row, const u_int32_t col)
     removeByValue(_rows[row], col);
 }
 
-bool BLIL::get(const u_int32_t row, const u_int32_t col)
+bool BLIL::get(const u_int32_t row, const u_int32_t col) const
 {
     if (col >= _width || row >= _height)
     {

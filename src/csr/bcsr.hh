@@ -221,7 +221,7 @@ public:
      * @param col of the value
      * @returns if the value at row,col is not a zero
      */
-    bool get(const u_int32_t row, const u_int32_t col);
+    bool get(const u_int32_t row, const u_int32_t col) const;
 
     /**
      * Add an empty row and column to the end of the matrix

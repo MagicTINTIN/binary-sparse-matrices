@@ -64,7 +64,7 @@ bool removeByValue(std::vector<T> &vec, const T &value)
 }
 
 template<typename T>
-bool isValueIn(std::vector<T> &vec,
+bool isValueIn(std::vector<T> const &vec,
                    size_t begin,
                    size_t end,
                    const T &value)
@@ -79,7 +79,7 @@ bool isValueIn(std::vector<T> &vec,
 }
 
 template<typename T>
-bool isValueIn(std::vector<T> &vec, const T &value)
+bool isValueIn(std::vector<T> const &vec, const T &value)
 {
     return isValueIn(vec, 0, vec.size(), value);
 }
