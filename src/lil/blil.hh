@@ -243,6 +243,13 @@ public:
      */
     void addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row);
     
+    /**
+     * Retrieve non zeros columns of a row
+     * @param row
+     * @warning no row check
+     */
+    std::vector<u_int32_t> getRow(u_int32_t row);
+
     // Not needed for the moment
     // ~BLIL();
 

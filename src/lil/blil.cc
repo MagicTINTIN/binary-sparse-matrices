@@ -379,3 +379,8 @@ void BLIL::addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row)
     if (nonzero_row < _height - 1)
         _rows[nonzero_row].emplace_back(_width - 1);
 }
+
+std::vector<u_int32_t> BLIL::getRow(u_int32_t row)
+{
+    return _rows[row];
+}
