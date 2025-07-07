@@ -234,6 +234,13 @@ public:
     // Not needed for the moment
     // ~BCSR();
 
+    /**
+     * Retrieve non zeros columns of a row
+     * @param row
+     * @warning no row check
+     */
+    std::vector<u_int32_t> getRow(u_int32_t row) const;
+
     friend class BLIL;
 };
 

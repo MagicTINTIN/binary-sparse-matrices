@@ -248,7 +248,7 @@ public:
      * @param row
      * @warning no row check
      */
-    std::vector<u_int32_t> getRow(u_int32_t row);
+    std::vector<u_int32_t> getRow(u_int32_t row) const;
 
     // Not needed for the moment
     // ~BLIL();
