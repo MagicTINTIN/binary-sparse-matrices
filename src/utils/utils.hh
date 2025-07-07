@@ -63,6 +63,27 @@ bool removeByValue(std::vector<T> &vec, const T &value)
     return removeByValue(vec, 0, vec.size(), value);
 }
 
+template<typename T>
+bool isValueIn(std::vector<T> &vec,
+                   size_t begin,
+                   size_t end,
+                   const T &value)
+{
+    // locate the first element >= value
+    auto it = std::lower_bound(vec.begin() + begin, vec.begin() + end, value);
+
+    // if we are at end or *it != value, not present
+    if (it == vec.begin() + end || *it != value)
+        return false;
+    return true;
+}
+
+template<typename T>
+bool isValueIn(std::vector<T> &vec, const T &value)
+{
+    return isValueIn(vec, 0, vec.size(), value);
+}
+
 // template<typename T>
 // bool insertByValue(std::vector<T> &vec, const size_t &begin, const size_t &end, const T &value);
 // template<typename T>

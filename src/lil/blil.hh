@@ -188,7 +188,7 @@ public:
      */
     BLIL transpose_withoutConversion() const;
 
-    // ######### SET RESET VALUE #########
+    // ######### SET RESET GET VALUE #########
     /**
      * Set a value in the matrix
      * @param row of the value
@@ -208,6 +208,13 @@ public:
      * @param col of the value
      */
     void reset(const u_int32_t row, const u_int32_t col);
+    /**
+     * Get a value in the matrix
+     * @param row of the value
+     * @param col of the value
+     * @returns if the value at row,col is not a zero
+     */
+    bool get(const u_int32_t row, const u_int32_t col);
 
     /**
      * Add an empty row and column to the end of the matrix

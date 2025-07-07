@@ -335,11 +335,21 @@ void BLIL::reset(const u_int32_t row, const u_int32_t col)
 {
     if (col >= _width || row >= _height)
     {
-        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        fprintf(stderr, "Error: position does not match in reset method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
         exit(EXIT_FAILURE);
     }
 
     removeByValue(_rows[row], col);
+}
+
+bool BLIL::get(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in get method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+    return isValueIn(_rows[row], col);
 }
 
 void BLIL::addDimension()

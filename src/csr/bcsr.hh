@@ -192,29 +192,36 @@ public:
      */
     BCSR transpose() const;
 
-    // ######### SET RESET VALUE #########
+    // ######### SET RESET GET VALUE #########
     /**
      * Set a value in the matrix
      * @param row of the value
      * @param col of the value
      * @param value (0 or 1) (different from 0)
-     * @warning this can be a costly operation
+     * @warning this can be a costly operation if multiply used
      */
     void set(const u_int32_t row, const u_int32_t col, const u_int8_t value);
     /**
      * Set the value at (row,col) to 1 in the matrix
      * @param row of the value
      * @param col of the value
-     * @warning this can be a costly operation
+     * @warning this can be a costly operation if multiply used
      */
     void set(const u_int32_t row, const u_int32_t col);
     /**
      * Set the value at (row,col) to 0 in the matrix
      * @param row of the value
      * @param col of the value
-     * @warning this can be a costly operation
+     * @warning this can be a costly operation if multiply used
      */
     void reset(const u_int32_t row, const u_int32_t col);
+    /**
+     * Get a value in the matrix
+     * @param row of the value
+     * @param col of the value
+     * @returns if the value at row,col is not a zero
+     */
+    bool get(const u_int32_t row, const u_int32_t col);
 
     /**
      * Add an empty row and column to the end of the matrix

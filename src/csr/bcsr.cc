@@ -307,7 +307,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
 {
     if (col >= _width || row >= _height)
     {
-        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        fprintf(stderr, "Error: position does not match in reset method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
         exit(EXIT_FAILURE);
     }
 
@@ -318,6 +318,16 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     {
         _index_pointers[r]--;
     }
+}
+
+bool BCSR::get(const u_int32_t row, const u_int32_t col)
+{
+    if (col >= _width || row >= _height)
+    {
+        fprintf(stderr, "Error: position does not match in get method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        exit(EXIT_FAILURE);
+    }
+    return isValueIn(_indices, _index_pointers[row], _index_pointers[row + 1], col);
 }
 
 void BCSR::addDimension()
