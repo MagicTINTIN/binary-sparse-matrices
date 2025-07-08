@@ -6,6 +6,7 @@
 #include "../utils/utils.hh"
 #include "blil.hh"
 #include "../csr/bcsr.hh"
+#include <stdexcept>
 
 
 BLIL::BLIL() : _height(0), _width(0)
@@ -84,8 +85,9 @@ void BLIL::operationOr(const BLIL &b)
 {
     if (b._width != _width || b._height != _height)
     {
-        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        exit(EXIT_FAILURE);
+        throw std::range_error("Error: dimensions does not match in operationOr a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
+        // fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        // exit(EXIT_FAILURE);
     }
 
     for (size_t r = 0; r < _height; r++)
@@ -124,8 +126,9 @@ void BLIL::operationOr2(const BLIL &b)
 {
     if (b._width != _width || b._height != _height)
     {
-        fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        exit(EXIT_FAILURE);
+        throw std::range_error("Error: dimensions does not match in operationOr a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
+        // fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        // exit(EXIT_FAILURE);
     }
 
     for (size_t r = 0; r < _height; r++)
@@ -188,8 +191,9 @@ void BLIL::operationAnd(const BLIL &b)
 {
     if (b._width != _width || b._height != _height)
     {
-        fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        exit(EXIT_FAILURE);
+        throw std::range_error("Error: dimensions does not match in operationAnd a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
+        // fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
+        // exit(EXIT_FAILURE);
     }
 
     for (size_t r = 0; r < _height; r++)
@@ -237,8 +241,9 @@ BLIL BLIL::operationTimesMatrix(const BLIL &b) const
 {
     if (b._height != _width)
     {
-        fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
-        exit(EXIT_FAILURE);
+        throw std::range_error("Error: dimensions does not match in operationTimesMatrix a<_;" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";_>\n");
+        // fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
+        // exit(EXIT_FAILURE);
     }
 
     BLIL res(_height, b._width);
@@ -324,8 +329,9 @@ void BLIL::set(const u_int32_t row, const u_int32_t col)
 {
     if (col >= _width || row >= _height)
     {
-        fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        exit(EXIT_FAILURE);
+        throw std::out_of_range("Error: position does not match in set method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
+        // fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        // exit(EXIT_FAILURE);
     }
 
     insertByValue(_rows[row], col);
@@ -335,8 +341,9 @@ void BLIL::reset(const u_int32_t row, const u_int32_t col)
 {
     if (col >= _width || row >= _height)
     {
-        fprintf(stderr, "Error: position does not match in reset method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        exit(EXIT_FAILURE);
+        throw std::out_of_range("Error: position does not match in reset method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
+        // fprintf(stderr, "Error: position does not match in reset method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        // exit(EXIT_FAILURE);
     }
 
     removeByValue(_rows[row], col);
@@ -346,8 +353,9 @@ bool BLIL::get(const u_int32_t row, const u_int32_t col) const
 {
     if (col >= _width || row >= _height)
     {
-        fprintf(stderr, "Error: position does not match in get method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        exit(EXIT_FAILURE);
+        throw std::out_of_range("Error: position does not match in get method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
+        // fprintf(stderr, "Error: position does not match in get method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
+        // exit(EXIT_FAILURE);
     }
     return isValueIn(_rows[row], col);
 }
