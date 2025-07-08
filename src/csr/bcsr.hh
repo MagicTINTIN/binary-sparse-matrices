@@ -138,14 +138,18 @@ public:
     // ######### OR operation with matrices #########
     /**
      * @note equivalent to operation+= and operation|=
+     * @returns if the matrix has changed
      */
-    void operationOr(const BCSR &b);
+    bool operationOr(const BCSR &b);
     /**
      * @note equivalent to operationOr method and operation+=
+     * @warning different return behaviour than most of the |=, doesn't return a reference to this!
+     * @returns if the matrix has changed
      */
-    BCSR &operator|=(const BCSR &b);
+    bool operator|=(const BCSR &b);
     /**
      * @note equivalent to operationOr method and operation|=
+     * @returns a reference to the current matrix
      */
     BCSR &operator+=(const BCSR &b);
     BCSR operator|(const BCSR &b) const;

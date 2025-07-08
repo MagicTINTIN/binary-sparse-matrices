@@ -133,15 +133,19 @@ public:
     // ######### OR operation with matrices #########
     /**
      * @note equivalent to operation+= and operation|=
+     * @returns if the matrix has changed
      */
-    void operationOr(const BLIL &b);
+    bool operationOr(const BLIL &b);
     void operationOr2(const BLIL &b);
     /**
      * @note equivalent to operationOr method and operation+=
+     * @warning different return behaviour than most of the |=, doesn't return a reference to this!
+     * @returns if the matrix has changed
      */
-    BLIL &operator|=(const BLIL &b);
+    bool operator|=(const BLIL &b);
     /**
      * @note equivalent to operationOr method and operation|=
+     * @returns a reference to the current matrix
      */
     BLIL &operator+=(const BLIL &b);
     BLIL operator|(const BLIL &b) const;

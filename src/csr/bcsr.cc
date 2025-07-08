@@ -93,10 +93,9 @@ bool BCSR::checkOrder() const
     return checkOrder(false);
 }
 
-BCSR &BCSR::operator|=(const BCSR &b)
+bool BCSR::operator|=(const BCSR &b)
 {
-    operationOr(b);
-    return *this;
+    return operationOr(b);
 }
 
 BCSR &BCSR::operator+=(const BCSR &b)
@@ -105,17 +104,21 @@ BCSR &BCSR::operator+=(const BCSR &b)
     return *this;
 }
 
-void BCSR::operationOr(const BCSR &b)
+bool BCSR::operationOr(const BCSR &b)
 {
     // *this = *this | b;
     if (b._width != _width || b._height != _height)
     {
         throw std::range_error("Error: dimensions does not match in operationOr a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
         // fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
-    *this = BCSR(BLIL(*this) | BLIL(b));
+    // TODO: improve performances ?
+    BCSR res = BCSR(BLIL(*this) | BLIL(b));
+    bool change = !(res == *this);
+    *this = res;
+    return change;
 }
 
 BCSR BCSR::operator|(const BCSR &b) const
@@ -124,7 +127,7 @@ BCSR BCSR::operator|(const BCSR &b) const
     {
         throw std::range_error("Error: dimensions does not match in operationOr a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
         // fprintf(stderr, "Error: dimensions does not match in operationOr a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
     return BCSR(BLIL(*this) | BLIL(b));
 }
@@ -140,7 +143,7 @@ void BCSR::operationAnd(const BCSR &b)
     {
         throw std::range_error("Error: dimensions does not match in operationAnd a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
         // fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     *this = BCSR(BLIL(*this) | BLIL(b));
@@ -152,7 +155,7 @@ BCSR BCSR::operator&(const BCSR &b) const
     {
         throw std::range_error("Error: dimensions does not match in operationAnd a<" + std::to_string(_height) + ";" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";" + std::to_string(b._width) + ">\n");
         // fprintf(stderr, "Error: dimensions does not match in operationAnd a<%d;%d> != b<%d;%d>\n", _height, _width, b._height, b._width);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     return BCSR(BLIL(*this) & BLIL(b));
@@ -170,7 +173,7 @@ BCSR BCSR::operationTimesMatrix(const BCSR &b) const
     {
         throw std::range_error("Error: dimensions does not match in operationTimesMatrix a<_;" + std::to_string(_width) + "> != b<" + std::to_string(b._height) + ";_>\n");
         // fprintf(stderr, "Error: dimensions does not match in operationTimesMatrix a<_;%d> != b<%d;_>\n", _width, b._height);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     BCSR res(_height, b._width);
@@ -300,7 +303,7 @@ void BCSR::set(const u_int32_t row, const u_int32_t col)
     {
         throw std::out_of_range("Error: position does not match in set method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
         // fprintf(stderr, "Error: position does not match in set method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     if (!insertByValue(_indices, _index_pointers[row], _index_pointers[row + 1], col))
@@ -316,7 +319,7 @@ void BCSR::reset(const u_int32_t row, const u_int32_t col)
     {
         throw std::out_of_range("Error: position does not match in reset method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
         // fprintf(stderr, "Error: position does not match in reset method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     if (!removeByValue(_indices, _index_pointers[row], _index_pointers[row + 1], col))
@@ -334,7 +337,7 @@ bool BCSR::get(const u_int32_t row, const u_int32_t col) const
     {
         throw std::out_of_range("Error: position does not match in get method, accessing M<" + std::to_string(_height) + ";" + std::to_string(_width) + ">(" + std::to_string(row) + "," + std::to_string(col) + ")\n");
         // fprintf(stderr, "Error: position does not match in get method, accessing M<%d;%d>(%d,%d)\n", _height, _width, row, col);
-        // exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
     return isValueIn(_indices, _index_pointers[row], _index_pointers[row + 1], col);
 }
