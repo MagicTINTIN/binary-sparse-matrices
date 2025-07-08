@@ -16,14 +16,19 @@ class BLIL
 private:
     u_int32_t _width, _height;
     // u_int32_t _nz_number; // equal last value of _index_pointers
-    std::vector<std::vector<u_int32_t>> _rows;
 
     /**
      * Insert a dense matrix in the current BCSR matrix
      * @param values[] a array-like dense matrix
      */
     void insertDn2BLIL(u_int8_t values[]);
+
 public:
+    /**
+     * @warning direct access to the structure ! Do not modify unless you really want to do it !
+     */
+    std::vector<std::vector<u_int32_t>> _rows;
+    
     /**
      * Initialise a <0;0> matrix
      */
@@ -79,7 +84,7 @@ public:
     //  * @param excludeMaxNZAbove to hide from stats some high values
     //  */
     // std::string info(u_int32_t excludeMaxNZAbove) const;
-     /**
+    /**
      * Get information about the matrix
      * @param excludeFullLineStat to exclude full line from median statistics
      */
@@ -124,7 +129,6 @@ public:
      * Check if 2 matrices are the same
      */
     bool operator==(const BLIL &b);
-
 
     // ######### OR operation with matrices #########
     /**
@@ -249,7 +253,7 @@ public:
      * @param nonzero_row the row at which we emplace a new non-zero value at the new column
      */
     void addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row);
-    
+
     /**
      * Retrieve non zeros columns of a row
      * @param row
