@@ -23,12 +23,12 @@ private:
      */
     void insertDn2BLIL(u_int8_t values[]);
 
-public:
     /**
      * @warning direct access to the structure ! Do not modify unless you really want to do it !
      */
     std::vector<std::vector<u_int32_t>> _rows;
-    
+
+public:
     /**
      * Initialise a <0;0> matrix
      */
@@ -260,6 +260,11 @@ public:
      * @warning no row check
      */
     std::vector<u_int32_t> getRow(u_int32_t row) const;
+
+    /**
+     * Retrieve non zeros columns of all rows
+     */
+    const std::vector<std::vector<u_int32_t>> &getRows() const;
 
     // Not needed for the moment
     // ~BLIL();

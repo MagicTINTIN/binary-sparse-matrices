@@ -394,3 +394,8 @@ std::vector<u_int32_t> BLIL::getRow(u_int32_t row) const
 {
     return _rows[row];
 }
+
+const std::vector<std::vector<u_int32_t>> &BLIL::getRows() const
+{
+    return _rows;
+}
