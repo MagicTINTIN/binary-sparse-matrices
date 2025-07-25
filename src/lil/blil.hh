@@ -258,6 +258,15 @@ public:
      */
     void addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row);
 
+    // FIXME: better factorization
+    struct stats
+    {
+        size_t height, width, min, med, max, nnz;
+        float sparsity;
+    };
+
+    stats getStats();
+
     /**
      * Retrieve non zeros columns of a row
      * @param row

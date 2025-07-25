@@ -8,12 +8,10 @@
 #include "../csr/bcsr.hh"
 #include <stdexcept>
 
-
 BLIL::BLIL() : _height(0), _width(0)
 {
     _rows = std::vector<std::vector<u_int32_t>>(0);
 }
-
 
 BLIL::BLIL(u_int32_t height, u_int32_t width) : _height(height), _width(width)
 {
@@ -400,6 +398,46 @@ void BLIL::addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row)
     _rows[_height - 1].emplace_back(nonzero_column);
     if (nonzero_row < _height - 1)
         _rows[nonzero_row].emplace_back(_width - 1);
+}
+
+BLIL::stats BLIL::getStats()
+{
+    if (_width == 0 || _height == 0)
+        return stats{
+            height : 0,
+            width : 0,
+            min : 0,
+            med : 0,
+            max : 0,
+            nnz: 0,
+            sparsity : 0
+        };
+
+    size_t nnz = 0;
+    std::vector<u_int32_t> nbPerLine(_height);
+    u_int32_t minNbPerLine(__INT32_MAX__), maxNbPerLine(0);
+    for (size_t i = 0; i < _height; i++)
+    {
+        u_int32_t ones = (u_int32_t)_rows[i].size();
+        nnz += ones;
+        nbPerLine[i] = ones;
+        if (ones < minNbPerLine)
+            minNbPerLine = ones;
+        if (ones > maxNbPerLine)
+            maxNbPerLine = ones;
+    }
+    std::sort(nbPerLine.begin(), nbPerLine.end());
+    u_int32_t medNbPerLine = nbPerLine[_height / 2];
+
+    return stats{
+        height : _height,
+        width : _width,
+        min : minNbPerLine,
+        med : medNbPerLine,
+        max : maxNbPerLine,
+        nnz: nnz,
+        sparsity : float(100.0 * (_width * _height - nnz) / (_width * _height))
+    };
 }
 
 std::vector<u_int32_t> BLIL::getRow(u_int32_t row) const
