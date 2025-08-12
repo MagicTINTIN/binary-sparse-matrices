@@ -316,7 +316,8 @@ BLIL BLIL::transpose_withoutConversion() const
 
 BLIL BLIL::transpose() const
 {
-    return BLIL(BCSR(*this).transpose());
+    return transpose_withoutConversion();
+    // return BLIL(BCSR(*this).transpose());
 }
 
 void BLIL::set(const u_int32_t row, const u_int32_t col, const u_int8_t value)
