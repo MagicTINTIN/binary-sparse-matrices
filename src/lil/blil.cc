@@ -273,10 +273,10 @@ BLIL BLIL::operationTimesMatrix(const BLIL &b) const
 
         for (u_int32_t jj = 0; jj < length; jj++)
         {
-            res._rows[i].emplace_back(head);
+            // res._rows[i].emplace_back(head);
 
-            // auto it = std::lower_bound(res._rows[i].begin(), res._rows[i].end(), head);
-            // res._rows[i].insert(it, head);
+            auto it = std::lower_bound(res._rows[i].begin(), res._rows[i].end(), head);
+            res._rows[i].insert(it, head);
 
             // insertByValue(res._rows[i], head);
             u_int32_t temp = head;
@@ -284,7 +284,7 @@ BLIL BLIL::operationTimesMatrix(const BLIL &b) const
 
             next[temp] = -1; // clear arrays
         }
-        std::sort(res._rows[i].begin(), res._rows[i].end()); // emplacing back and then sorting is quicker than inserting !
+        // std::sort(res._rows[i].begin(), res._rows[i].end()); // emplacing back and then sorting is quicker than inserting ? sometimes yes, sometimes no...
     }
     return res;
 }
