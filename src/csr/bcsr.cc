@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <algorithm>
 
 void bcsr_canonicalize(const u_int32_t n_row,
                        u_int32_t Ap[],
