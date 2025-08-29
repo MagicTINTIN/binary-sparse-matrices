@@ -81,5 +81,8 @@
         "queue": "cpp",
         "stack": "cpp",
         "t2b": "cpp"
-    }
+    },
+    "clangd.arguments": [
+        "--query-driver=/usr/bin/c++"
+    ]
 }

@@ -1,0 +1,41 @@
+AllowShortLoopsOnASingleLine: true
+# AllowShortFunctionsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse #WithoutElse
+AllowShortFunctionsOnASingleLine: Inline
+
+IndentWidth: 4
+AccessModifierOffset: -4
+MaxEmptyLinesToKeep:  5
+BreakStringLiterals: false
+
+SortIncludes: true
+IncludeBlocks: Regroup
+
+PointerAlignment: Right
+AlignArrayOfStructures: Right
+AlignTrailingComments: true
+
+AllowAllArgumentsOnNextLine: false
+BinPackArguments: true
+
+# RemoveBracesLLVM: true
+
+IntegerLiteralSeparator:
+  Binary: 0
+  Decimal: 3
+  Hex: 0
+
+QualifierAlignment: Custom
+QualifierOrder: [inline, type, static, const, volatile]
+
+ColumnLimit: 135
+
+FixNamespaceComments: true
+
+PenaltyExcessCharacter: 1
+PenaltyBreakComment: 100
+PenaltyBreakScopeResolution: 1000
+PenaltyBreakBeforeMemberAccess: 1000
+PenaltyBreakTemplateDeclaration: 1000
+PenaltyReturnTypeOnItsOwnLine: 10000

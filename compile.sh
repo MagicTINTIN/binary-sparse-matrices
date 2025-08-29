@@ -44,6 +44,7 @@ if [[ $? != 0 ]]; then
     cd ../
     exit $err
 elif [[ $? == 0 ]]; then
+    cp -f compile_commands.json ../ 2> /dev/null
     echo "$(tput setaf 2)$(tput bold)Compilation of $projectName finished.$(tput sgr0)
     Execute $projectName compiler with build/$projectName"
 fi
