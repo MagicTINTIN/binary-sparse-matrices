@@ -1,6 +1,6 @@
 //// SET & RESET replaced by dichotomic version
 
-// void BCSR::set(const u_int32_t row, const u_int32_t col)
+// void BCSR::set(const uint32_t row, const uint32_t col)
 // {
 //     if (col >= _width || row >= _height)
 //     {
@@ -14,7 +14,7 @@
 //     {
 //         if (!inserted)
 //         {
-//             for (u_int32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
+//             for (uint32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
 //             {
 //                 if (col < _indices[i])
 //                 {
@@ -39,7 +39,7 @@
 // }
 
 
-// void BCSR::reset(const u_int32_t row, const u_int32_t col)
+// void BCSR::reset(const uint32_t row, const uint32_t col)
 // {
 //     if (col >= _width || row >= _height)
 //     {
@@ -53,7 +53,7 @@
 //     {
 //         if (!removed)
 //         {
-//             for (u_int32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
+//             for (uint32_t i = _index_pointers[r - 1]; i < _index_pointers[r]; i++)
 //             {
 //                 if (col == _indices[i])
 //                 {
@@ -87,14 +87,14 @@
 //     }
 
 //    // for each row after an insertion, propagate the information with the carry
-//        u_int32_t carry = 0;
+//        uint32_t carry = 0;
 //        for (size_t r = 1; r <= _height; r++) //< _index_pointers.size()
 //        {
 //            // if the line contains a non zero value.
 //            if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
 //            {
-//                u_int32_t col_index = _index_pointers[r - 1];
-//                u_int32_t b_index_pointer = b._index_pointers[r - 1];
+//                uint32_t col_index = _index_pointers[r - 1];
+//                uint32_t b_index_pointer = b._index_pointers[r - 1];
 //                // for each column check if there is an insertion to do before it
 //                for (; col_index < _index_pointers[r] + carry; col_index++)
 //                {
@@ -130,7 +130,7 @@
 //     }
 
 //     // for each row after an removal, propagate the information with the carry
-//     u_int32_t carry = 0;
+//     uint32_t carry = 0;
 //     for (size_t r = 1; r <= _height; r++)
 //     {
 //         if (_index_pointers[r] - _index_pointers[r - 1] == 0)
@@ -139,8 +139,8 @@
 //         // if the line pf b contains a non zero value.
 //         else if (b._index_pointers[r] - b._index_pointers[r - 1] > 0)
 //         {
-//             u_int32_t col_index = _index_pointers[r - 1];
-//             u_int32_t b_index_pointer = b._index_pointers[r - 1];
+//             uint32_t col_index = _index_pointers[r - 1];
+//             uint32_t b_index_pointer = b._index_pointers[r - 1];
 //             // for each column of b
 //             for (; b_index_pointer < b._index_pointers[r]; b_index_pointer++)
 //             {

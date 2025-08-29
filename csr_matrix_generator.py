@@ -36,16 +36,16 @@ def main():
                 columns.append(col)
         pointers.append(nnz)
         
-    # print(f"u_int32_t mat_p[{len(pointers)}] = {{" + ", ".join(str(v) for v in pointers) + "};")
-    # print(f"u_int32_t mat_j[{len(columns)}] = {{" + ", ".join(str(v) for v in columns) + "};")
+    # print(f"uint32_t mat_p[{len(pointers)}] = {{" + ", ".join(str(v) for v in pointers) + "};")
+    # print(f"uint32_t mat_j[{len(columns)}] = {{" + ", ".join(str(v) for v in columns) + "};")
     
-    print(f"u_int32_t mat_p[{len(pointers)}] = {{{pointers[0]}")
+    print(f"uint32_t mat_p[{len(pointers)}] = {{{pointers[0]}")
     for v in range(1,len(pointers)):
         print(f", {pointers[v]}")
     print("};")
     
     
-    print(f"u_int32_t mat_p[{len(columns)}] = {{{columns[0]}")
+    print(f"uint32_t mat_p[{len(columns)}] = {{{columns[0]}")
     for v in range(1,len(columns)):
         print(f", {columns[v]}")
     print("};")

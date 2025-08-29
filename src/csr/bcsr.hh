@@ -1,29 +1,29 @@
 #pragma once
+#include <cstdint>
 #ifndef BCSR_HH
 #define BCSR_HH
 
+#include <string>
 #include <sys/types.h>
 #include <vector>
-#include <string>
 // #include "../lil/blil.hh"
 class BLIL;
 
-std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
-std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width, std::vector<std::string> linesDescription);
+std::string denseMatrixPrinter(std::vector<uint8_t> m, uint32_t height, uint32_t width);
+std::string spreadsheetPrinter(std::vector<uint8_t> m, uint32_t height, uint32_t width, std::vector<std::string> linesDescription);
 
-class BCSR
-{
+class BCSR {
 private:
-    u_int32_t _width, _height;
-    // u_int32_t _nz_number; // equal last value of _index_pointers
-    std::vector<u_int32_t> _index_pointers;
-    std::vector<u_int32_t> _indices;
+    uint32_t _width, _height;
+    // uint32_t _nz_number; // equal last value of _index_pointers
+    std::vector<uint32_t> _index_pointers;
+    std::vector<uint32_t> _indices;
 
     /**
      * Insert a dense matrix in the current BCSR matrix
      * @param values[] a array-like dense matrix
      */
-    void insertDn2BCSR(u_int8_t values[]);
+    void insertDn2BCSR(uint8_t values[]);
 
 public:
     /**
@@ -35,7 +35,7 @@ public:
      * @param height the matrix height/rows
      * @param width the matrix width/columns
      */
-    BCSR(u_int32_t height, u_int32_t width);
+    BCSR(uint32_t height, uint32_t width);
 
     /**
      * Initialise a BCSR matrix using bcsr matrix params
@@ -44,7 +44,7 @@ public:
      * @param index_pointers an array of index pointers (rows)
      * @param indices an array of indices (columns)
      */
-    BCSR(u_int32_t height, u_int32_t width, u_int32_t index_pointers[], u_int32_t indices[]);
+    BCSR(uint32_t height, uint32_t width, uint32_t index_pointers[], uint32_t indices[]);
 
     /**
      * Initialise a BCSR matrix using bcsr matrix params
@@ -53,7 +53,7 @@ public:
      * @param index_pointers an array of index pointers (rows)
      * @param indices an array of indices (columns)
      */
-    BCSR(u_int32_t height, u_int32_t width, std::vector<u_int32_t> &index_pointers, std::vector<u_int32_t> &indices);
+    BCSR(uint32_t height, uint32_t width, std::vector<uint32_t> &index_pointers, std::vector<uint32_t> &indices);
 
     /**
      * Initialise a BCSR matrix using a dense matrix
@@ -61,7 +61,7 @@ public:
      * @param width the matrix width/columns
      * @param values the dense array-like matrix values
      */
-    BCSR(u_int32_t height, u_int32_t width, u_int8_t values[]);
+    BCSR(uint32_t height, uint32_t width, uint8_t values[]);
 
     /**
      * Initialise a BCSR matrix using a dense matrix
@@ -69,7 +69,7 @@ public:
      * @param width the matrix width/columns
      * @param nz_number number of non zero values (optimisation to prevent too many resizes)
      */
-    BCSR(u_int32_t height, u_int32_t width, u_int32_t nz_number);
+    BCSR(uint32_t height, uint32_t width, uint32_t nz_number);
 
     /**
      * Initialise a BCSR matrix using a BLIL one
@@ -81,7 +81,7 @@ public:
     /**
      * @returns a dense matrix
      */
-    std::vector<u_int8_t> toDenseMatrix() const;
+    std::vector<uint8_t> toDenseMatrix() const;
     /**
      * Convert the BCSR matrix to a printable string
      */
@@ -133,7 +133,7 @@ public:
     /**
      * Check if 2 matrices are the same
      */
-    bool operator==(const BCSR &b);
+    bool operator==(const BCSR &b) const;
 
     // ######### OR operation with matrices #########
     /**
@@ -204,28 +204,28 @@ public:
      * @param value (0 or 1) (different from 0)
      * @warning this can be a costly operation if multiply used
      */
-    void set(const u_int32_t row, const u_int32_t col, const u_int8_t value);
+    void set(uint32_t const row, uint32_t const col, uint8_t const value);
     /**
      * Set the value at (row,col) to 1 in the matrix
      * @param row of the value
      * @param col of the value
      * @warning this can be a costly operation if multiply used
      */
-    void set(const u_int32_t row, const u_int32_t col);
+    void set(uint32_t const row, uint32_t const col);
     /**
      * Set the value at (row,col) to 0 in the matrix
      * @param row of the value
      * @param col of the value
      * @warning this can be a costly operation if multiply used
      */
-    void reset(const u_int32_t row, const u_int32_t col);
+    void reset(uint32_t const row, uint32_t const col);
     /**
      * Get a value in the matrix
      * @param row of the value
      * @param col of the value
      * @returns if the value at row,col is not a zero
      */
-    bool get(const u_int32_t row, const u_int32_t col) const;
+    bool get(uint32_t const row, uint32_t const col) const;
 
     /**
      * Add an empty row and column to the end of the matrix
@@ -250,7 +250,7 @@ public:
      * @param row
      * @warning no row check
      */
-    std::vector<u_int32_t> getRow(u_int32_t row) const;
+    std::vector<uint32_t> getRow(uint32_t row) const;
 
     friend class BLIL;
 };
@@ -259,128 +259,64 @@ std::ostream &operator<<(std::ostream &stream, BCSR &matrix);
 std::ostream &operator<<(std::ostream &stream, const BCSR &matrix);
 
 // Scipy comparison
-void scipy_csr_matmat_binary(const u_int32_t n_row,
-                             const u_int32_t n_col,
-                             const u_int32_t Ap[],
-                             const u_int32_t Aj[],
-                             const u_int32_t Bp[],
-                             const u_int32_t Bj[],
-                             u_int32_t Cp[],
-                             u_int32_t Cj[]);
+void scipy_csr_matmat_binary(uint32_t const n_row, uint32_t const n_col, uint32_t const Ap[], uint32_t const Aj[], uint32_t const Bp[],
+                             uint32_t const Bj[], uint32_t Cp[], uint32_t Cj[]);
 
-void scipy_csr_matmat_binary(const u_int32_t n_row,
-                             const u_int32_t n_col,
-                             const std::vector<u_int32_t> &Ap,
-                             const std::vector<u_int32_t> &Aj,
-                             const std::vector<u_int32_t> &Bp,
-                             const std::vector<u_int32_t> &Bj,
-                             std::vector<u_int32_t> &Cp,
-                             std::vector<u_int32_t> &Cj);
+void scipy_csr_matmat_binary(uint32_t const n_row, uint32_t const n_col, std::vector<uint32_t> const &Ap,
+                             std::vector<uint32_t> const &Aj, std::vector<uint32_t> const &Bp, std::vector<uint32_t> const &Bj,
+                             std::vector<uint32_t> &Cp, std::vector<uint32_t> &Cj);
 
-void my_scipy_csr_matmat_binary(const u_int32_t n_row,
-                                const u_int32_t n_col,
-                                const std::vector<u_int32_t> &Ap,
-                                const std::vector<u_int32_t> &Aj,
-                                const std::vector<u_int32_t> &Bp,
-                                const std::vector<u_int32_t> &Bj,
-                                std::vector<u_int32_t> &Cp,
-                                std::vector<u_int32_t> &Cj);
+void my_scipy_csr_matmat_binary(uint32_t const n_row, uint32_t const n_col, std::vector<uint32_t> const &Ap,
+                                std::vector<uint32_t> const &Aj, std::vector<uint32_t> const &Bp, std::vector<uint32_t> const &Bj,
+                                std::vector<uint32_t> &Cp, std::vector<uint32_t> &Cj);
 
-BCSR uninformed_scipy_csr_matmat_binary(const u_int32_t n_row,
-                                        const u_int32_t n_col,
-                                        const std::vector<u_int32_t> &Ap,
-                                        const std::vector<u_int32_t> &Aj,
-                                        const std::vector<u_int32_t> &Bp,
-                                        const std::vector<u_int32_t> &Bj);
+BCSR uninformed_scipy_csr_matmat_binary(uint32_t const n_row, uint32_t const n_col, std::vector<uint32_t> const &Ap,
+                                        std::vector<uint32_t> const &Aj, std::vector<uint32_t> const &Bp, std::vector<uint32_t> const &Bj);
 
-void scipy_csr_matmat(const u_int32_t n_row,
-                      const u_int32_t n_col,
-                      const u_int32_t Ap[],
-                      const u_int32_t Aj[],
-                      const char Ax[],
-                      const u_int32_t Bp[],
-                      const u_int32_t Bj[],
-                      const char Bx[],
-                      u_int32_t Cp[],
-                      u_int32_t Cj[],
-                      char Cx[]);
+void scipy_csr_matmat(uint32_t const n_row, uint32_t const n_col, uint32_t const Ap[], uint32_t const Aj[], char const Ax[],
+                      uint32_t const Bp[], uint32_t const Bj[], char const Bx[], uint32_t Cp[], uint32_t Cj[], char Cx[]);
 
-void scipy_csr_matmat(const u_int32_t n_row,
-                      const u_int32_t n_col,
-                      const std::vector<u_int32_t> &Ap,
-                      const std::vector<u_int32_t> &Aj,
-                      const char Ax[],
-                      const std::vector<u_int32_t> &Bp,
-                      const std::vector<u_int32_t> &Bj,
-                      const char Bx[],
-                      std::vector<u_int32_t> &Cp,
-                      std::vector<u_int32_t> &Cj,
-                      char Cx[]);
+void scipy_csr_matmat(uint32_t const n_row, uint32_t const n_col, std::vector<uint32_t> const &Ap, std::vector<uint32_t> const &Aj,
+                      char const Ax[], std::vector<uint32_t> const &Bp, std::vector<uint32_t> const &Bj, char const Bx[],
+                      std::vector<uint32_t> &Cp, std::vector<uint32_t> &Cj, char Cx[]);
 
-void scipy_tocsc(const u_int32_t n_row,
-                 const u_int32_t n_col,
-                 const u_int32_t Ap[],
-                 const u_int32_t Aj[],
+void scipy_tocsc(uint32_t const n_row, uint32_t const n_col, uint32_t const Ap[], uint32_t const Aj[],
                  //    const char Ax[],
-                 u_int32_t Bp[],
-                 u_int32_t Bi[] //,
-                                //  char Bx[]
+                 uint32_t Bp[],
+                 uint32_t Bi[] //,
+                               //  char Bx[]
 );
-// void my_scipy_tocsc(const u_int32_t n_row,
-//                  const u_int32_t n_col,
-//                  const u_int32_t Ap[],
-//                  const u_int32_t Aj[],
+// void my_scipy_tocsc(const uint32_t n_row,
+//                  const uint32_t n_col,
+//                  const uint32_t Ap[],
+//                  const uint32_t Aj[],
 //                  //    const char Ax[],
-//                  u_int32_t Bp[],
-//                  u_int32_t Bi[] //,
+//                  uint32_t Bp[],
+//                  uint32_t Bi[] //,
 //                           //  char Bx[]
 // );
 
-void my_scipy_tocsc(const u_int32_t n_row,
-                    const u_int32_t n_col,
-                    const std::vector<u_int32_t> &Ap,
-                    const std::vector<u_int32_t> &Aj,
+void my_scipy_tocsc(uint32_t const n_row, uint32_t const n_col, std::vector<uint32_t> const &Ap, std::vector<uint32_t> const &Aj,
                     //    const char Ax[],
-                    std::vector<u_int32_t> &Bp,
-                    std::vector<u_int32_t> &Bi //,
-                                               //  char Bx[]
+                    std::vector<uint32_t> &Bp,
+                    std::vector<uint32_t> &Bi //,
+                                              //  char Bx[]
 );
 
-void bcsr_canonicalize(const u_int32_t n_row,
-                        u_int32_t Ap[],
-                        u_int32_t Aj[]);
+void bcsr_canonicalize(uint32_t const n_row, uint32_t Ap[], uint32_t Aj[]);
 
-void bcsr_canonicalize(const u_int32_t n_row,
-                        std::vector<u_int32_t> &Ap,
-                        std::vector<u_int32_t> &Aj);
+void bcsr_canonicalize(uint32_t const n_row, std::vector<uint32_t> &Ap, std::vector<uint32_t> &Aj);
 
-std::string scipy_tostr(const u_int32_t n_row,
-                        const u_int32_t n_nz,
-                        const u_int32_t Mp[],
-                        const u_int32_t Mj[]);
+std::string scipy_tostr(uint32_t const n_row, uint32_t const n_nz, uint32_t const Mp[], uint32_t const Mj[]);
 
-std::string scipy_tostr(const u_int32_t n_row,
-                        const u_int32_t n_nz,
-                        const u_int32_t Mp[],
-                        const u_int32_t Mj[],
-                        const char separator);
+std::string scipy_tostr(uint32_t const n_row, uint32_t const n_nz, uint32_t const Mp[], uint32_t const Mj[], char const separator);
 
-std::string scipy_tostr(const u_int32_t n_row,
-                        const u_int32_t n_nz,
-                        const std::vector<u_int32_t> &Mp,
-                        const std::vector<u_int32_t> &Mj);
+std::string scipy_tostr(uint32_t const n_row, uint32_t const n_nz, std::vector<uint32_t> const &Mp, std::vector<uint32_t> const &Mj);
 
-std::string scipy_tostr(const u_int32_t n_row,
-                        const u_int32_t n_nz,
-                        const std::vector<u_int32_t> &Mp,
-                        const std::vector<u_int32_t> &Mj,
-                        const char separator);
+std::string scipy_tostr(uint32_t const n_row, uint32_t const n_nz, std::vector<uint32_t> const &Mp, std::vector<uint32_t> const &Mj,
+                        char const separator);
 
-std::string scipy_info(const u_int32_t width,
-                       const u_int32_t height,
-                       const std::vector<u_int32_t> &Mp);
+std::string scipy_info(uint32_t const width, uint32_t const height, std::vector<uint32_t> const &Mp);
 
-std::string scipy_info(const u_int32_t width,
-                       const u_int32_t height,
-                       const u_int32_t Mp[]);
+std::string scipy_info(uint32_t const width, uint32_t const height, uint32_t const Mp[]);
 #endif // BCSR_HH

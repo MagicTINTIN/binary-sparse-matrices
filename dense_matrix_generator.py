@@ -28,12 +28,12 @@ def main():
 
     
     if oneliner == "no":  
-        print(f"u_int8_t mat[{height}*{width}] = {{")
+        print(f"uint8_t mat[{height}*{width}] = {{")
         for i in range(height):
             row = data[i*width:(i+1)*width]
             print("    " + ", ".join(str(v) for v in row) + ("," if i < height - 1 else ""))
     else:
-        print(f"u_int8_t mat[{height}*{width}] = {{" + ", ".join(str(v) for v in data), end="")
+        print(f"uint8_t mat[{height}*{width}] = {{" + ", ".join(str(v) for v in data), end="")
     
     print("};")
 

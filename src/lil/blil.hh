@@ -2,31 +2,31 @@
 #ifndef BLIL_HH
 #define BLIL_HH
 
+#include <cstdint>
+#include <string>
 #include <sys/types.h>
 #include <vector>
-#include <string>
-// #include "../csr/bcsr.hh"
+
 class BCSR;
 
-std::string denseMatrixPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width);
-std::string spreadsheetPrinter(std::vector<u_int8_t> m, u_int32_t height, u_int32_t width, std::vector<std::string> linesDescription);
+std::string denseMatrixPrinter(std::vector<uint8_t> m, uint32_t height, uint32_t width);
+std::string spreadsheetPrinter(std::vector<uint8_t> m, uint32_t height, uint32_t width, std::vector<std::string> linesDescription);
 
-class BLIL
-{
+class BLIL {
 private:
-    u_int32_t _width, _height;
-    // u_int32_t _nz_number; // equal last value of _index_pointers
+    uint32_t _width, _height;
+    // uint32_t _nz_number; // equal last value of _index_pointers
 
     /**
      * Insert a dense matrix in the current BCSR matrix
      * @param values[] a array-like dense matrix
      */
-    void insertDn2BLIL(u_int8_t values[]);
+    void insertDn2BLIL(uint8_t values[]);
 
     /**
      * @warning direct access to the structure ! Do not modify unless you really want to do it !
      */
-    std::vector<std::vector<u_int32_t>> _rows;
+    std::vector<std::vector<uint32_t>> _rows;
 
 public:
     /**
@@ -38,7 +38,7 @@ public:
      * @param height the matrix height/rows
      * @param width the matrix width/columns
      */
-    BLIL(u_int32_t height, u_int32_t width);
+    BLIL(uint32_t height, uint32_t width);
 
     /**
      * Initialise a BLIL matrix using BLIL matrix params
@@ -46,7 +46,7 @@ public:
      * @param width the matrix width/columns
      * @param rows a vector of vectors containing column indices per row
      */
-    BLIL(u_int32_t height, u_int32_t width, std::vector<std::vector<u_int32_t>> &rows);
+    BLIL(uint32_t height, uint32_t width, std::vector<std::vector<uint32_t>> &rows);
 
     /**
      * Initialise a BLIL matrix using a dense matrix
@@ -54,7 +54,7 @@ public:
      * @param width the matrix width/columns
      * @param values the dense array-like matrix values
      */
-    BLIL(u_int32_t height, u_int32_t width, u_int8_t values[]);
+    BLIL(uint32_t height, uint32_t width, uint8_t values[]);
 
     /**
      * Initialise a BLIL matrix using a BCSR one
@@ -66,7 +66,7 @@ public:
     /**
      * @returns a dense matrix
      */
-    std::vector<u_int8_t> toDenseMatrix() const;
+    std::vector<uint8_t> toDenseMatrix() const;
     /**
      * Convert the BLIL matrix to a printable string
      */
@@ -83,7 +83,7 @@ public:
     //  * Get information about the matrix
     //  * @param excludeMaxNZAbove to hide from stats some high values
     //  */
-    // std::string info(u_int32_t excludeMaxNZAbove) const;
+    // std::string info(uint32_t excludeMaxNZAbove) const;
     /**
      * Get information about the matrix
      * @param excludeFullLineStat to exclude full line from median statistics
@@ -203,26 +203,26 @@ public:
      * @param col of the value
      * @param value (0 or 1) (different from 0)
      */
-    void set(const u_int32_t row, const u_int32_t col, const u_int8_t value);
+    void set(uint32_t const row, uint32_t const col, uint8_t const value);
     /**
      * Set the value at (row,col) to 1 in the matrix
      * @param row of the value
      * @param col of the value
      */
-    void set(const u_int32_t row, const u_int32_t col);
+    void set(uint32_t const row, uint32_t const col);
     /**
      * Set the value at (row,col) to 0 in the matrix
      * @param row of the value
      * @param col of the value
      */
-    void reset(const u_int32_t row, const u_int32_t col);
+    void reset(uint32_t const row, uint32_t const col);
     /**
      * Get a value in the matrix
      * @param row of the value
      * @param col of the value
      * @returns if the value at row,col is not a zero
      */
-    bool get(const u_int32_t row, const u_int32_t col) const;
+    bool get(uint32_t const row, uint32_t const col) const;
 
     /**
      * Add an empty row and column to the end of the matrix
@@ -243,24 +243,23 @@ public:
      * Add a row with a non zero value and column to the end of the matrix
      * @param nonzero_column the column of the row's non-zero value
      */
-    void addDimensionNZC(u_int32_t nonzero_column);
+    void addDimensionNZC(uint32_t nonzero_column);
 
     /**
      * Add an empty row and column with a non zero value to the end of the matrix
      * @param nonzero_row the row at which we emplace a new non-zero value at the new column
      */
-    void addDimensionNZR(u_int32_t nonzero_row);
+    void addDimensionNZR(uint32_t nonzero_row);
 
     /**
      * Add a row with a non zero value and column with a non zero value to the end of the matrix
      * @param nonzero_column the column of the row's non-zero value
      * @param nonzero_row the row at which we emplace a new non-zero value at the new column
      */
-    void addDimension(u_int32_t nonzero_column, u_int32_t nonzero_row);
+    void addDimension(uint32_t nonzero_column, uint32_t nonzero_row);
 
     // FIXME: better factorization
-    struct stats
-    {
+    struct stats {
         size_t height, width, min, med, max, nnz;
         float sparsity;
     };
@@ -272,12 +271,12 @@ public:
      * @param row
      * @warning no row check
      */
-    std::vector<u_int32_t> getRow(u_int32_t row) const;
+    std::vector<uint32_t> getRow(uint32_t row) const;
 
     /**
      * Retrieve non zeros columns of all rows
      */
-    const std::vector<std::vector<u_int32_t>> &getRows() const;
+    std::vector<std::vector<uint32_t>> const &getRows() const;
 
     // Not needed for the moment
     // ~BLIL();
