@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #ifndef UTILS_HH
 #define UTILS_HH
 
@@ -35,6 +36,9 @@ template <typename T> bool insertByValue(std::vector<T> &vec, T const &value) {
     return insertByValue(vec, 0, vec.size(), value);
 }
 
+template <typename T> void insertByValues(std::vector<T> &dest, std::vector<T> const &source) {
+    for (size_t i = 0; i < source.size(); ++i) insertByValue(dest, source[i]);
+}
 
 template <typename T> bool removeByValue(std::vector<T> &vec, size_t begin, size_t end, T const &value) {
     // locate the first element >= value
