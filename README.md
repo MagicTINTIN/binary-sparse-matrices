@@ -1,4 +1,6 @@
 # Binary Sparse Matrices
+<img src="icon.png" width="120px" height="120px">
+
 > Sparse matrices library specialized in binary values.
 
 Transposition and matrix-matrix multiplication algorithms are adapted from the [**SciPy**](https://github.com/scipy/scipy/) library for Python.
